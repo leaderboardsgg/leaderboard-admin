@@ -13,7 +13,15 @@
     "express-server": "node --experimental-strip-types server.ts",
     "dev": "vite",
     "build-vue": "vue-tsc && vite build",
-    "preview-vue": "vite preview"
+    "preview-vue": "vite preview",
+    "checks": "pnpm lint-check && pnpm format-check && pnpm type-check",
+    "lint-check": "biome lint && echo lint-check done",
+    "format-check": "biome format && echo format-check done",
+    "type-check": "vue-tsc --noEmit && echo type-check done",
+    "lint-fix": "biome lint --write",
+    "format-fix": "biome format --write",
+    "prepare": "husky",
+    "serve": "pnpm build-vue && pnpm express-server"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -26,6 +34,7 @@
     "@types/express": "^5.0.0",
     "@types/node": "^22.7.9",
     "@vitejs/plugin-vue": "^5.1.4",
+    "husky": "^9.1.6",
     "typescript": "^5.6.3",
     "vite": "^5.4.10",
     "vue-tsc": "^2.1.6"

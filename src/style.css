@@ -21,3 +21,7 @@ body {
 	padding: 11px;
 	cursor: pointer;
 }
+
+.select-none {
+	user-select: none;
+}
