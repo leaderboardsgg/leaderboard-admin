@@ -1,0 +1,33 @@
+{
+  "name": "leaderboardsgg-admin-panel",
+  "private": true,
+  "version": "1.0.0",
+  "description": "The express application to verify then serve the Admin panel to authenticated users",
+  "author": "buffet-time",
+  "type": "module",
+  "keywords": [],
+  "engines": {
+    "node": "23.0.0"
+  },
+  "scripts": {
+    "express-server": "node --experimental-strip-types server.ts",
+    "dev": "vite",
+    "build-vue": "vue-tsc && vite build",
+    "preview-vue": "vite preview"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.0.1",
+    "vue": "^3.5.12"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.7.9",
+    "@vitejs/plugin-vue": "^5.1.4",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10",
+    "vue-tsc": "^2.1.6"
+  }
+}
