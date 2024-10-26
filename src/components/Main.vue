@@ -3,8 +3,5 @@
 </script>
 
 <template>
-	
-	<div class="main-content">
-      Functionality here!
-    </div>
+	<div class="main-content">Functionality here!</div>
 </template>

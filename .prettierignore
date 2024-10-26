@@ -1,0 +1,27 @@
+# single files
+pnpm-lock.yaml
+.nvmrc
+.pnpmrc
+.prettierignore
+.gitignore
+.DS_Store
+LICENSE
+
+# folders
+/dist
+/.vscode
+/.husky
+/.github
+/node_modules
+/src/assets/*
+/public
+
+# file types
+*.md
+*.txt
+
+# files covered by biome
+*.json
+*.ts
+*.jsonc
+*.css

@@ -4,19 +4,18 @@ import Main from './components/Main.vue'
 </script>
 
 <template>
-  <div class="root">
-    <Navbar />
-    <Main />
-  </div>
+	<div class="root">
+		<Navbar />
+		<Main />
+	</div>
 </template>
 
 <style scoped>
 .root {
-  width: 100%;
+	width: 100%;
 }
 
-
 .main-content {
-  margin: 8px;
+	margin: 8px;
 }
 </style>

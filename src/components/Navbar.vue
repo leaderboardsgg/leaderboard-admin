@@ -6,8 +6,11 @@ function logoutClicked() {
 
 <template>
 	<div class="navbar">
-		<p class="title select-none " >Leaderboards.gg Admin Panel</p>
-		<button class="button log-out-button select-none " @click="logoutClicked">Log Out</button>
+		<p class="title select-none">Leaderboards.gg Admin Panel</p>
+
+		<button class="button log-out-button select-none" @click="logoutClicked">
+			Log Out
+		</button>
 	</div>
 </template>
 
@@ -21,10 +24,10 @@ function logoutClicked() {
 	justify-content: center;
 }
 
-
 .log-out-button {
 	display: flex;
 	height: 40px;
+
 	margin-left: auto;
 	align-items: center;
 	justify-content: center;
