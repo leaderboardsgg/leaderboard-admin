@@ -6,7 +6,7 @@ import Main from './components/Main.vue'
 <template>
 	<div class="root">
 		<Navbar />
-		<Main />
+		<RouterView />
 	</div>
 </template>
 
