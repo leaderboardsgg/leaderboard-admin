@@ -7,7 +7,7 @@
 	"type": "module",
 	"keywords": [],
 	"engines": {
-		"node": "23.0.0"
+		"node": "^23.0.0"
 	},
 	"scripts": {
 		"express-server": "node --experimental-strip-types server.ts",
@@ -26,7 +26,8 @@
 	"dependencies": {
 		"cors": "^2.8.5",
 		"express": "^5.0.1",
-		"vue": "^3.5.12"
+		"vue": "^3.5.12",
+		"vue-router": "^4.4.5"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.2",
