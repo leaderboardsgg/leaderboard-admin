@@ -7,7 +7,7 @@
 	"type": "module",
 	"keywords": [],
 	"engines": {
-		"node": "23.0.0"
+		"node": "^23.0.0"
 	},
 	"scripts": {
 		"express-server": "node --experimental-strip-types server.ts",
