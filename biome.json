@@ -16,7 +16,8 @@
 			"*.md",
 			"*.yaml",
 			"*.json",
-			"*.vue"
+			"*.vue",
+			"src/api/Api.ts"
 		]
 	},
 	"formatter": {
