@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useSessionToken } from '../composables'
+import { useSessionToken } from '../composables/useSessionToken'
 
 function logoutClicked() {
 	useSessionToken().value = ''
