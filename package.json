@@ -20,7 +20,7 @@
 		"lint-fix": "biome lint --write",
 		"format-fix": "biome format --write && prettier --check --write \"**/**\"",
 		"prepare": "husky",
-		"generate-api": "tsx ./scripts/generate-api.ts"
+		"generate-api": "node --experimental-strip-types ./scripts/generate-api.ts"
 	},
 	"dependencies": {
 		"vue": "^3.5.12",
