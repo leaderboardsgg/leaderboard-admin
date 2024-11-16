@@ -35,7 +35,6 @@
 		"husky": "^9.1.6",
 		"prettier": "^3.3.3",
 		"swagger-typescript-api": "^13.0.23",
-		"tsx": "^4.19.2",
 		"typescript": "^5.6.3",
 		"vite": "^5.4.10",
 		"vue-tsc": "^2.1.6"
