@@ -14,5 +14,5 @@ if (!backendUrl) {
 
 generateApi({
 	url: `${backendUrl}/swagger/v1/swagger.json`,
-	output: resolve(process.cwd(), 'src', 'api'),
+	output: resolve(process.cwd(), 'src'),
 })
