@@ -13,6 +13,16 @@ if (!backendUrl) {
 }
 
 generateApi({
-	url: `${backendUrl}/swagger/v1/swagger.json`,
+	enumNamesAsValues: true,
+	extractRequestBody: true,
+	extractRequestParams: true,
+	generateResponses: true,
+	generateRouteTypes: true,
+	generateUnionEnums: true,
+	httpClientType: 'fetch',
+	modular: true,
+	moduleNameFirstTag: true,
 	output: resolve(process.cwd(), 'src'),
+	singleHttpClient: false,
+	url: `${backendUrl}/swagger/v1/swagger.json`,
 })
