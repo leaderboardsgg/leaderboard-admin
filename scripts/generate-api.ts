@@ -22,7 +22,7 @@ generateApi({
 	httpClientType: 'fetch',
 	modular: true,
 	moduleNameFirstTag: true,
-	output: resolve(process.cwd(), 'src', 'api'),
+	output: resolve(process.cwd(), 'src', 'lib', 'api'),
 	singleHttpClient: false,
 	url: `${backendUrl}/swagger/v1/swagger.json`,
 })
