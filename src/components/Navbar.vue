@@ -46,6 +46,8 @@ const user = useUserDetails()
 .log-out-button {
 	height: 40px;
 	margin-left: 1rem;
+	display: flex;
+	align-items: center;
 }
 
 .title {
