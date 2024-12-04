@@ -14,8 +14,4 @@ import Main from './components/Main.vue'
 .root {
 	width: 100%;
 }
-
-.main-content {
-	margin: 8px;
-}
 </style>
