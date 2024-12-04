@@ -20,9 +20,9 @@ const user = useUserDetails()
 
 		<div class="navbar-right">
 			<p>Signed in as {{ user?.username }}</p>
-		<button class="button log-out-button select-none" @click="logoutClicked">
-			Log Out
-		</button>
+			<button class="button log-out-button select-none" @click="logoutClicked">
+				Log Out
+			</button>
 		</div>
 	</div>
 </template>
