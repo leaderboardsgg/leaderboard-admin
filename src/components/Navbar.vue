@@ -1,8 +1,14 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router';
 import { useSessionToken } from '../composables/useSessionToken'
+import { useUserDetails } from '../composables/useUserDetails';
+
+const router = useRouter()
+const token = useSessionToken()
 
 function logoutClicked() {
-	useSessionToken().value = ''
+	router.push('/')
+	token.value = ''
 }
 </script>
 
