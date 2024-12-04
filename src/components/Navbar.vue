@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router'
 import { useSessionToken } from '../composables/useSessionToken'
-import { useUserDetails } from '../composables/useUserDetails';
+import { useUserDetails } from '../composables/useUserDetails'
 
 const router = useRouter()
 const token = useSessionToken()

@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import Login from './components/Login.vue';
+import { computed } from 'vue'
+import Login from './components/Login.vue'
 import Navbar from './components/Navbar.vue'
-import { useSessionToken } from './composables/useSessionToken';
-import { useUserDetails } from './composables/useUserDetails';
+import { useSessionToken } from './composables/useSessionToken'
+import { useUserDetails } from './composables/useUserDetails'
 
 const token = useSessionToken()
 const user = useUserDetails()
-const loggedIn = computed(() => token.value && user.value?.role === 'Administrator')
+const loggedIn = computed(
+	() => token.value && user.value?.role === 'Administrator'
+)
 </script>
 
 <template>
