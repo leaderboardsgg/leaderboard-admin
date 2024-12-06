@@ -17,6 +17,7 @@ export function useUserDetails() {
 		const users = new Users({
 			baseUrl: import.meta.env.VITE_BACKEND_URL,
 		})
+
 		const me = await users.me(useAuth(token.value))
 		userDetails.value = me.data
 	})
