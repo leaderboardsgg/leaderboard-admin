@@ -12,8 +12,10 @@ const loginError = ref(false)
 const submitted = ref(false)
 const token = useSessionToken()
 const user = useUserDetails()
-const nonAdminLogin = computed(
-	() => submitted.value && user.value && user.value.role !== 'Administrator'
+const loginFailed = computed(
+	() =>
+		loginError.value ||
+		(submitted.value && user.value && user.value.role !== 'Administrator')
 )
 
 async function submit() {
@@ -51,9 +53,7 @@ async function submit() {
 				<input type="submit" value="Login" />
 			</form>
 		</div>
-		<p class="errorText">
-			{{ nonAdminLogin ? 'Must be Admin to log in' : loginError ? "Login failed" }}
-		</p>
+		<p class="errorText" v-if="loginFailed">Login failed</p>
 	</div>
 </template>
 
