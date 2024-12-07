@@ -1,21 +1,25 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import Login from './components/Login.vue'
 import Navbar from './components/Navbar.vue'
-import Main from './components/Main.vue'
+import { useUserDetails } from './composables/useUserDetails'
+
+const user = useUserDetails()
+const loggedIn = computed(() => user.value?.role === 'Administrator')
 </script>
 
 <template>
 	<div class="root">
-		<Navbar />
-		<RouterView />
+		<div v-if="loggedIn">
+			<Navbar />
+			<RouterView />
+		</div>
+		<Login v-else />
 	</div>
 </template>
 
 <style scoped>
 .root {
 	width: 100%;
-}
-
-.main-content {
-	margin: 8px;
 }
 </style>

@@ -1,18 +1,29 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import { useSessionToken } from '../composables/useSessionToken'
+import { useUserDetails } from '../composables/useUserDetails'
+
+const router = useRouter()
+const token = useSessionToken()
 
 function logoutClicked() {
-	useSessionToken().value = ''
+	router.push('/')
+	token.value = ''
 }
+
+const user = useUserDetails()
 </script>
 
 <template>
 	<div class="navbar">
 		<p class="title select-none">Leaderboards.gg Admin Panel</p>
 
-		<button class="button log-out-button select-none" @click="logoutClicked">
-			Log Out
-		</button>
+		<div class="navbar-right">
+			<p>Signed in as {{ user?.username }}</p>
+			<button class="button log-out-button select-none" @click="logoutClicked">
+				Log Out
+			</button>
+		</div>
 	</div>
 </template>
 
@@ -23,23 +34,24 @@ function logoutClicked() {
 	background-color: green;
 	padding: 8px;
 	align-items: center;
-	justify-content: center;
+	justify-content: space-between;
+}
+
+.navbar-right {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
 }
 
 .log-out-button {
-	display: flex;
 	height: 40px;
-
-	margin-left: auto;
+	margin-left: 1rem;
+	display: flex;
 	align-items: center;
-	justify-content: center;
 }
 
 .title {
-	display: flex;
 	margin-left: 8px;
-	align-items: center;
-	justify-content: center;
 	line-height: unset;
 }
 </style>
