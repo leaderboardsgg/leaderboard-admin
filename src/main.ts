@@ -8,10 +8,12 @@ import './style.css'
 const routes = [
 	{
 		path: '/',
+		name: 'home',
 		component: Main,
 	},
 	{
 		path: '/leaderboards',
+		name: 'leaderboardsList',
 		component: Leaderboards,
 	},
 ]

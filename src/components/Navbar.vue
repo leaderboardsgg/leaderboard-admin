@@ -7,7 +7,7 @@ const router = useRouter()
 const token = useSessionToken()
 
 function logoutClicked() {
-	router.push('/')
+	router.push({ name: 'home' })
 	token.value = ''
 }
 
