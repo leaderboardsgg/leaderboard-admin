@@ -17,13 +17,17 @@ const leaderboardClient = new Leaderboards({
 	baseUrl: import.meta.env.VITE_BACKEND_URL
 })
 
-const { state: allBoards, error, isLoading } = useAsyncState(
-	leaderboardClient.listLeaderboards({})
-		.then(
-			res => res.data || []
-		),
-	[]
-)
+const {
+	state: allBoards,
+	error,
+	isLoading
+} = useAsyncState(async () => {
+	const resp = await leaderboardClient.listLeaderboards({
+		includeDeleted: true
+	})
+	
+	return resp.data
+}, [])
 
 const router = useRouter()
 
