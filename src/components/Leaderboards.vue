@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useAsyncState } from '@vueuse/core'
 import { computed, ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { Leaderboards } from '../lib/api/Leaderboards'
 
 enum IncludeDeleted {
@@ -20,20 +19,15 @@ const leaderboardClient = new Leaderboards({
 const {
 	state: allBoards,
 	error,
-	isLoading
+	isLoading,
+	execute
 } = useAsyncState(async () => {
 	const resp = await leaderboardClient.listLeaderboards({
 		includeDeleted: true
 	})
-	
+
 	return resp.data
 }, [])
-
-const router = useRouter()
-
-function reload() {
-	router.go(0)
-}
 
 const boards = computed(() =>
 	allBoards.value.filter(
@@ -66,7 +60,7 @@ const boards = computed(() =>
 
 		<div v-else-if="error" class="main-content error-container">
 			<span>{{ error }}</span>
-			<button @click="reload" class="reload-button">Refresh page</button>
+			<button @click="execute()" class="reload-button">Retry</button>
 		</div>
 
 		<ul v-else v-for="board in boards ?? []" :key="board.id" class="main-content">
