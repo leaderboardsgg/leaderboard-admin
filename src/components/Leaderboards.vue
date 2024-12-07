@@ -36,15 +36,7 @@ function reload() {
 }
 
 const boards = computed(() =>
-	allBoards
-		.value
-		.filter((board) =>
-			search.value
-				? board.name
-						.toLocaleLowerCase()
-						.includes(search.value.trim().toLocaleLowerCase())
-				: true
-		)
+	allBoards.value
 		.filter((board) => {
 			switch (includeDeleted.value) {
 				case IncludeDeleted.NotDeleted:
@@ -55,6 +47,13 @@ const boards = computed(() =>
 					return true
 			}
 		})
+		.filter(
+			(board) =>
+				!search.value ||
+				board.name
+					.toLocaleLowerCase()
+					.includes(search.value.trim().toLocaleLowerCase())
+		)
 )
 </script>
 
