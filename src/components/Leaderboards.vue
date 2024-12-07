@@ -4,13 +4,13 @@ import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { Leaderboards } from '../lib/api/Leaderboards'
 
-enum Flag {
-	Without,
-	With,
+enum IncludeDeleted {
+	NotDeleted,
+	Deleted,
 	All
 }
 
-const includeDeleted = ref(Flag.Without)
+const includeDeleted = ref(IncludeDeleted.NotDeleted)
 const search = ref<string | null>(null)
 
 const leaderboardClient = new Leaderboards({
@@ -43,9 +43,9 @@ const boards = computed(() =>
 		)
 		.filter((board) => {
 			switch (includeDeleted.value) {
-				case Flag.Without:
+				case IncludeDeleted.NotDeleted:
 					return board.deletedAt === null
-				case Flag.With:
+				case IncludeDeleted.Deleted:
 					return board.deletedAt !== null
 				default:
 					return true
@@ -59,9 +59,9 @@ const boards = computed(() =>
 		<h1 class="title">Leaderboards</h1>
 		<select v-model="includeDeleted" class="input">
 			<option value="" disabled>Please select one</option>
-			<option :value="Flag.Without">Not Deleted</option>
-			<option :value="Flag.With">Deleted</option>
-			<option :value="Flag.All">All</option>
+			<option :value="IncludeDeleted.NotDeleted">Not Deleted</option>
+			<option :value="IncludeDeleted.Deleted">Deleted</option>
+			<option :value="IncludeDeleted.All">All</option>
 		</select>
 		<input v-model="search" placeholder="Search" class="input" />
 
