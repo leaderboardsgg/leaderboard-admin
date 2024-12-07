@@ -63,7 +63,7 @@ const boards = computed(() =>
 			<button @click="execute()" class="reload-button">Retry</button>
 		</div>
 
-		<ul v-else v-for="board in boards ?? []" :key="board.id" class="main-content">
+		<ul v-else v-for="board in boards" :key="board.id" class="main-content">
 			<!-- TODO: Switch list item to RouterLink -->
 			<li>{{ board.name }}</li>
 			<!-- <RouterLink :to="{
