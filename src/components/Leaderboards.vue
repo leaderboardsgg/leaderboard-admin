@@ -59,7 +59,7 @@ const boards = computed(() =>
 		</div>
 
 		<div v-else-if="error" class="main-content error-container">
-			<span>{{ error }}</span>
+			<p>An error occurred.</p>
 			<button @click="execute()" class="reload-button">Retry</button>
 		</div>
 
