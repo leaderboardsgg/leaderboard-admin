@@ -54,9 +54,7 @@ const boards = computed(() =>
 		</select>
 		<input v-model="search" placeholder="Search" class="input" />
 
-		<div v-if="isLoading" class="main-content">
-			Loading...
-		</div>
+		<div v-if="isLoading" class="main-content">Loading...</div>
 
 		<div v-else-if="error" class="main-content error-container">
 			<p>An error occurred.</p>

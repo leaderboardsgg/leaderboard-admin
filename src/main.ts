@@ -13,7 +13,7 @@ const routes = [
 	{
 		path: '/leaderboards',
 		component: Leaderboards,
-	}
+	},
 ]
 
 const router = createRouter({
