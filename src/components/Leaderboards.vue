@@ -29,16 +29,22 @@ const {
 	return resp.data
 }, [])
 
-const boards = computed(() =>
+const boardsFiltered = computed(() =>
 	allBoards.value.filter(
 		(board) =>
-			(includeDeleted.value === IncludeDeleted.All ||
-				(includeDeleted.value === IncludeDeleted.NotDeleted) ===
-					(board.deletedAt === null)) &&
-			(!search.value ||
-				board.name
-					.toLocaleLowerCase()
-					.includes(search.value.trim().toLocaleLowerCase()))
+			includeDeleted.value === IncludeDeleted.All ||
+			(includeDeleted.value === IncludeDeleted.NotDeleted) ===
+				(board.deletedAt === null)
+	)
+)
+
+const boardsSearched = computed(() =>
+	boardsFiltered.value.filter(
+		(board) =>
+			!search.value ||
+			board.name
+				.toLocaleLowerCase()
+				.includes(search.value.trim().toLocaleLowerCase())
 	)
 )
 </script>
