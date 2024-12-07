@@ -11,7 +11,7 @@ enum IncludeDeleted {
 }
 
 const includeDeleted = ref(IncludeDeleted.NotDeleted)
-const search = ref<string | null>(null)
+const search = ref<string>('')
 
 const leaderboardClient = new Leaderboards({
 	baseUrl: import.meta.env.VITE_BACKEND_URL
