@@ -36,24 +36,16 @@ function reload() {
 }
 
 const boards = computed(() =>
-	allBoards.value
-		.filter((board) => {
-			switch (includeDeleted.value) {
-				case IncludeDeleted.NotDeleted:
-					return board.deletedAt === null
-				case IncludeDeleted.Deleted:
-					return board.deletedAt !== null
-				default:
-					return true
-			}
-		})
-		.filter(
-			(board) =>
-				!search.value ||
+	allBoards.value.filter(
+		(board) =>
+			(includeDeleted.value === IncludeDeleted.All ||
+				(includeDeleted.value === IncludeDeleted.NotDeleted) ===
+					(board.deletedAt === null)) &&
+			(!search.value ||
 				board.name
 					.toLocaleLowerCase()
-					.includes(search.value.trim().toLocaleLowerCase())
-		)
+					.includes(search.value.trim().toLocaleLowerCase()))
+	)
 )
 </script>
 
