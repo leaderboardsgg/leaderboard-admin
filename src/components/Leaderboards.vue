@@ -68,14 +68,15 @@ const boardsSearched = computed(() =>
 		</div>
 
 		<ul v-else class="main-content">
-			<!-- TODO: Switch list item to RouterLink -->
-			<li v-for="board in boards" :key="board.id">
-				{{ board.name }}
+			<li v-for="board in boardsSearched" :key="board.id">
+				<RouterLink
+					:to="`/leaderboard/${board.id}`"
+					:class="{ dull: board.deletedAt !== null }"
+				>
+					{{ board.name }}
+				</RouterLink>
 			</li>
-			<!-- <RouterLink :to="{
-				name: 'leaderboard',
-				params: { slug: board.slug },
-			}">{{ board.name }}</RouterLink> -->
+			<!-- TODO: Use a proper named route here. -->
 		</ul>
 	</div>
 </template>
@@ -109,5 +110,9 @@ const boardsSearched = computed(() =>
 .reload-button {
 	align-self: start;
 	padding: 1rem;
+}
+
+.dull {
+	color: grey;
 }
 </style>
