@@ -66,7 +66,7 @@ const boardsSearched = computed(() =>
 
 		<div v-else-if="error" class="error-container">
 			<p>An error occurred.</p>
-			<button @click="execute()" class="reload-button">Retry</button>
+			<button @click="execute()" class="retry-button">Retry</button>
 		</div>
 
 		<ul v-else>
@@ -109,7 +109,7 @@ const boardsSearched = computed(() =>
 	gap: 1rem;
 }
 
-.reload-button {
+.retry-button {
 	align-self: start;
 	padding: 1rem;
 }
