@@ -51,23 +51,25 @@ const boardsSearched = computed(() =>
 
 <template>
 	<div class="container">
-		<h1 class="title">Leaderboards</h1>
-		<select v-model="includeDeleted" class="input">
-			<option value="" disabled>Please select one</option>
-			<option :value="IncludeDeleted.NotDeleted">Not Deleted</option>
-			<option :value="IncludeDeleted.Deleted">Deleted</option>
-			<option :value="IncludeDeleted.All">All</option>
-		</select>
-		<input v-model="search" placeholder="Search" class="input" />
+		<h1>Leaderboards</h1>
+		<div class="input-container">
+			<input v-model="search" placeholder="Search" class="input" />
+			<select v-model="includeDeleted" class="input">
+				<option value="" disabled>Please select one</option>
+				<option :value="IncludeDeleted.NotDeleted">Not Deleted</option>
+				<option :value="IncludeDeleted.Deleted">Deleted</option>
+				<option :value="IncludeDeleted.All">All</option>
+			</select>
+		</div>
 
-		<div v-if="isLoading" class="main-content">Loading...</div>
+		<div v-if="isLoading">Loading...</div>
 
-		<div v-else-if="error" class="main-content error-container">
+		<div v-else-if="error" class="error-container">
 			<p>An error occurred.</p>
 			<button @click="execute()" class="reload-button">Retry</button>
 		</div>
 
-		<ul v-else class="main-content">
+		<ul v-else>
 			<li v-for="board in boardsSearched" :key="board.id">
 				<RouterLink
 					:to="`/leaderboard/${board.id}`"
@@ -83,22 +85,21 @@ const boardsSearched = computed(() =>
 
 <style scoped>
 .container {
-	display: grid;
-	grid-template-columns: repeat(2, 1fr);
+	max-width: 85rem;
+	margin: auto;
+	display: flex;
+	flex-direction: column;
 	gap: 0.5rem;
 }
 
-.title {
-	grid-column: span 2 / span 2;
+.input-container {
+	align-self: flex-end;
+	display: flex;
+	gap: 1rem;
 }
 
 .input {
 	padding: 0.5rem;
-}
-
-.main-content {
-	grid-column: span 2 / span 2;
-	padding: 0;
 }
 
 .error-container {
