@@ -7,7 +7,7 @@ const router = useRouter()
 const token = useSessionToken()
 
 function logoutClicked() {
-	router.push('/')
+	router.push({ name: 'home' })
 	token.value = ''
 }
 
@@ -16,8 +16,10 @@ const user = useUserDetails()
 
 <template>
 	<div class="navbar">
-		<p class="title select-none">Leaderboards.gg Admin Panel</p>
-
+		<div class="navbar-left">
+			<p class="title select-none">Leaderboards.gg Admin Panel</p>
+			<RouterLink class="navlink" :to="{ name: 'leaderboardsList' }">Leaderboards</RouterLink>
+		</div>
 		<div class="navbar-right">
 			<p>Signed in as {{ user?.username }}</p>
 			<button class="button log-out-button select-none" @click="logoutClicked">
@@ -37,15 +39,22 @@ const user = useUserDetails()
 	justify-content: space-between;
 }
 
+.navbar-left {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 1rem;
+}
+
 .navbar-right {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
+	gap: 1rem;
 }
 
 .log-out-button {
 	height: 40px;
-	margin-left: 1rem;
 	display: flex;
 	align-items: center;
 }
@@ -53,5 +62,13 @@ const user = useUserDetails()
 .title {
 	margin-left: 8px;
 	line-height: unset;
+}
+
+.navlink {
+	color: blue;
+}
+
+.router-link-active {
+	color: white;
 }
 </style>
