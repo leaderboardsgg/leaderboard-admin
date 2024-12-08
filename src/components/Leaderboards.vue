@@ -77,6 +77,7 @@ const boardsSearched = computed(() =>
 				>
 					{{ board.name }}
 				</RouterLink>
+				({{ board.slug }})
 			</li>
 			<!-- TODO: Use a proper named route here. -->
 		</ul>
