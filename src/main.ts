@@ -6,27 +6,26 @@ import Leaderboards from './components/Leaderboards.vue'
 import Main from './components/Main.vue'
 import './style.css'
 
-const routes = [
-	{
-		path: '/',
-		name: 'home',
-		component: Main,
-	},
-	{
-		path: '/leaderboard/:id',
-		name: 'leaderboard',
-		component: Leaderboard,
-	},
-	{
-		path: '/leaderboards',
-		name: 'leaderboardsList',
-		component: Leaderboards,
-	},
-]
-
 const router = createRouter({
 	history: createWebHistory(),
-	routes,
+	routes: [
+		{
+			path: '/',
+			name: '/home',
+			component: Main,
+		},
+		{
+			path: '/leaderboard/:id(\\d+)',
+			name: 'leaderboard',
+			component: Leaderboard,
+			props: (route) => ({ id: Number.parseInt(route.params.id.toString()) }),
+		},
+		{
+			path: '/leaderboards',
+			name: 'leaderboardsList',
+			component: Leaderboards,
+		},
+	],
 })
 
 createApp(App).use(router).mount('#app')

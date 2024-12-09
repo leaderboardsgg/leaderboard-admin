@@ -5,37 +5,17 @@ import { useRoute, useRouter } from 'vue-router'
 import { Leaderboards } from '../lib/api/Leaderboards'
 
 const router = useRouter()
-const route = useRoute()
+const props = defineProps<{
+	id: number
+}>()
 
 const leaderboards = new Leaderboards({
 	baseUrl: import.meta.env.VITE_BACKEND_URL
 })
 
-const id = computed(() => {
-	const { id } = route.params
-
-	if (Array.isArray(id)) {
-		return null
-	}
-
-	const parsed = parseInt(id, 10)
-
-	if (isNaN(parsed)) {
-		return null
-	}
-
-	return parsed
-})
-
 const {state: board, error, isLoading, execute} = useAsyncState(async () => {
-	if (id.value === null) {
-		// TODO: Handle appropriately
-		throw new Error('Leaderboard does not exist')
-	}
-
 	// TODO: Add param in BE that allows also fetching deleted boards
-	const resp = await leaderboards.getLeaderboard(id.value)
-
+	const resp = await leaderboards.getLeaderboard(props.id)
 	return resp.data
 }, null)
 
@@ -52,24 +32,15 @@ const {
 } = useConfirmDialog()
 
 async function confirmDeleteBoard() {
-	if (id.value === null) {
-		return
-	}
 
 	// TODO: Error-handling
-	await leaderboards.deleteLeaderboard(id.value)
-
+	await leaderboards.deleteLeaderboard(props.id)
 	router.go(0)
 }
 
 async function confirmRestoreBoard() {
-	if (id.value === null) {
-		return
-	}
-
 	// TODO: Error-handling
-	await leaderboards.restoreLeaderboard(id.value)
-
+	await leaderboards.restoreLeaderboard(props.id)
 	router.go(0)
 }
 </script>
