@@ -78,20 +78,35 @@ async function confirmRestoreBoard() {
 				<button v-else class="action-button" @click="revealRestore">Restore</button>
 			</div>
 
-			<div class="table">
-				<span class="table-header">ID:</span>
-				<span>{{ board?.id }}</span>
-				<span class="table-header">Name:</span>
-				<span>{{ board?.name }}</span>
-				<span class="table-header">Slug:</span>
-				<span>{{ board?.slug }}</span>
-				<span class="table-header">Created:</span>
-				<span>{{ board?.createdAt }}</span>
-				<span class="table-header">Deleted:</span>
-				<span>{{ board?.deletedAt ?? 'Not deleted' }}</span>
-				<span class="table-header">Info:</span>
-				<span>{{ board?.info ?? '-' }}</span>
-			</div>
+			<table>
+				<tbody>
+					<tr>
+						<th>ID:</th>
+						<td>{{ board?.id }}</td>
+					</tr>
+					<tr>
+						<th>Name:</th>
+						<td>{{ board?.name }}</td>
+					</tr>
+					<tr>
+						<th>Slug:</th>
+						<td>/{{ board?.slug }}</td>
+					</tr>
+					<tr>
+						<th>Created:</th>
+						<td>{{ board?.createdAt }}</td>
+					</tr>
+					<tr>
+						<th>Deleted:</th>
+						<td>{{ board?.deletedAt ?? 'Not deleted' }}</td>
+					</tr>
+					<tr>
+						<th>Info:</th>
+						<td v-if="board?.info">{{ board?.info }}</td>
+						<td v-else class="dim">&lt;none&gt;</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 
@@ -141,14 +156,12 @@ async function confirmRestoreBoard() {
 	background: red;
 }
 
-.table {
-	grid-column: span 2 / span 2;
-	display: grid;
-	column-gap: 1rem;
-	grid-template-columns: max-content 1fr;
-}
-
 .table-header {
 	font-weight: bold;
+}
+
+.dim {
+	color: grey;
+	font-style: italic;
 }
 </style>
