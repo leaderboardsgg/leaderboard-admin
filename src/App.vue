@@ -5,9 +5,7 @@ import Navbar from './components/Navbar.vue'
 import { useUserDetails } from './composables/useUserDetails'
 
 const { state, isLoading, isReady } = useUserDetails()
-const loggedIn = computed(
-	() => state.value?.role === 'Administrator'
-)
+const loggedIn = computed(() => state.value?.role === 'Administrator')
 </script>
 
 <template>

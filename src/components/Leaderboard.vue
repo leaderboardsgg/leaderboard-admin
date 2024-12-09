@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useAsyncState, useConfirmDialog } from '@vueuse/core'
 import { Leaderboards } from '../lib/api/Leaderboards'
-import { useSessionToken } from '../composables/useSessionToken';
-import { useAuth } from '../composables/useAuth';
+import { useSessionToken } from '../composables/useSessionToken'
+import { useAuth } from '../composables/useAuth'
 
 const props = defineProps<{
 	id: number
@@ -14,7 +14,12 @@ const leaderboards = new Leaderboards({
 	baseUrl: import.meta.env.VITE_BACKEND_URL
 })
 
-const {state: board, error, isLoading, execute} = useAsyncState(async () => {
+const {
+	state: board,
+	error,
+	isLoading,
+	execute
+} = useAsyncState(async () => {
 	// TODO: Add param in BE that allows also fetching deleted boards
 	const resp = await leaderboards.getLeaderboard(props.id)
 	return resp.data
@@ -49,7 +54,7 @@ async function confirmRestoreBoard() {
 	<div class="container">
 		<div v-if="isLoading">Loading...</div>
 		<div v-else-if="error" class="error-container">
-			{{ error }}
+			<p>Error</p>
 			<button @click="execute()" class="button">Reload</button>
 			<!-- TODO: Add button to go back to the List page -->
 		</div>
@@ -74,8 +79,16 @@ async function confirmRestoreBoard() {
 			<div class="action-button-container">
 				<!-- TODO: Create Edit page, and then add this link to it -->
 				<!-- <RouterLink to="/edit"><button class="action-button">✎</button></RouterLink> -->
-				<button v-if="board?.deletedAt === null" class="action-button delete-button" @click="revealDelete">🗑️</button>
-				<button v-else class="action-button" @click="revealRestore">Restore</button>
+				<button
+					v-if="board?.deletedAt === null"
+					class="action-button delete-button"
+					@click="revealDelete"
+				>
+					Delete
+				</button>
+				<button v-else class="action-button" @click="revealRestore">
+					Restore
+				</button>
 			</div>
 
 			<table>
@@ -109,7 +122,6 @@ async function confirmRestoreBoard() {
 			</table>
 		</div>
 	</div>
-
 </template>
 
 <style lang="css" scoped>
