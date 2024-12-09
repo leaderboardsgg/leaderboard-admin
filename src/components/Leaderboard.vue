@@ -89,8 +89,6 @@ async function confirmRestoreBoard() {
 				<span>{{ board?.createdAt }}</span>
 				<span class="table-header">Deleted:</span>
 				<span>{{ board?.deletedAt ?? 'Not deleted' }}</span>
-				<span class="table-header">Categories:</span>
-				<span>{{ board?.categories }}</span>
 				<span class="table-header">Info:</span>
 				<span>{{ board?.info ?? '-' }}</span>
 			</div>
