@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { useAsyncState, useConfirmDialog } from '@vueuse/core'
-import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
 import { Leaderboards } from '../lib/api/Leaderboards'
 
-const router = useRouter()
 const props = defineProps<{
 	id: number
 }>()
@@ -32,16 +29,15 @@ const {
 } = useConfirmDialog()
 
 async function confirmDeleteBoard() {
-
 	// TODO: Error-handling
 	await leaderboards.deleteLeaderboard(props.id)
-	router.go(0)
+	execute()
 }
 
 async function confirmRestoreBoard() {
 	// TODO: Error-handling
 	await leaderboards.restoreLeaderboard(props.id)
-	router.go(0)
+	execute()
 }
 </script>
 
