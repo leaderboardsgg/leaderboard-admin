@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { useAsyncState, useConfirmDialog } from '@vueuse/core'
 import { Leaderboards } from '../lib/api/Leaderboards'
+import { useSessionToken } from '../composables/useSessionToken';
+import { useAuth } from '../composables/useAuth';
 
 const props = defineProps<{
 	id: number
 }>()
+
+const token = useSessionToken()
 
 const leaderboards = new Leaderboards({
 	baseUrl: import.meta.env.VITE_BACKEND_URL
@@ -30,13 +34,13 @@ const {
 
 async function confirmDeleteBoard() {
 	// TODO: Error-handling
-	await leaderboards.deleteLeaderboard(props.id)
+	await leaderboards.deleteLeaderboard(props.id, useAuth(token.value))
 	execute()
 }
 
 async function confirmRestoreBoard() {
 	// TODO: Error-handling
-	await leaderboards.restoreLeaderboard(props.id)
+	await leaderboards.restoreLeaderboard(props.id, useAuth(token.value))
 	execute()
 }
 </script>
