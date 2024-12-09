@@ -152,7 +152,7 @@ async function confirmRestoreBoard() {
 	height: 3rem;
 }
 
-.delete-button:hover {
+.delete-button {
 	background: red;
 }
 
