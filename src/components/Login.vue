@@ -11,7 +11,7 @@ const password = ref('')
 const loginError = ref(false)
 const submitted = ref(false)
 const token = useSessionToken()
-const user = useUserDetails()
+const { state: user } = useUserDetails()
 const loginFailed = computed(
 	() =>
 		loginError.value ||

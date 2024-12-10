@@ -11,7 +11,7 @@ function logoutClicked() {
 	token.value = ''
 }
 
-const user = useUserDetails()
+const { state: user } = useUserDetails()
 </script>
 
 <template>
