@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { useAsyncState, useConfirmDialog } from '@vueuse/core'
-import { Leaderboards } from '../lib/api/Leaderboards'
-import { useSessionToken } from '../composables/useSessionToken'
 import { useAuth } from '../composables/useAuth'
+import { useSessionToken } from '../composables/useSessionToken'
+import { Leaderboards } from '../lib/api/Leaderboards'
+import Modal from './Modal.vue'
 
 const props = defineProps<{
 	id: number
@@ -28,7 +29,7 @@ const {
 const {
 	reveal: revealDelete,
 	isRevealed: isRevealedDelete,
-	cancel: cancelDelete
+	cancel: cancelDelete,
 } = useConfirmDialog()
 
 const {
@@ -61,16 +62,22 @@ async function confirmRestoreBoard() {
 
 		<div v-else class="main-content">
 			<!-- Deletion confirmation -->
-			<div v-if="isRevealedDelete" class="delete-confirmation-container">
-				<button @click="cancelDelete">Cancel</button>
-				<button @click="confirmDeleteBoard">Confirm</button>
-			</div>
+			<Modal :show="isRevealedDelete" @hide="cancelDelete">
+				<div class="confirmation-container">
+					<span class="confirmation-message">Really delete this leaderboard? (This action can be reversed)</span>
+					<button @click="cancelDelete">No</button>
+					<button @click="confirmDeleteBoard">Yes</button>
+				</div>
+			</Modal>
 
 			<!-- Restoration confirmation -->
-			<div v-if="isRevealedRestore" class="delete-confirmation-container">
-				<button @click="cancelRestore">Cancel</button>
-				<button @click="confirmRestoreBoard">Confirm</button>
-			</div>
+			<Modal :show="isRevealedRestore" @hide="cancelRestore">
+				<div class="confirmation-container">
+					<span class="confirmation-message">Really restore this leaderboard? (This action can be reversed)</span>
+					<button @click="cancelRestore">No</button>
+					<button @click="confirmRestoreBoard">Yes</button>
+				</div>
+			</Modal>
 
 			<RouterLink class="back-link" :to="{ name: 'leaderboardsList' }">&lt; Back</RouterLink>
 			<div class="action-button-container">
@@ -100,6 +107,7 @@ async function confirmRestoreBoard() {
 					</tr>
 					<tr>
 						<th>Slug:</th>
+						<!-- TODO: Convert this to a link to the board on the main site -->
 						<td>/{{ board?.slug }}</td>
 					</tr>
 					<tr>
@@ -108,7 +116,8 @@ async function confirmRestoreBoard() {
 					</tr>
 					<tr>
 						<th>Deleted:</th>
-						<td>{{ board?.deletedAt ?? 'Not deleted' }}</td>
+						<td v-if="board?.deletedAt">{{ board?.deletedAt }}</td>
+						<td v-else class="dim">&lt;Not deleted&gt;</td>
 					</tr>
 					<tr>
 						<th>Info:</th>
@@ -145,9 +154,18 @@ async function confirmRestoreBoard() {
 	padding: 0.5rem;
 }
 
-.delete-confirmation-container {
-	display: flex;
-	justify-content: space-between;
+.confirmation-container {
+	padding: 1rem;
+	border: solid 1px gray;
+	border-radius: 5px;
+	background-color: black;
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 1rem;
+}
+
+.confirmation-message {
+	grid-column: span 2 / span 2;
 }
 
 .action-button-container {
