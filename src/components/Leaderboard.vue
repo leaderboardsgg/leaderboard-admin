@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useAsyncState, useConfirmDialog } from '@vueuse/core'
+import { ref } from 'vue'
 import { useAuth } from '../composables/useAuth'
 import { useSessionToken } from '../composables/useSessionToken'
 import { Leaderboards } from '../lib/api/Leaderboards'
@@ -30,34 +31,65 @@ const {
 	reveal: revealDelete,
 	isRevealed: isRevealedDelete,
 	cancel: cancelDelete,
+	confirm: confirmDelete,
+	onCancel: onCancelDelete,
 } = useConfirmDialog()
 
 const {
 	reveal: revealRestore,
 	isRevealed: isRevealedRestore,
-	cancel: cancelRestore
+	cancel: cancelRestore,
+	confirm: confirmRestore,
+	onCancel: onCancelRestore,
 } = useConfirmDialog()
 
+const isDisabled = ref(false)
+const modalError = ref<string | null>(null)
+
 async function confirmDeleteBoard() {
-	// TODO: Error-handling
-	await leaderboards.deleteLeaderboard(props.id, useAuth(token.value))
-	execute()
+	isDisabled.value = true
+	modalError.value = null
+	try {
+		await leaderboards.deleteLeaderboard(props.id, useAuth(token.value))
+		confirmDelete()
+		execute()
+	} catch (error: unknown) {
+		modalError.value = (error as Response).status.toString(10)
+	} finally {
+		isDisabled.value = false
+	}
 }
 
 async function confirmRestoreBoard() {
-	// TODO: Error-handling
-	await leaderboards.restoreLeaderboard(props.id, useAuth(token.value))
-	execute()
+	isDisabled.value = true
+	modalError.value = null
+	try {
+		await leaderboards.restoreLeaderboard(props.id, useAuth(token.value))
+		confirmRestore()
+		execute()
+	} catch (error: unknown) {
+		modalError.value = (error as Response).status.toString(10)
+	} finally {
+		isDisabled.value = false
+	}
 }
+
+onCancelDelete(() => {
+	modalError.value = null
+})
+
+onCancelRestore(() => {
+	modalError.value = null
+})
 </script>
 
 <template>
 	<div class="container">
 		<div v-if="isLoading">Loading...</div>
 		<div v-else-if="error" class="error-container">
-			<p>Error</p>
+			<RouterLink class="back-link" :to="{ name: 'leaderboardsList' }">&lt; Back</RouterLink>
+			<p>{{ error }}</p>
 			<button @click="execute()" class="button">Reload</button>
-			<!-- TODO: Add button to go back to the List page -->
 		</div>
 
 		<div v-else class="main-content">
@@ -65,8 +97,9 @@ async function confirmRestoreBoard() {
 			<Modal :show="isRevealedDelete" @hide="cancelDelete">
 				<div class="confirmation-container">
 					<span class="confirmation-message">Really delete this leaderboard? (This action can be reversed)</span>
-					<button @click="cancelDelete">No</button>
-					<button @click="confirmDeleteBoard">Yes</button>
+					<button @click="cancelDelete" :disabled="isDisabled" :class="{ disabled: isDisabled }">No</button>
+					<button @click="confirmDeleteBoard" :disabled="isDisabled" :class="{ disabled: isDisabled }">Yes</button>
+					<span class="modal-error" :style="{ visibility: modalError ? 'visible' : 'hidden' }">Deletion failed: {{ modalError }}</span>
 				</div>
 			</Modal>
 
@@ -74,8 +107,9 @@ async function confirmRestoreBoard() {
 			<Modal :show="isRevealedRestore" @hide="cancelRestore">
 				<div class="confirmation-container">
 					<span class="confirmation-message">Really restore this leaderboard? (This action can be reversed)</span>
-					<button @click="cancelRestore">No</button>
-					<button @click="confirmRestoreBoard">Yes</button>
+					<button @click="cancelRestore" :disabled="isDisabled" :class="{ disabled: isDisabled }">No</button>
+					<button @click="confirmRestoreBoard" :disabled="isDisabled" :class="{ disabled: isDisabled }">Yes</button>
+					<span class="modal-error" :style="{ visibility: modalError ? 'visible' : 'hidden' }">Restoration failed: {{ modalError }}</span>
 				</div>
 			</Modal>
 
@@ -166,6 +200,14 @@ async function confirmRestoreBoard() {
 
 .confirmation-message {
 	grid-column: span 2 / span 2;
+}
+
+.modal-error {
+	color: red;
+}
+
+button.disabled {
+	color: gray;
 }
 
 .action-button-container {
