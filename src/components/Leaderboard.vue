@@ -72,10 +72,7 @@ async function confirmRestoreBoard() {
 				<button @click="confirmRestoreBoard">Confirm</button>
 			</div>
 
-			<!-- <RouterLink :to="{ name: 'leaderboards' }">
-				<button class="back-button">← Leaderboards</button>
-			</RouterLink> -->
-			<button class="back-button">Temp</button>
+			<RouterLink class="back-link" :to="{ name: 'leaderboardsList' }">&lt; Back</RouterLink>
 			<div class="action-button-container">
 				<!-- TODO: Create Edit page, and then add this link to it -->
 				<!-- <RouterLink to="/edit"><button class="action-button">✎</button></RouterLink> -->
@@ -143,7 +140,7 @@ async function confirmRestoreBoard() {
 	row-gap: 1rem;
 }
 
-.back-button {
+.back-link {
 	justify-self: start;
 	padding: 0.5rem;
 }
