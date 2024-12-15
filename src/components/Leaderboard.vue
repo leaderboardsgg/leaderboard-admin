@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { useAsyncState, useConfirmDialog } from '@vueuse/core'
-import { ref } from 'vue'
+import { useAsyncState } from '@vueuse/core'
 import { useAuth } from '../composables/useAuth'
 import { useSessionToken } from '../composables/useSessionToken'
 import { Leaderboards } from '../lib/api/Leaderboards'
-import Modal from './Modal.vue'
 
 const props = defineProps<{
 	id: number
@@ -27,60 +25,27 @@ const {
 	return resp.data
 }, null)
 
-const {
-	reveal: revealDelete,
-	isRevealed: isRevealedDelete,
-	cancel: cancelDelete,
-	confirm: confirmDelete,
-	onCancel: onCancelDelete,
-} = useConfirmDialog()
-
-const {
-	reveal: revealRestore,
-	isRevealed: isRevealedRestore,
-	cancel: cancelRestore,
-	confirm: confirmRestore,
-	onCancel: onCancelRestore,
-} = useConfirmDialog()
-
-const isDisabled = ref(false)
-const modalError = ref<string | null>(null)
-
-async function confirmDeleteBoard() {
-	isDisabled.value = true
-	modalError.value = null
-	try {
-		await leaderboards.deleteLeaderboard(props.id, useAuth(token.value))
-		confirmDelete()
-		execute()
-	} catch (error: unknown) {
-		modalError.value = (error as Response).status.toString(10)
-	} finally {
-		isDisabled.value = false
+async function revealDelete() {
+	if (confirm('Really delete this leaderboard? (This action can be reversed)')) {
+		try {
+			await leaderboards.deleteLeaderboard(props.id, useAuth(token.value))
+			execute()
+		} catch (error: unknown) {
+			alert('Failed to delete: ' + (error as Response).status.toString(10))
+		}
 	}
 }
 
-async function confirmRestoreBoard() {
-	isDisabled.value = true
-	modalError.value = null
-	try {
-		await leaderboards.restoreLeaderboard(props.id, useAuth(token.value))
-		confirmRestore()
-		execute()
-	} catch (error: unknown) {
-		modalError.value = (error as Response).status.toString(10)
-	} finally {
-		isDisabled.value = false
+async function revealRestore() {
+	if (confirm('Really restore this leaderboard? (This action can be reversed)')) {
+		try {
+			await leaderboards.restoreLeaderboard(props.id, useAuth(token.value))
+			execute()
+		} catch (error: unknown) {
+			alert('Failed to restore: ' + (error as Response).status.toString(10))
+		}
 	}
 }
-
-onCancelDelete(() => {
-	modalError.value = null
-})
-
-onCancelRestore(() => {
-	modalError.value = null
-})
 </script>
 
 <template>
@@ -93,26 +58,6 @@ onCancelRestore(() => {
 		</div>
 
 		<div v-else class="main-content">
-			<!-- Deletion confirmation -->
-			<Modal :show="isRevealedDelete" @hide="cancelDelete">
-				<div class="confirmation-container">
-					<span class="confirmation-message">Really delete this leaderboard? (This action can be reversed)</span>
-					<button @click="cancelDelete" :disabled="isDisabled" :class="{ disabled: isDisabled }">No</button>
-					<button @click="confirmDeleteBoard" :disabled="isDisabled" :class="{ disabled: isDisabled }">Yes</button>
-					<span class="modal-error" :style="{ visibility: modalError ? 'visible' : 'hidden' }">Deletion failed: {{ modalError }}</span>
-				</div>
-			</Modal>
-
-			<!-- Restoration confirmation -->
-			<Modal :show="isRevealedRestore" @hide="cancelRestore">
-				<div class="confirmation-container">
-					<span class="confirmation-message">Really restore this leaderboard? (This action can be reversed)</span>
-					<button @click="cancelRestore" :disabled="isDisabled" :class="{ disabled: isDisabled }">No</button>
-					<button @click="confirmRestoreBoard" :disabled="isDisabled" :class="{ disabled: isDisabled }">Yes</button>
-					<span class="modal-error" :style="{ visibility: modalError ? 'visible' : 'hidden' }">Restoration failed: {{ modalError }}</span>
-				</div>
-			</Modal>
-
 			<RouterLink class="back-link" :to="{ name: 'leaderboardsList' }">&lt; Back</RouterLink>
 			<div class="action-button-container">
 				<!-- TODO: Create Edit page, and then add this link to it -->
@@ -186,28 +131,6 @@ onCancelRestore(() => {
 .back-link {
 	justify-self: start;
 	padding: 0.5rem;
-}
-
-.confirmation-container {
-	padding: 1rem;
-	border: solid 1px gray;
-	border-radius: 5px;
-	background-color: black;
-	display: grid;
-	grid-template-columns: repeat(2, 1fr);
-	gap: 1rem;
-}
-
-.confirmation-message {
-	grid-column: span 2 / span 2;
-}
-
-.modal-error {
-	color: red;
-}
-
-button.disabled {
-	color: gray;
 }
 
 .action-button-container {
