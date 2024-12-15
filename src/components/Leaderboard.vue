@@ -55,25 +55,25 @@ async function revealRestore() {
 <template>
 	<div class="container">
 		<div v-if="isLoading">Loading...</div>
-		<div v-else-if="error" class="error-container">
-			<RouterLink class="back-link" :to="{ name: 'leaderboardsList' }">&lt; Back</RouterLink>
+		<div v-else-if="error" class="errorContainer">
+			<RouterLink class="backLink" :to="{ name: 'leaderboardsList' }">&lt; Back</RouterLink>
 			<p class="errorText">{{ error }}</p>
 			<button @click="execute()" class="button">Reload</button>
 		</div>
 
-		<div v-else class="main-content">
-			<RouterLink class="back-link" :to="{ name: 'leaderboardsList' }">&lt; Back</RouterLink>
-			<div class="action-button-container">
+		<div v-else class="mainContent">
+			<RouterLink class="backLink" :to="{ name: 'leaderboardsList' }">&lt; Back</RouterLink>
+			<div class="actionButtonContainer">
 				<!-- TODO: Create Edit page, and then add this link to it -->
-				<!-- <RouterLink to="/edit"><button class="action-button">✎</button></RouterLink> -->
+				<!-- <RouterLink to="/edit"><button class="actionButton">✎</button></RouterLink> -->
 				<button
 					v-if="board?.deletedAt === null"
-					class="action-button delete-button"
+					class="actionButton deleteButton"
 					@click="revealDelete"
 				>
 					Delete
 				</button>
-				<button v-else class="action-button" @click="revealRestore">
+				<button v-else class="actionButton" @click="revealRestore">
 					Restore
 				</button>
 			</div>
@@ -120,42 +120,38 @@ async function revealRestore() {
 	padding: 1rem;
 }
 
-.error-container {
+.errorContainer {
 	display: flex;
 	flex-direction: column;
 	gap: 1rem;
 	align-items: start;
 }
 
-.main-content {
+.mainContent {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
 	margin-top: 1rem;
 	row-gap: 1rem;
 }
 
-.back-link {
+.backLink {
 	justify-self: start;
 	padding: 0.5rem;
 }
 
-.action-button-container {
+.actionButtonContainer {
 	display: flex;
 	gap: 0.5rem;
 	justify-self: end;
 }
 
-.action-button {
+.actionButton {
 	width: 3rem;
 	height: 3rem;
 }
 
-.delete-button {
+.deleteButton {
 	background: crimson;
-}
-
-.table-header {
-	font-weight: bold;
 }
 
 .errorText {
