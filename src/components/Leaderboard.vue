@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useAsyncState } from '@vueuse/core'
+import { ref } from 'vue'
 import { useAuth } from '../composables/useAuth'
 import { useSessionToken } from '../composables/useSessionToken'
 import { Leaderboards } from '../lib/api/Leaderboards'
@@ -7,6 +8,8 @@ import { Leaderboards } from '../lib/api/Leaderboards'
 const props = defineProps<{
 	id: number
 }>()
+
+const updateError = ref<string | null>(null)
 
 const token = useSessionToken()
 
@@ -25,13 +28,14 @@ const {
 	return resp.data
 }, null)
 
+
 async function revealDelete() {
 	if (confirm('Really delete this leaderboard? (This action can be reversed)')) {
 		try {
 			await leaderboards.deleteLeaderboard(props.id, useAuth(token.value))
 			execute()
 		} catch (error: unknown) {
-			alert('Failed to delete: ' + (error as Response).status.toString(10))
+			updateError.value = 'Failed to delete: ' + (error as Response).status.toString(10)
 		}
 	}
 }
@@ -42,7 +46,7 @@ async function revealRestore() {
 			await leaderboards.restoreLeaderboard(props.id, useAuth(token.value))
 			execute()
 		} catch (error: unknown) {
-			alert('Failed to restore: ' + (error as Response).status.toString(10))
+			updateError.value = 'Failed to restore: ' + (error as Response).status.toString(10)
 		}
 	}
 }
@@ -53,7 +57,7 @@ async function revealRestore() {
 		<div v-if="isLoading">Loading...</div>
 		<div v-else-if="error" class="error-container">
 			<RouterLink class="back-link" :to="{ name: 'leaderboardsList' }">&lt; Back</RouterLink>
-			<p>{{ error }}</p>
+			<p class="errorText">{{ error }}</p>
 			<button @click="execute()" class="button">Reload</button>
 		</div>
 
@@ -73,6 +77,8 @@ async function revealRestore() {
 					Restore
 				</button>
 			</div>
+
+			<span v-if="updateError !== null" class="errorText">{{ updateError }}</span>
 
 			<table>
 				<tbody>
@@ -145,11 +151,16 @@ async function revealRestore() {
 }
 
 .delete-button {
-	background: red;
+	background: crimson;
 }
 
 .table-header {
 	font-weight: bold;
+}
+
+.errorText {
+	grid-column: span 2 / span 2;
+	color: crimson;
 }
 
 .dim {
