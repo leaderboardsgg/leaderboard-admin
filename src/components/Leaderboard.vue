@@ -4,12 +4,13 @@ import { ref } from 'vue'
 import { useAuth } from '../composables/useAuth'
 import { useSessionToken } from '../composables/useSessionToken'
 import { Leaderboards } from '../lib/api/Leaderboards'
+import { useApi } from '../composables/useApi'
 
 const props = defineProps<{
 	id: number
 }>()
 
-const updateError = ref<string | null>(null)
+const updateError = ref('')
 
 const token = useSessionToken()
 
@@ -31,23 +32,25 @@ const {
 
 async function revealDelete() {
 	if (confirm('Really delete this leaderboard? (This action can be reversed)')) {
-		try {
-			await leaderboards.deleteLeaderboard(props.id, useAuth(token.value))
-			execute()
-		} catch (error: unknown) {
-			updateError.value = 'Failed to delete: ' + (error as Response).status.toString(10)
-		}
+		useApi(
+			() => leaderboards.deleteLeaderboard(props.id, useAuth(token.value)),
+			() => execute(),
+			(error) => {
+				updateError.value = 'Failed to delete: ' + (error as Response).status.toString(10)
+			}
+		)
 	}
 }
 
 async function revealRestore() {
 	if (confirm('Really restore this leaderboard? (This action can be reversed)')) {
-		try {
-			await leaderboards.restoreLeaderboard(props.id, useAuth(token.value))
-			execute()
-		} catch (error: unknown) {
-			updateError.value = 'Failed to restore: ' + (error as Response).status.toString(10)
-		}
+		useApi(
+			() => leaderboards.restoreLeaderboard(props.id, useAuth(token.value)),
+			() => execute(),
+			(error) => {
+				updateError.value = 'Failed to restore: ' + (error as Response).status.toString(10)
+			}
+		)
 	}
 }
 </script>
@@ -78,7 +81,7 @@ async function revealRestore() {
 				</button>
 			</div>
 
-			<span v-if="updateError !== null" class="errorText">{{ updateError }}</span>
+			<p v-if="updateError" class="error-text">{{ updateError }}</p>
 
 			<table>
 				<tbody>
@@ -158,7 +161,7 @@ async function revealRestore() {
 	font-weight: bold;
 }
 
-.errorText {
+.error-text {
 	grid-column: span 2 / span 2;
 	color: crimson;
 }
