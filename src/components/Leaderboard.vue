@@ -73,8 +73,7 @@ async function revealRestore() {
 				>&lt; Back</RouterLink
 			>
 			<div class="action-button-container">
-				<!-- TODO: Create Edit page, and then add this link to it -->
-				<!-- <RouterLink to="/edit"><button class="action-button">✎</button></RouterLink> -->
+				<RouterLink :to="{ name: 'leaderboardEdit', params: { id } }"><button class="action-button">✎</button></RouterLink>
 				<button
 					v-if="board?.deletedAt === null"
 					class="action-button delete-button"
@@ -161,10 +160,6 @@ async function revealRestore() {
 
 .delete-button {
 	background: crimson;
-}
-
-.table-header {
-	font-weight: bold;
 }
 
 .error-text {
