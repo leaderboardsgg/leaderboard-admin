@@ -29,26 +29,31 @@ const {
 	return resp.data
 }, null)
 
-
 async function revealDelete() {
-	if (confirm('Really delete this leaderboard? (This action can be reversed)')) {
+	if (
+		confirm('Really delete this leaderboard? (This action can be reversed)')
+	) {
 		useApi(
 			() => leaderboards.deleteLeaderboard(props.id, useAuth(token.value)),
 			() => execute(),
 			(error) => {
-				updateError.value = 'Failed to delete: ' + (error as Response).status.toString(10)
+				updateError.value =
+					'Failed to delete: ' + (error as Response).status.toString(10)
 			}
 		)
 	}
 }
 
 async function revealRestore() {
-	if (confirm('Really restore this leaderboard? (This action can be reversed)')) {
+	if (
+		confirm('Really restore this leaderboard? (This action can be reversed)')
+	) {
 		useApi(
 			() => leaderboards.restoreLeaderboard(props.id, useAuth(token.value)),
 			() => execute(),
 			(error) => {
-				updateError.value = 'Failed to restore: ' + (error as Response).status.toString(10)
+				updateError.value =
+					'Failed to restore: ' + (error as Response).status.toString(10)
 			}
 		)
 	}
@@ -59,13 +64,17 @@ async function revealRestore() {
 	<div class="container">
 		<div v-if="isLoading">Loading...</div>
 		<div v-else-if="error" class="error-container">
-			<RouterLink class="back-link" :to="{ name: 'leaderboardsList' }">&lt; Back</RouterLink>
+			<RouterLink class="back-link" :to="{ name: 'leaderboardsList' }"
+				>&lt; Back</RouterLink
+			>
 			<p class="errorText">{{ error }}</p>
 			<button @click="execute()" class="button">Reload</button>
 		</div>
 
 		<div v-else class="main-content">
-			<RouterLink class="back-link" :to="{ name: 'leaderboardsList' }">&lt; Back</RouterLink>
+			<RouterLink class="back-link" :to="{ name: 'leaderboardsList' }"
+				>&lt; Back</RouterLink
+			>
 			<div class="action-button-container">
 				<!-- TODO: Create Edit page, and then add this link to it -->
 				<!-- <RouterLink to="/edit"><button class="action-button">✎</button></RouterLink> -->
