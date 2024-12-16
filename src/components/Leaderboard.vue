@@ -64,9 +64,6 @@ async function revealRestore() {
 	<div class="container">
 		<div v-if="isLoading">Loading...</div>
 		<div v-else-if="error" class="error-container">
-			<RouterLink class="back-link" :to="{ name: 'leaderboardsList' }"
-				>&lt; Back</RouterLink
-			>
 			<p class="errorText">{{ error }}</p>
 			<button @click="execute()" class="button">Reload</button>
 		</div>
