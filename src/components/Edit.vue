@@ -95,8 +95,8 @@ async function submit() {
 							<input v-model="updateRequest.info" id="info" />
 						</tr>
 					</tbody>
-					<button>Submit</button>
 				</table>
+				<button>Submit</button>
 			</form>
 		</div>
 	</div>
