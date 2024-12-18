@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { useAsyncState } from '@vueuse/core'
+import { computedAsync, useAsyncState } from '@vueuse/core'
 import { ref } from 'vue'
+import { useApi } from '../composables/useApi'
 import { useAuth } from '../composables/useAuth'
 import { useSessionToken } from '../composables/useSessionToken'
 import { Leaderboards } from '../lib/api/Leaderboards'
-import { useApi } from '../composables/useApi'
 
 const props = defineProps<{
 	id: number
@@ -29,6 +29,11 @@ const {
 	return resp.data
 }, null)
 
+const errorStringified = computedAsync(
+	() => (error.value as Response).json(),
+	''
+)
+
 async function revealDelete() {
 	if (
 		confirm('Really delete this leaderboard? (This action can be reversed)')
@@ -37,8 +42,7 @@ async function revealDelete() {
 			() => leaderboards.deleteLeaderboard(props.id, useAuth(token.value)),
 			() => execute(),
 			(error) => {
-				updateError.value =
-					'Failed to delete: ' + (error as Response).status.toString(10)
+				updateError.value = 'Failed to delete: ' + (error as Response).status
 			}
 		)
 	}
@@ -52,8 +56,7 @@ async function revealRestore() {
 			() => leaderboards.restoreLeaderboard(props.id, useAuth(token.value)),
 			() => execute(),
 			(error) => {
-				updateError.value =
-					'Failed to restore: ' + (error as Response).status.toString(10)
+				updateError.value = 'Failed to restore: ' + (error as Response).status
 			}
 		)
 	}
@@ -64,8 +67,11 @@ async function revealRestore() {
 	<div class="container">
 		<div v-if="isLoading">Loading...</div>
 		<div v-else-if="error" class="error-container">
-			<p class="errorText">{{ error }}</p>
-			<button @click="execute()" class="button">Reload</button>
+			<p class="errorText">
+				Failed to fetch leaderboard: {{ errorStringified.status }}
+				{{ errorStringified.title }}
+			</p>
+			<button @click="execute()" class="button">Retry</button>
 		</div>
 
 		<div v-else class="main-content">
