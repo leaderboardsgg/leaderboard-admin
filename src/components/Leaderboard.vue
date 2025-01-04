@@ -42,7 +42,7 @@ async function revealDelete() {
 			() => leaderboards.deleteLeaderboard(props.id, useAuth(token.value)),
 			() => execute(),
 			(error) => {
-				updateError.value = 'Failed to delete: ' + (error as Response).status
+				updateError.value = 'Failed to delete: ' + error.status
 			}
 		)
 	}
@@ -56,7 +56,7 @@ async function revealRestore() {
 			() => leaderboards.restoreLeaderboard(props.id, useAuth(token.value)),
 			() => execute(),
 			(error) => {
-				updateError.value = 'Failed to restore: ' + (error as Response).status
+				updateError.value = 'Failed to restore: ' + error.status
 			}
 		)
 	}
