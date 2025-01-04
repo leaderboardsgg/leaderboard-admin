@@ -159,7 +159,7 @@ async function revealRestore() {
 }
 
 .action-button {
-	width: 3rem;
+	min-width: 3rem;
 	height: 3rem;
 }
 
