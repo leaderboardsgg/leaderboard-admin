@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { computedAsync, useAsyncState } from '@vueuse/core'
-import { ref } from 'vue'
+import { useAsyncState } from '@vueuse/core'
+import { computed, ref } from 'vue'
 import { useApi } from '../composables/useApi'
 import { useAuth } from '../composables/useAuth'
 import { useSessionToken } from '../composables/useSessionToken'
 import { Leaderboards } from '../lib/api/Leaderboards'
+import { HttpResponse } from '../lib/api/http-client'
+import { ProblemDetails } from '../lib/api/data-contracts'
 
 const props = defineProps<{
 	id: number
@@ -24,15 +26,11 @@ const {
 	isLoading,
 	execute
 } = useAsyncState(async () => {
-	// TODO: Add param in BE that allows also fetching deleted boards
 	const resp = await leaderboards.getLeaderboard(props.id)
 	return resp.data
 }, null)
 
-const errorStringified = computedAsync(
-	() => (error.value as Response).json(),
-	''
-)
+const errorResponse = computed(() => (error.value as HttpResponse<unknown, ProblemDetails>).error)
 
 async function revealDelete() {
 	if (
@@ -68,8 +66,8 @@ async function revealRestore() {
 		<div v-if="isLoading">Loading...</div>
 		<div v-else-if="error" class="error-container">
 			<p class="errorText">
-				Failed to fetch leaderboard: {{ errorStringified.status }}
-				{{ errorStringified.title }}
+				Failed to fetch leaderboard: {{ errorResponse.status }}
+				{{ errorResponse.title }}
 			</p>
 			<button @click="execute()" class="button">Retry</button>
 		</div>
