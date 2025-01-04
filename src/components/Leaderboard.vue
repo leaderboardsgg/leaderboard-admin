@@ -1,12 +1,18 @@
 <script setup lang="ts">
-import { useAsyncState, useConfirmDialog } from '@vueuse/core'
-import { Leaderboards } from '../lib/api/Leaderboards'
-import { useSessionToken } from '../composables/useSessionToken'
+import { useAsyncState } from '@vueuse/core'
+import { computed, ref } from 'vue'
+import { useApi } from '../composables/useApi'
 import { useAuth } from '../composables/useAuth'
+import { useSessionToken } from '../composables/useSessionToken'
+import { Leaderboards } from '../lib/api/Leaderboards'
+import { HttpResponse } from '../lib/api/http-client'
+import { ProblemDetails } from '../lib/api/data-contracts'
 
 const props = defineProps<{
 	id: number
 }>()
+
+const updateError = ref('')
 
 const token = useSessionToken()
 
@@ -20,33 +26,38 @@ const {
 	isLoading,
 	execute
 } = useAsyncState(async () => {
-	// TODO: Add param in BE that allows also fetching deleted boards
 	const resp = await leaderboards.getLeaderboard(props.id)
 	return resp.data
 }, null)
 
-const {
-	reveal: revealDelete,
-	isRevealed: isRevealedDelete,
-	cancel: cancelDelete
-} = useConfirmDialog()
+const errorResponse = computed(() => (error.value as HttpResponse<unknown, ProblemDetails>).error)
 
-const {
-	reveal: revealRestore,
-	isRevealed: isRevealedRestore,
-	cancel: cancelRestore
-} = useConfirmDialog()
-
-async function confirmDeleteBoard() {
-	// TODO: Error-handling
-	await leaderboards.deleteLeaderboard(props.id, useAuth(token.value))
-	execute()
+async function revealDelete() {
+	if (
+		confirm('Really delete this leaderboard? (This action can be reversed)')
+	) {
+		useApi(
+			() => leaderboards.deleteLeaderboard(props.id, useAuth(token.value)),
+			() => execute(),
+			(error) => {
+				updateError.value = 'Failed to delete: ' + error.status
+			}
+		)
+	}
 }
 
-async function confirmRestoreBoard() {
-	// TODO: Error-handling
-	await leaderboards.restoreLeaderboard(props.id, useAuth(token.value))
-	execute()
+async function revealRestore() {
+	if (
+		confirm('Really restore this leaderboard? (This action can be reversed)')
+	) {
+		useApi(
+			() => leaderboards.restoreLeaderboard(props.id, useAuth(token.value)),
+			() => execute(),
+			(error) => {
+				updateError.value = 'Failed to restore: ' + error.status
+			}
+		)
+	}
 }
 </script>
 
@@ -54,25 +65,17 @@ async function confirmRestoreBoard() {
 	<div class="container">
 		<div v-if="isLoading">Loading...</div>
 		<div v-else-if="error" class="error-container">
-			<p>Error</p>
-			<button @click="execute()" class="button">Reload</button>
-			<!-- TODO: Add button to go back to the List page -->
+			<p class="errorText">
+				Failed to fetch leaderboard: {{ errorResponse.status }}
+				{{ errorResponse.title }}
+			</p>
+			<button @click="execute()" class="button">Retry</button>
 		</div>
 
 		<div v-else class="main-content">
-			<!-- Deletion confirmation -->
-			<div v-if="isRevealedDelete" class="delete-confirmation-container">
-				<button @click="cancelDelete">Cancel</button>
-				<button @click="confirmDeleteBoard">Confirm</button>
-			</div>
-
-			<!-- Restoration confirmation -->
-			<div v-if="isRevealedRestore" class="delete-confirmation-container">
-				<button @click="cancelRestore">Cancel</button>
-				<button @click="confirmRestoreBoard">Confirm</button>
-			</div>
-
-			<RouterLink class="back-link" :to="{ name: 'leaderboardsList' }">&lt; Back</RouterLink>
+			<RouterLink class="back-link" :to="{ name: 'leaderboardsList' }"
+				>&lt; Back</RouterLink
+			>
 			<div class="action-button-container">
 				<!-- TODO: Create Edit page, and then add this link to it -->
 				<!-- <RouterLink to="/edit"><button class="action-button">✎</button></RouterLink> -->
@@ -88,6 +91,8 @@ async function confirmRestoreBoard() {
 				</button>
 			</div>
 
+			<p v-if="updateError" class="error-text">{{ updateError }}</p>
+
 			<table>
 				<tbody>
 					<tr>
@@ -100,6 +105,7 @@ async function confirmRestoreBoard() {
 					</tr>
 					<tr>
 						<th>Slug:</th>
+						<!-- TODO: Convert this to a link to the board on the main site -->
 						<td>/{{ board?.slug }}</td>
 					</tr>
 					<tr>
@@ -108,7 +114,8 @@ async function confirmRestoreBoard() {
 					</tr>
 					<tr>
 						<th>Deleted:</th>
-						<td>{{ board?.deletedAt ?? 'Not deleted' }}</td>
+						<td v-if="board?.deletedAt">{{ board?.deletedAt }}</td>
+						<td v-else class="dim">&lt;Not deleted&gt;</td>
 					</tr>
 					<tr>
 						<th>Info:</th>
@@ -145,11 +152,6 @@ async function confirmRestoreBoard() {
 	padding: 0.5rem;
 }
 
-.delete-confirmation-container {
-	display: flex;
-	justify-content: space-between;
-}
-
 .action-button-container {
 	display: flex;
 	gap: 0.5rem;
@@ -162,11 +164,16 @@ async function confirmRestoreBoard() {
 }
 
 .delete-button {
-	background: red;
+	background: crimson;
 }
 
 .table-header {
 	font-weight: bold;
+}
+
+.error-text {
+	grid-column: span 2 / span 2;
+	color: crimson;
 }
 
 .dim {

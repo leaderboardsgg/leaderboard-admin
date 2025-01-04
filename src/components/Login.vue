@@ -47,7 +47,7 @@ async function submit() {
 			<h2>Admin Panel Login</h2>
 			<form class="loginForm" @submit.prevent="submit">
 				<label for="email">Email</label>
-				<input v-model="email" id="email" type="text" />
+				<input v-model="email" id="email" type="text" autofocus />
 				<label for="password">Password</label>
 				<input v-model="password" id="password" type="password" />
 				<input type="submit" value="Login" />
