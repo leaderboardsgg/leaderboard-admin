@@ -35,7 +35,7 @@ const { state: user } = useUserDetails()
 .navbar {
 	display: flex;
 	height: 48px;
-	background-color: green;
+	background-color: hsl(270, 30%, 30%);
 	padding: 8px;
 	align-items: center;
 	justify-content: space-between;
@@ -67,10 +67,10 @@ const { state: user } = useUserDetails()
 }
 
 .navlink {
-	color: blue;
+	color: white;
 }
 
 .router-link-active {
-	color: white;
+	color: hsl(187, 100%, 74%);
 }
 </style>
