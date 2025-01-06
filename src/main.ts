@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import App from './App.vue'
+import Edit from './components/Edit.vue'
 import Leaderboard from './components/Leaderboard.vue'
 import Leaderboards from './components/Leaderboards.vue'
 import Main from './components/Main.vue'
@@ -19,6 +20,14 @@ const router = createRouter({
 			name: 'leaderboardView',
 			component: Leaderboard,
 			props: (route) => ({ id: Number.parseInt(route.params.id as string) }),
+		},
+		{
+			path: '/leaderboard/:id(\\d+)/edit',
+			name: 'leaderboardEdit',
+			component: Edit,
+			props: (route) => ({
+				id: Number.parseInt(route.params.id as string, 10),
+			}),
 		},
 		{
 			path: '/leaderboards',

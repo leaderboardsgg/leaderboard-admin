@@ -5,8 +5,8 @@ import { useApi } from '../composables/useApi'
 import { useAuth } from '../composables/useAuth'
 import { useSessionToken } from '../composables/useSessionToken'
 import { Leaderboards } from '../lib/api/Leaderboards'
-import { HttpResponse } from '../lib/api/http-client'
 import { ProblemDetails } from '../lib/api/data-contracts'
+import { HttpResponse } from '../lib/api/http-client'
 
 const props = defineProps<{
 	id: number
@@ -30,7 +30,9 @@ const {
 	return resp.data
 }, null)
 
-const errorResponse = computed(() => (error.value as HttpResponse<unknown, ProblemDetails>).error)
+const errorResponse = computed(
+	() => (error.value as HttpResponse<unknown, ProblemDetails>).error
+)
 
 async function revealDelete() {
 	if (
@@ -77,8 +79,10 @@ async function revealRestore() {
 				>&lt; Back</RouterLink
 			>
 			<div class="action-button-container">
-				<!-- TODO: Create Edit page, and then add this link to it -->
-				<!-- <RouterLink to="/edit"><button class="action-button">✎</button></RouterLink> -->
+				<RouterLink :to="{ name: 'leaderboardEdit', params: { id } }">
+					<button class="action-button">✎</button>
+				</RouterLink>
+
 				<button
 					v-if="board?.deletedAt === null"
 					class="action-button delete-button"
