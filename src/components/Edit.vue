@@ -5,7 +5,8 @@ import { useApi } from '../composables/useApi'
 import { useAuth } from '../composables/useAuth'
 import { useSessionToken } from '../composables/useSessionToken'
 import { Leaderboards } from '../lib/api/Leaderboards'
-import { UpdateLeaderboardRequest } from '../lib/api/data-contracts'
+import { ProblemDetails, UpdateLeaderboardRequest } from '../lib/api/data-contracts'
+import { HttpResponse } from '../lib/api/http-client'
 
 const props = defineProps<{
 	id: number
@@ -29,6 +30,10 @@ const {
 	const resp = await leaderboards.getLeaderboard(props.id)
 	return resp.data
 }, null)
+
+const errorResponse = computed(
+	() => (error.value as HttpResponse<unknown, ProblemDetails>).error
+)
 
 const updateRequest = computed<UpdateLeaderboardRequest>(() => ({
 	name: board.value?.name,
@@ -60,7 +65,11 @@ async function submit() {
 	<div class="container">
 		<div v-if="isLoading">Loading...</div>
 		<div v-else-if="error" class="error-container">
-			<p class="errorText">{{ error }}</p>
+			<p class="errorText">
+				<!-- For unexpected server errors; fields will be empty, hence the defaults. -->
+				Failed to fetch leaderboard: {{ errorResponse.status ?? '500' }}
+				{{ errorResponse.title ?? 'Check the console for more info.' }}
+			</p>
 			<button @click="execute()" class="button">Reload</button>
 		</div>
 
