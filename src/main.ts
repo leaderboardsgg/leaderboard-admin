@@ -19,7 +19,7 @@ const router = createRouter({
 			path: '/leaderboard/:id(\\d+)',
 			name: 'leaderboardView',
 			component: Leaderboard,
-			props: (route) => ({ id: Number.parseInt(route.params.id as string) }),
+			props: (route) => ({ id: Number.parseInt(route.params.id as string, 10) }),
 		},
 		{
 			path: '/leaderboard/:id(\\d+)/edit',
