@@ -74,20 +74,48 @@ async function submit() {
 
 			<p v-if="updateError" class="error-text">{{ updateError }}</p>
 
-			<form @submit.prevent="submit" class="edit-form">
-				<span>ID:</span>
-				<span>{{ board?.id }}</span>
-				<label for="name">Name:</label>
-				<input v-model="updateRequest.name" id="name" />
-				<label for="slug">Slug:</label>
-				<input v-model="updateRequest.slug" id="slug" />
-				<span>Created:</span>
-				<span>{{ board?.createdAt }}</span>
-				<span>Deleted:</span>
-				<span v-if="board?.deletedAt">{{ board?.deletedAt }}</span>
-				<span v-else class="dim">&lt;Not deleted&gt;</span>
-				<label for="info">Info:</label>
-				<textarea v-model="updateRequest.info" id="info" rows="5" />
+			<form @submit.prevent="submit">
+				<table>
+					<tbody>
+						<tr>
+							<th>ID:</th>
+							<td>{{ board?.id }}</td>
+						</tr>
+						<tr>
+							<th>
+								<label for="name">Name:</label>
+							</th>
+							<td>
+								<input v-model="updateRequest.name" id="name" />
+							</td>
+						</tr>
+						<tr>
+							<th>
+								<label for="slug">Slug:</label>
+							</th>
+							<td>
+								<input v-model="updateRequest.slug" id="slug" />
+							</td>
+						</tr>
+						<tr>
+							<th>Created:</th>
+							<td>{{ board?.createdAt }}</td>
+						</tr>
+						<tr>
+							<th>Deleted:</th>
+							<td v-if="board?.deletedAt">{{ board?.deletedAt }}</td>
+							<td v-else class="dim">&lt;Not deleted&gt;</td>
+						</tr>
+						<tr>
+							<th>
+								<label for="info">Info:</label>
+							</th>
+							<td>
+								<textarea v-model="updateRequest.info" id="info" rows="5" />
+							</td>
+						</tr>
+					</tbody>
+				</table>
 				<button>Submit</button>
 			</form>
 		</div>
@@ -121,12 +149,6 @@ async function submit() {
 .error-text {
 	grid-column: span 2 / span 2;
 	color: crimson;
-}
-
-.edit-form {
-	display: grid;
-	grid-template-columns: max-content 1fr;
-	gap: 1rem;
 }
 
 .dim {
