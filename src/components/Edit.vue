@@ -6,6 +6,7 @@ import { useAuth } from '../composables/useAuth'
 import { useSessionToken } from '../composables/useSessionToken'
 import { Leaderboards } from '../lib/api/Leaderboards'
 import { ProblemDetails, UpdateLeaderboardRequest } from '../lib/api/data-contracts'
+import { onBeforeRouteLeave, useRouter } from 'vue-router'
 import { HttpResponse } from '../lib/api/http-client'
 
 const props = defineProps<{
@@ -15,6 +16,19 @@ const props = defineProps<{
 const updateError = ref('')
 
 const token = useSessionToken()
+
+const router = useRouter()
+
+onBeforeRouteLeave(() => {
+	if (
+		board.value?.name !== updateRequest.value.name ||
+		board.value?.slug !== updateRequest.value.slug ||
+		board.value?.info !== updateRequest.value.info
+	) {
+		return window.confirm('Do you want to leave? You have unsaved changes.');
+	}
+	return true
+})
 
 const leaderboards = new Leaderboards({
 	baseUrl: import.meta.env.VITE_BACKEND_URL
@@ -26,7 +40,6 @@ const {
 	isLoading,
 	execute
 } = useAsyncState(async () => {
-	// TODO: Add param in BE that allows also fetching deleted boards
 	const resp = await leaderboards.getLeaderboard(props.id)
 	return resp.data
 }, null)
@@ -46,12 +59,16 @@ async function submit() {
 		() =>
 			leaderboards.updateLeaderboard(
 				props.id,
-				updateRequest.value,
+				{
+					name: board.value?.name,
+					info: board.value?.info,
+					slug: board.value?.slug
+				},
 				useAuth(token.value)
 			),
-		async (data) => {
-			console.log(await data.json())
-			execute()
+		async () => {
+			alert("Edit successful.")
+			router.push({ name: 'leaderboardView', params: { id: props.id }})
 		},
 		(error) => {
 			updateError.value =
@@ -125,7 +142,7 @@ async function submit() {
 						</tr>
 					</tbody>
 				</table>
-				<button>Submit</button>
+				<button>Save Changes</button>
 			</form>
 		</div>
 	</div>
