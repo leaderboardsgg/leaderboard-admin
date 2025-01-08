@@ -80,7 +80,7 @@ async function revealRestore() {
 			>
 			<div class="action-button-container">
 				<RouterLink :to="{ name: 'leaderboardEdit', params: { id } }">
-					<button class="action-button">✎</button>
+					<button class="action-button">Edit</button>
 				</RouterLink>
 
 				<button
