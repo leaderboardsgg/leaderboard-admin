@@ -81,8 +81,7 @@ async function submit() {
 			router.push({ name: 'leaderboardView', params: { id: props.id } })
 		},
 		(error) => {
-			updateError.value =
-				'Failed to update: ' + error.status.toString(10)
+			updateError.value = 'Failed to update: ' + error.status.toString(10)
 		}
 	)
 }
