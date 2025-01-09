@@ -70,7 +70,6 @@ async function submit() {
 				useAuth(token.value)
 			),
 		async () => {
-			alert("Edit successful.")
 			router.push({ name: 'leaderboardView', params: { id: props.id }})
 		},
 		(error) => {
