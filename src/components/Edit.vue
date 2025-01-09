@@ -34,6 +34,12 @@ const leaderboards = new Leaderboards({
 	baseUrl: import.meta.env.VITE_BACKEND_URL
 })
 
+const updateRequest = ref<UpdateLeaderboardRequest>({
+	info: '',
+	name: '',
+	slug: ''
+})
+
 const {
 	state: board,
 	error,
@@ -41,6 +47,9 @@ const {
 	execute
 } = useAsyncState(async () => {
 	const resp = await leaderboards.getLeaderboard(props.id)
+	updateRequest.value.info = resp.data.info
+	updateRequest.value.name = resp.data.name
+	updateRequest.value.slug = resp.data.slug
 	return resp.data
 }, null)
 
@@ -48,21 +57,15 @@ const errorResponse = computed(
 	() => (error.value as HttpResponse<unknown, ProblemDetails>).error
 )
 
-const updateRequest = computed<UpdateLeaderboardRequest>(() => ({
-	name: board.value?.name,
-	info: board.value?.info,
-	slug: board.value?.slug
-}))
-
 async function submit() {
 	useApi(
 		() =>
 			leaderboards.updateLeaderboard(
 				props.id,
 				{
-					name: board.value?.name,
-					info: board.value?.info,
-					slug: board.value?.slug
+					name: updateRequest.value.name,
+					info: updateRequest.value.info,
+					slug: updateRequest.value.slug
 				},
 				useAuth(token.value)
 			),
