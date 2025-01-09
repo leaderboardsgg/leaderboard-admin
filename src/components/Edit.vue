@@ -5,7 +5,10 @@ import { useApi } from '../composables/useApi'
 import { useAuth } from '../composables/useAuth'
 import { useSessionToken } from '../composables/useSessionToken'
 import { Leaderboards } from '../lib/api/Leaderboards'
-import { ProblemDetails, UpdateLeaderboardRequest } from '../lib/api/data-contracts'
+import {
+	ProblemDetails,
+	UpdateLeaderboardRequest
+} from '../lib/api/data-contracts'
 import { onBeforeRouteLeave, useRouter } from 'vue-router'
 import { HttpResponse } from '../lib/api/http-client'
 
