@@ -19,20 +19,11 @@ const token = useSessionToken()
 
 const router = useRouter()
 
-onBeforeRouteLeave(() => {
-	if (
-		board.value?.name !== updateRequest.value.name ||
-		board.value?.slug !== updateRequest.value.slug ||
-		board.value?.info !== updateRequest.value.info
-	) {
-		return window.confirm('Do you want to leave? You have unsaved changes.');
-	}
-	return true
-})
-
 const leaderboards = new Leaderboards({
 	baseUrl: import.meta.env.VITE_BACKEND_URL
 })
+
+const warnBeforeLeave = ref(true)
 
 const updateRequest = ref<UpdateLeaderboardRequest>({
 	info: '',
@@ -53,6 +44,19 @@ const {
 	return resp.data
 }, null)
 
+onBeforeRouteLeave(() => {
+	if (
+		warnBeforeLeave.value &&
+		(board.value?.name !== updateRequest.value.name ||
+			board.value?.slug !== updateRequest.value.slug ||
+			board.value?.info !== updateRequest.value.info)
+	) {
+		if (!window.confirm('Do you want to leave? You have unsaved changes.')) {
+			return false
+		}
+	}
+})
+
 const errorResponse = computed(
 	() => (error.value as HttpResponse<unknown, ProblemDetails>).error
 )
@@ -69,8 +73,9 @@ async function submit() {
 				},
 				useAuth(token.value)
 			),
-		async () => {
-			router.push({ name: 'leaderboardView', params: { id: props.id }})
+		() => {
+			warnBeforeLeave.value = false
+			router.push({ name: 'leaderboardView', params: { id: props.id } })
 		},
 		(error) => {
 			updateError.value =
