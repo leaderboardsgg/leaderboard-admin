@@ -82,7 +82,7 @@ async function submit() {
 		},
 		(error) => {
 			updateError.value =
-				'Failed to update: ' + (error as Response).status.toString(10)
+				'Failed to update: ' + error.status.toString(10)
 		}
 	)
 }
