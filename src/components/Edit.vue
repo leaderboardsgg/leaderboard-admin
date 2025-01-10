@@ -5,7 +5,10 @@ import { useApi } from '../composables/useApi'
 import { useAuth } from '../composables/useAuth'
 import { useSessionToken } from '../composables/useSessionToken'
 import { Leaderboards } from '../lib/api/Leaderboards'
-import { ProblemDetails, UpdateLeaderboardRequest } from '../lib/api/data-contracts'
+import {
+	ProblemDetails,
+	UpdateLeaderboardRequest
+} from '../lib/api/data-contracts'
 import { onBeforeRouteLeave, useRouter } from 'vue-router'
 import { HttpResponse } from '../lib/api/http-client'
 
@@ -19,19 +22,16 @@ const token = useSessionToken()
 
 const router = useRouter()
 
-onBeforeRouteLeave(() => {
-	if (
-		board.value?.name !== updateRequest.value.name ||
-		board.value?.slug !== updateRequest.value.slug ||
-		board.value?.info !== updateRequest.value.info
-	) {
-		return window.confirm('Do you want to leave? You have unsaved changes.');
-	}
-	return true
-})
-
 const leaderboards = new Leaderboards({
 	baseUrl: import.meta.env.VITE_BACKEND_URL
+})
+
+const warnBeforeLeave = ref(true)
+
+const updateRequest = ref<UpdateLeaderboardRequest>({
+	info: '',
+	name: '',
+	slug: ''
 })
 
 const {
@@ -41,18 +41,28 @@ const {
 	execute
 } = useAsyncState(async () => {
 	const resp = await leaderboards.getLeaderboard(props.id)
+	updateRequest.value.info = resp.data.info
+	updateRequest.value.name = resp.data.name
+	updateRequest.value.slug = resp.data.slug
 	return resp.data
 }, null)
+
+onBeforeRouteLeave(() => {
+	if (
+		warnBeforeLeave.value &&
+		(board.value?.name !== updateRequest.value.name ||
+			board.value?.slug !== updateRequest.value.slug ||
+			board.value?.info !== updateRequest.value.info)
+	) {
+		if (!window.confirm('Do you want to leave? You have unsaved changes.')) {
+			return false
+		}
+	}
+})
 
 const errorResponse = computed(
 	() => (error.value as HttpResponse<unknown, ProblemDetails>).error
 )
-
-const updateRequest = computed<UpdateLeaderboardRequest>(() => ({
-	name: board.value?.name,
-	info: board.value?.info,
-	slug: board.value?.slug
-}))
 
 async function submit() {
 	useApi(
@@ -60,19 +70,18 @@ async function submit() {
 			leaderboards.updateLeaderboard(
 				props.id,
 				{
-					name: board.value?.name,
-					info: board.value?.info,
-					slug: board.value?.slug
+					name: updateRequest.value.name,
+					info: updateRequest.value.info,
+					slug: updateRequest.value.slug
 				},
 				useAuth(token.value)
 			),
-		async () => {
-			alert("Edit successful.")
-			router.push({ name: 'leaderboardView', params: { id: props.id }})
+		() => {
+			warnBeforeLeave.value = false
+			router.push({ name: 'leaderboardView', params: { id: props.id } })
 		},
 		(error) => {
-			updateError.value =
-				'Failed to update: ' + (error as Response).status.toString(10)
+			updateError.value = 'Failed to update: ' + error.status.toString(10)
 		}
 	)
 }
