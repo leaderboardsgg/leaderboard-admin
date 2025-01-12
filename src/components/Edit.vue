@@ -61,7 +61,7 @@ onBeforeRouteLeave(() => {
 })
 
 const errorResponse = computed(
-	() => (error.value as HttpResponse<unknown, ProblemDetails>).error
+	() => (error.value as HttpResponse<unknown, ProblemDetails>)
 )
 
 async function submit() {
@@ -94,7 +94,7 @@ async function submit() {
 			<p class="errorText">
 				<!-- For unexpected server errors; fields will be empty, hence the defaults. -->
 				Failed to fetch leaderboard: {{ errorResponse.status ?? '500' }}
-				{{ errorResponse.title ?? 'Check the console for more info.' }}
+				{{ errorResponse.error.title ?? 'Check the console for more info.' }}
 			</p>
 			<button @click="execute()" class="button">Reload</button>
 		</div>
