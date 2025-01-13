@@ -61,7 +61,7 @@ onBeforeRouteLeave(() => {
 })
 
 const errorResponse = computed(
-	() => (error.value as HttpResponse<unknown, ProblemDetails>)
+	() => (error.value as HttpResponse<unknown, void | ProblemDetails>)
 )
 
 async function submit() {
@@ -93,8 +93,8 @@ async function submit() {
 		<div v-else-if="error" class="error-container">
 			<p class="errorText">
 				<!-- For unexpected server errors; fields will be empty, hence the defaults. -->
-				Failed to fetch leaderboard: {{ errorResponse.status ?? '500' }}
-				{{ errorResponse.error.title ?? 'Check the console for more info.' }}
+				Failed to fetch leaderboard: {{ errorResponse.status }}
+				{{ errorResponse.error?.title ?? 'Check the console for more info.' }}
 			</p>
 			<button @click="execute()" class="button">Reload</button>
 		</div>
