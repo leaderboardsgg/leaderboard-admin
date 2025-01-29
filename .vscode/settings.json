@@ -28,5 +28,8 @@
 	},
 	"[json]": {
 		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[vue]": {
+		"editor.defaultFormatter": "biomejs.biome"
 	}
 }

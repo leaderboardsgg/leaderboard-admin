@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import App from './App.vue'
+import FourOhFour from './components/404.vue'
 import Leaderboard from './components/Leaderboard.vue'
 import Leaderboards from './components/Leaderboards.vue'
 import Main from './components/Main.vue'
@@ -25,6 +26,8 @@ const router = createRouter({
 			name: 'leaderboardsList',
 			component: Leaderboards,
 		},
+		// keep this at the bottom of the array.
+		{ path: '/:pathMatch(.*)*', name: '404', component: FourOhFour },
 	],
 })
 
