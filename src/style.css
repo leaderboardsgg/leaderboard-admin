@@ -25,3 +25,7 @@ body {
 .select-none {
 	user-select: none;
 }
+
+input, textarea {
+	padding: .3rem;
+}
