@@ -7,6 +7,7 @@ import Leaderboard from './components/Leaderboard.vue'
 import Leaderboards from './components/Leaderboards.vue'
 import Main from './components/Main.vue'
 import './style.css'
+import Create from './components/leaderboards/Create.vue'
 
 const router = createRouter({
 	history: createWebHistory(),
@@ -31,6 +32,11 @@ const router = createRouter({
 			props: (route) => ({
 				id: Number.parseInt(route.params.id as string, 10),
 			}),
+		},
+		{
+			path: '/leaderboards/create',
+			name: 'leaderboardsCreate',
+			component: Create,
 		},
 		{
 			path: '/leaderboards',

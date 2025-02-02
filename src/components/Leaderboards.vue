@@ -53,6 +53,11 @@ const boardsSearched = computed(() =>
 	<div class="container">
 		<h1>Leaderboards</h1>
 		<div class="input-container">
+			<RouterLink :to="{ name: 'leaderboardsCreate' }">
+				<button class="button create-new">
+					Create New
+				</button>
+			</RouterLink>
 			<input v-model="search" placeholder="Search" class="input" />
 			<select v-model="includeDeleted" class="input">
 				<option value="" disabled>Please select one</option>
