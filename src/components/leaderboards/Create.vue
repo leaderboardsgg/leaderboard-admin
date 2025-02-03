@@ -76,7 +76,7 @@ async function submit() {
 							<label for="name">Name*:</label>
 						</th>
 						<td>
-							<input v-model="createRequest.name" id="name" />
+							<input required v-model="createRequest.name" id="name" />
 						</td>
 					</tr>
 					<tr>
@@ -84,7 +84,7 @@ async function submit() {
 							<label for="slug">Slug*:</label>
 						</th>
 						<td>
-							<input v-model="createRequest.slug" id="slug" />
+							<input required pattern="^[a-zA-Z0-9\-_]{2,80}$" v-model="createRequest.slug" id="slug" />
 						</td>
 					</tr>
 					<tr>
