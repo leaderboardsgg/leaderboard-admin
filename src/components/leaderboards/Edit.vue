@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { useAsyncState } from '@vueuse/core'
 import { computed, ref } from 'vue'
-import { useApi } from '../composables/useApi'
-import { useAuth } from '../composables/useAuth'
-import { useSessionToken } from '../composables/useSessionToken'
-import { Leaderboards } from '../lib/api/Leaderboards'
-import {
-	ProblemDetails,
-	UpdateLeaderboardRequest
-} from '../lib/api/data-contracts'
 import { onBeforeRouteLeave, useRouter } from 'vue-router'
-import { HttpResponse } from '../lib/api/http-client'
+import { useApi } from '../../composables/useApi'
+import { useAuth } from '../../composables/useAuth'
+import { useSessionToken } from '../../composables/useSessionToken'
+import { Leaderboards } from '../../lib/api/Leaderboards'
+import {
+ProblemDetails,
+UpdateLeaderboardRequest
+} from '../../lib/api/data-contracts'
+import { HttpResponse } from '../../lib/api/http-client'
 
 const props = defineProps<{
 	id: number

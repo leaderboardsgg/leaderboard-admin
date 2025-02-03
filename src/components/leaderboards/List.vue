@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useAsyncState } from '@vueuse/core'
 import { computed, ref } from 'vue'
-import { Leaderboards } from '../lib/api/Leaderboards'
+import { Leaderboards } from '../../lib/api/Leaderboards'
 
 enum IncludeDeleted {
 	NotDeleted,
@@ -53,7 +53,7 @@ const boardsSearched = computed(() =>
 	<div class="container">
 		<h1>Leaderboards</h1>
 		<div class="input-container">
-			<RouterLink :to="{ name: 'leaderboardsCreate' }">
+			<RouterLink :to="{ name: 'leaderboardCreate' }">
 				<button class="button create-new">
 					Create New
 				</button>

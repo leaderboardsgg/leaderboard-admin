@@ -2,12 +2,12 @@ import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import App from './App.vue'
 import FourOhFour from './components/404.vue'
-import Edit from './components/Edit.vue'
-import Leaderboard from './components/Leaderboard.vue'
-import Leaderboards from './components/Leaderboards.vue'
 import Main from './components/Main.vue'
+import LeaderboardCreate from './components/leaderboards/Create.vue'
+import Edit from './components/leaderboards/Edit.vue'
+import Leaderboards from './components/leaderboards/List.vue'
+import Leaderboard from './components/leaderboards/View.vue'
 import './style.css'
-import Create from './components/leaderboards/Create.vue'
 
 const router = createRouter({
 	history: createWebHistory(),
@@ -34,9 +34,9 @@ const router = createRouter({
 			}),
 		},
 		{
-			path: '/leaderboards/create',
-			name: 'leaderboardsCreate',
-			component: Create,
+			path: '/leaderboard/create',
+			name: 'leaderboardCreate',
+			component: LeaderboardCreate,
 		},
 		{
 			path: '/leaderboards',
