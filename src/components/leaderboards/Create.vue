@@ -84,7 +84,7 @@ async function submit() {
 							<label for="slug">Slug*:</label>
 						</th>
 						<td>
-							<input required pattern="^[a-zA-Z0-9\-_]{2,80}$" v-model="createRequest.slug" id="slug" />
+							<input required pattern="[a-zA-Z0-9-_]{2,80}" v-model="createRequest.slug" id="slug" />
 						</td>
 					</tr>
 					<tr>
