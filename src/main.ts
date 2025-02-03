@@ -4,9 +4,9 @@ import App from './App.vue'
 import FourOhFour from './components/404.vue'
 import Main from './components/Main.vue'
 import LeaderboardCreate from './components/leaderboards/Create.vue'
-import Edit from './components/leaderboards/Edit.vue'
-import Leaderboards from './components/leaderboards/List.vue'
-import Leaderboard from './components/leaderboards/View.vue'
+import LeaderboardEdit from './components/leaderboards/Edit.vue'
+import LeaderboardsList from './components/leaderboards/List.vue'
+import LeaderboardView from './components/leaderboards/View.vue'
 import './style.css'
 
 const router = createRouter({
@@ -20,7 +20,7 @@ const router = createRouter({
 		{
 			path: '/leaderboard/:id(\\d+)',
 			name: 'leaderboardView',
-			component: Leaderboard,
+			component: LeaderboardView,
 			props: (route) => ({
 				id: Number.parseInt(route.params.id as string, 10),
 			}),
@@ -28,7 +28,7 @@ const router = createRouter({
 		{
 			path: '/leaderboard/:id(\\d+)/edit',
 			name: 'leaderboardEdit',
-			component: Edit,
+			component: LeaderboardEdit,
 			props: (route) => ({
 				id: Number.parseInt(route.params.id as string, 10),
 			}),
@@ -41,7 +41,7 @@ const router = createRouter({
 		{
 			path: '/leaderboards',
 			name: 'leaderboardsList',
-			component: Leaderboards,
+			component: LeaderboardsList,
 		},
 		// keep this at the bottom of the array.
 		{ path: '/:pathMatch(.*)*', name: '404', component: FourOhFour },
