@@ -48,7 +48,6 @@ async function submit() {
 			router.push({ name: 'leaderboardsList' })
 		},
 		(error) => {
-			console.error(error)
 			createError.value = 'Failed to create: ' + error.status.toString(10)
 		}
 	)
@@ -98,7 +97,7 @@ async function submit() {
 					</tr>
 				</tbody>
 			</table>
-			<button class="button">Save Changes</button>
+			<button class="button">Create</button>
 		</form>
 	</div>
 </template>
