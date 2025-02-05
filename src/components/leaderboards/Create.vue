@@ -42,10 +42,7 @@ onBeforeRouteLeave(() => {
 })
 
 function submit() {
-	useApi<
-		LeaderboardViewModel,
-		void | ProblemDetails | ValidationProblemDetails
-	>(
+	useApi(
 		() =>
 			leaderboards.createLeaderboard(createRequest.value, useAuth(token.value)),
 		({ data }) => {
@@ -96,7 +93,7 @@ function submit() {
 						<td>
 							<input
 								required
-								pattern="[a-zA-Z0-9\-_]{2,80}"
+								pattern="[a-zA-Z0-9\-_]"
 								minlength="2"
 								maxlength="80"
 								v-model="createRequest.slug"
