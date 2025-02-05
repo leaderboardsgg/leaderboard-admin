@@ -2,10 +2,11 @@ import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import App from './App.vue'
 import FourOhFour from './components/404.vue'
-import Edit from './components/Edit.vue'
-import Leaderboard from './components/Leaderboard.vue'
-import Leaderboards from './components/Leaderboards.vue'
 import Main from './components/Main.vue'
+import LeaderboardCreate from './components/leaderboards/Create.vue'
+import LeaderboardEdit from './components/leaderboards/Edit.vue'
+import LeaderboardsList from './components/leaderboards/List.vue'
+import LeaderboardView from './components/leaderboards/View.vue'
 import './style.css'
 
 const router = createRouter({
@@ -13,13 +14,13 @@ const router = createRouter({
 	routes: [
 		{
 			path: '/',
-			name: '/home',
+			name: 'home',
 			component: Main,
 		},
 		{
 			path: '/leaderboard/:id(\\d+)',
 			name: 'leaderboardView',
-			component: Leaderboard,
+			component: LeaderboardView,
 			props: (route) => ({
 				id: Number.parseInt(route.params.id as string, 10),
 			}),
@@ -27,15 +28,20 @@ const router = createRouter({
 		{
 			path: '/leaderboard/:id(\\d+)/edit',
 			name: 'leaderboardEdit',
-			component: Edit,
+			component: LeaderboardEdit,
 			props: (route) => ({
 				id: Number.parseInt(route.params.id as string, 10),
 			}),
 		},
 		{
+			path: '/leaderboard/create',
+			name: 'leaderboardCreate',
+			component: LeaderboardCreate,
+		},
+		{
 			path: '/leaderboards',
 			name: 'leaderboardsList',
-			component: Leaderboards,
+			component: LeaderboardsList,
 		},
 		// keep this at the bottom of the array.
 		{ path: '/:pathMatch(.*)*', name: '404', component: FourOhFour },
