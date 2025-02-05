@@ -45,6 +45,7 @@ async function submit() {
 			),
 		() => {
 			warnBeforeLeave.value = false
+			alert('Leaderboard created. Returning to the list.')
 			router.push({ name: 'leaderboardsList' })
 		},
 		(error) => {
