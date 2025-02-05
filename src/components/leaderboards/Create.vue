@@ -5,7 +5,12 @@ import { useApi } from '../../composables/useApi'
 import { useAuth } from '../../composables/useAuth'
 import { useSessionToken } from '../../composables/useSessionToken'
 import { Leaderboards } from '../../lib/api/Leaderboards'
-import { CreateLeaderboardRequest } from '../../lib/api/data-contracts'
+import {
+	CreateLeaderboardRequest,
+	LeaderboardViewModel,
+	ProblemDetails,
+	ValidationProblemDetails
+} from '../../lib/api/data-contracts'
 
 const token = useSessionToken()
 const createError = ref('')
@@ -20,15 +25,15 @@ const warnBeforeLeave = ref(true)
 const createRequest = ref<CreateLeaderboardRequest>({
 	name: '',
 	slug: '',
-	info: '',
+	info: ''
 })
 
 onBeforeRouteLeave(() => {
 	if (
 		warnBeforeLeave.value &&
 		(createRequest.value.name ||
-		 createRequest.value.slug ||
-		 createRequest.value.info)
+			createRequest.value.slug ||
+			createRequest.value.info)
 	) {
 		if (!window.confirm('Do you want to leave? You have unsaved changes.')) {
 			return false
@@ -37,15 +42,15 @@ onBeforeRouteLeave(() => {
 })
 
 function submit() {
-	useApi(
+	useApi<
+		LeaderboardViewModel,
+		void | ProblemDetails | ValidationProblemDetails
+	>(
 		() =>
-			leaderboards.createLeaderboard(
-				createRequest.value,
-				useAuth(token.value)
-			),
-		() => {
+			leaderboards.createLeaderboard(createRequest.value, useAuth(token.value)),
+		({ data }) => {
 			warnBeforeLeave.value = false
-			router.push({ name: 'leaderboardView' })
+			router.push({ name: 'leaderboardView', params: { id: data.id } })
 		},
 		(error) => {
 			createError.value = 'Failed to create: ' + error.status.toString(10)
@@ -76,7 +81,12 @@ function submit() {
 							<label for="name">Name*:</label>
 						</th>
 						<td>
-							<input required v-model="createRequest.name" id="name" class="input" />
+							<input
+								required
+								v-model="createRequest.name"
+								id="name"
+								class="input"
+							/>
 						</td>
 					</tr>
 					<tr>
@@ -86,12 +96,13 @@ function submit() {
 						<td>
 							<input
 								required
-								pattern="[a-zA-Z0-9-_]"
+								pattern="[a-zA-Z0-9\-_]{2,80}"
 								minlength="2"
 								maxlength="80"
 								v-model="createRequest.slug"
 								id="slug"
-								class="input" />
+								class="input"
+							/>
 						</td>
 					</tr>
 					<tr>
