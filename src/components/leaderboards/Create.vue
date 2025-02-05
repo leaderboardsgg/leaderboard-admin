@@ -77,7 +77,7 @@ function submit() {
 							<label for="name">Name*:</label>
 						</th>
 						<td>
-							<input required v-model="createRequest.name" id="name" />
+							<input required v-model="createRequest.name" id="name" class="input" />
 						</td>
 					</tr>
 					<tr>
@@ -85,7 +85,7 @@ function submit() {
 							<label for="slug">Slug*:</label>
 						</th>
 						<td>
-							<input required pattern="[a-zA-Z0-9-_]{2,80}" v-model="createRequest.slug" id="slug" />
+							<input required pattern="[a-zA-Z0-9-_]{2,80}" v-model="createRequest.slug" id="slug" class="input" />
 						</td>
 					</tr>
 					<tr>
@@ -137,6 +137,10 @@ th {
 
 td {
 	width: 100%;
+}
+
+.input {
+	width: 40rem;
 }
 
 textarea {
