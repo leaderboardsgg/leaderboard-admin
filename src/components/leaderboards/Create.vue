@@ -36,7 +36,7 @@ onBeforeRouteLeave(() => {
 	}
 })
 
-async function submit() {
+function submit() {
 	useApi(
 		() =>
 			leaderboards.createLeaderboard(
