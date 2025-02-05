@@ -54,9 +54,7 @@ const boardsSearched = computed(() =>
 		<h1>Leaderboards</h1>
 		<div class="input-container">
 			<RouterLink :to="{ name: 'leaderboardCreate' }">
-				<button class="button create-new">
-					Create New
-				</button>
+				<button class="button create-new">Create New</button>
 			</RouterLink>
 			<input v-model="search" placeholder="Search" class="input" />
 			<select v-model="includeDeleted" class="input">

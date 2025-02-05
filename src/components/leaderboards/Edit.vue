@@ -7,8 +7,8 @@ import { useAuth } from '../../composables/useAuth'
 import { useSessionToken } from '../../composables/useSessionToken'
 import { Leaderboards } from '../../lib/api/Leaderboards'
 import {
-ProblemDetails,
-UpdateLeaderboardRequest
+	ProblemDetails,
+	UpdateLeaderboardRequest
 } from '../../lib/api/data-contracts'
 import { HttpResponse } from '../../lib/api/http-client'
 
@@ -61,7 +61,7 @@ onBeforeRouteLeave(() => {
 })
 
 const errorResponse = computed(
-	() => (error.value as HttpResponse<unknown, void | ProblemDetails>)
+	() => error.value as HttpResponse<unknown, void | ProblemDetails>
 )
 
 async function submit() {

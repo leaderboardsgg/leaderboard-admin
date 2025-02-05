@@ -26,6 +26,7 @@ body {
 	user-select: none;
 }
 
-input, textarea {
+input,
+textarea {
 	padding: .3rem;
 }
