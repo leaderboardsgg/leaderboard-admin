@@ -5,12 +5,7 @@ import { useApi } from '../../composables/useApi'
 import { useAuth } from '../../composables/useAuth'
 import { useSessionToken } from '../../composables/useSessionToken'
 import { Leaderboards } from '../../lib/api/Leaderboards'
-import {
-	CreateLeaderboardRequest,
-	LeaderboardViewModel,
-	ProblemDetails,
-	ValidationProblemDetails
-} from '../../lib/api/data-contracts'
+import { CreateLeaderboardRequest } from '../../lib/api/data-contracts'
 
 const token = useSessionToken()
 const createError = ref('')
