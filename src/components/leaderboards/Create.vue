@@ -45,8 +45,7 @@ function submit() {
 			),
 		() => {
 			warnBeforeLeave.value = false
-			alert('Leaderboard created. Returning to the list.')
-			router.push({ name: 'leaderboardsList' })
+			router.push({ name: 'leaderboardView' })
 		},
 		(error) => {
 			createError.value = 'Failed to create: ' + error.status.toString(10)
