@@ -85,7 +85,14 @@ function submit() {
 							<label for="slug">Slug*:</label>
 						</th>
 						<td>
-							<input required pattern="[a-zA-Z0-9-_]{2,80}" v-model="createRequest.slug" id="slug" class="input" />
+							<input
+								required
+								pattern="[a-zA-Z0-9-_]"
+								minlength="2"
+								maxlength="80"
+								v-model="createRequest.slug"
+								id="slug"
+								class="input" />
 						</td>
 					</tr>
 					<tr>
