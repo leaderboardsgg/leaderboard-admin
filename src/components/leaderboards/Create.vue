@@ -93,7 +93,7 @@ function submit() {
 						<td>
 							<input
 								required
-								pattern="[a-zA-Z0-9\-_]"
+								pattern="[a-zA-Z0-9-_]"
 								minlength="2"
 								maxlength="80"
 								v-model="createRequest.slug"
