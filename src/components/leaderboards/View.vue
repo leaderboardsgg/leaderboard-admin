@@ -16,6 +16,8 @@ const updateError = ref('')
 
 const token = useSessionToken()
 
+const frontendUrl = import.meta.env.VITE_FRONTEND_URL
+
 const leaderboards = new Leaderboards({
 	baseUrl: import.meta.env.VITE_BACKEND_URL
 })
@@ -109,8 +111,11 @@ async function revealRestore() {
 					</tr>
 					<tr>
 						<th>Slug:</th>
-						<!-- TODO: Convert this to a link to the board on the main site -->
-						<td>/{{ board?.slug }}</td>
+						<td>
+							/<a :href="`${frontendUrl}/board/${board?.slug}`">{{
+								board?.slug
+							}}</a>
+						</td>
 					</tr>
 					<tr>
 						<th>Created:</th>
