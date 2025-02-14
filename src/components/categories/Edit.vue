@@ -7,8 +7,8 @@ import { useAuth } from '../../composables/useAuth'
 import { useSessionToken } from '../../composables/useSessionToken'
 import { Categories } from '../../lib/api/Categories'
 import {
-ProblemDetails,
-UpdateCategoryRequest
+	ProblemDetails,
+	UpdateCategoryRequest
 } from '../../lib/api/data-contracts'
 import { HttpResponse } from '../../lib/api/http-client'
 
@@ -30,7 +30,7 @@ const warnBeforeLeave = ref(true)
 
 const updateRequest = ref<UpdateCategoryRequest>({
 	name: '',
-	slug: '',
+	slug: ''
 })
 
 const {
@@ -74,7 +74,7 @@ async function submit() {
 					name: updateRequest.value.name,
 					info: updateRequest.value.info,
 					slug: updateRequest.value.slug,
-					sortDirection: updateRequest.value.sortDirection,
+					sortDirection: updateRequest.value.sortDirection
 				},
 				useAuth(token.value)
 			),
@@ -149,7 +149,10 @@ async function submit() {
 								<label for="sort-direction">Sort Direction:</label>
 							</th>
 							<td>
-								<select v-model="updateRequest.sortDirection" id="sort-direction">
+								<select
+									v-model="updateRequest.sortDirection"
+									id="sort-direction"
+								>
 									<option value="">---</option>
 									<option value="Ascending">Ascending</option>
 									<option value="Descending">Descending</option>

@@ -46,9 +46,7 @@ const errorResponse = computed(
 )
 
 async function revealDelete() {
-	if (
-		confirm('Really delete this category? (This action can be reversed)')
-	) {
+	if (confirm('Really delete this category? (This action can be reversed)')) {
 		useApi(
 			() => categories.deleteCategory(props.id, useAuth(token.value)),
 			() => execute(),
@@ -60,9 +58,7 @@ async function revealDelete() {
 }
 
 async function revealRestore() {
-	if (
-		confirm('Really restore this category? (This action can be reversed)')
-	) {
+	if (confirm('Really restore this category? (This action can be reversed)')) {
 		useApi(
 			() => categories.restoreCategory(props.id, useAuth(token.value)),
 			() => execute(),
@@ -87,7 +83,12 @@ async function revealRestore() {
 
 		<div v-else class="main-content">
 			<h1 class="title">Details for {{ category?.name }}</h1>
-			<RouterLink class="back-link" :to="{ name: 'leaderboardView', params: { id: category?.leaderboardId } }"
+			<RouterLink
+				class="back-link"
+				:to="{
+					name: 'leaderboardView',
+					params: { id: category?.leaderboardId }
+				}"
 				>&lt; Back</RouterLink
 			>
 			<div class="action-button-container">
@@ -154,7 +155,6 @@ async function revealRestore() {
 						<td v-if="category?.deletedAt">{{ category?.deletedAt }}</td>
 						<td v-else class="dim">&lt;Not deleted&gt;</td>
 					</tr>
-
 				</tbody>
 			</table>
 		</div>

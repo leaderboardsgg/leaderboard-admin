@@ -68,7 +68,7 @@ const router = createRouter({
 			component: CategoryCreate,
 			props: (route) => ({
 				id: Number.parseInt(route.params.id as string, 10),
-			})
+			}),
 		},
 		// keep this at the bottom of the array.
 		{ path: '/:pathMatch(.*)*', name: '404', component: FourOhFour },
