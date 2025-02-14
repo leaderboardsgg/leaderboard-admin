@@ -7,6 +7,7 @@ import { useSessionToken } from '../../composables/useSessionToken'
 import { Leaderboards } from '../../lib/api/Leaderboards'
 import { ProblemDetails } from '../../lib/api/data-contracts'
 import { HttpResponse } from '../../lib/api/http-client'
+import CategoryList from './CategoryList.vue'
 
 const props = defineProps<{
 	id: number
@@ -69,7 +70,7 @@ async function revealRestore() {
 	<div class="container">
 		<div v-if="isLoading">Loading...</div>
 		<div v-else-if="error" class="error-container">
-			<p class="errorText">
+			<p class="error-text">
 				Failed to fetch leaderboard: {{ errorResponse.status }}
 				{{ errorResponse.title }}
 			</p>
@@ -77,6 +78,8 @@ async function revealRestore() {
 		</div>
 
 		<div v-else class="main-content">
+			<h1 class="title">Details for {{ board?.name }}</h1>
+
 			<RouterLink class="back-link" :to="{ name: 'leaderboardsList' }"
 				>&lt; Back</RouterLink
 			>
@@ -133,6 +136,8 @@ async function revealRestore() {
 					</tr>
 				</tbody>
 			</table>
+
+			<CategoryList :id="props.id" />
 		</div>
 	</div>
 </template>
@@ -154,6 +159,10 @@ async function revealRestore() {
 	grid-template-columns: repeat(2, 1fr);
 	margin-top: 1rem;
 	row-gap: 1rem;
+}
+
+.title {
+	grid-column: span 2 / span 2;
 }
 
 .back-link {
