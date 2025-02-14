@@ -91,10 +91,9 @@ async function revealRestore() {
 				>&lt; Back</RouterLink
 			>
 			<div class="action-button-container">
-				<!-- TODO: Create edit page and uncomment this -->
-				<!-- <RouterLink :to="{ name: 'categoryEdit', params: { id: props.id } }">
+				<RouterLink :to="{ name: 'categoryEdit', params: { id: props.id } }">
 					<button class="action-button">Edit</button>
-				</RouterLink> -->
+				</RouterLink>
 
 				<button
 					v-if="category?.deletedAt === null"
@@ -147,7 +146,8 @@ async function revealRestore() {
 					</tr>
 					<tr>
 						<th>Updated:</th>
-						<td>{{ category?.updatedAt }}</td>
+						<td v-if="category?.updatedAt">{{ category?.updatedAt }}</td>
+						<td v-else>-</td>
 					</tr>
 					<tr>
 						<th>Deleted:</th>
