@@ -100,6 +100,8 @@ async function submit() {
 		</div>
 
 		<div v-else class="main-content">
+			<h1>Update {{ board?.name }}</h1>
+
 			<RouterLink
 				class="back-link"
 				:to="{ name: 'leaderboardView', params: { id } }"
