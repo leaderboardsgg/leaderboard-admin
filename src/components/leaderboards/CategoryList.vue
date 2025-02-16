@@ -23,7 +23,7 @@ const {
 	isLoading,
 	execute
 } = useAsyncState(async () => {
-	const resp = await categories.getCategoriesForLeaderboard({id: props.id})
+	const resp = await categories.getCategoriesForLeaderboard({ id: props.id })
 	return resp.data
 }, null)
 </script>
@@ -43,7 +43,9 @@ const {
 			<span>Categories:</span>
 			<ul>
 				<li v-for="cat of cats">
-					<a :href="`/category/${cat.id}`">{{ cat.name }}</a>
+					<RouterLink :to="{ name: 'categoryView', params: { id: cat.id } }">{{
+						cat.name
+					}}</RouterLink>
 				</li>
 			</ul>
 		</div>
