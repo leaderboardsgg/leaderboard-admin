@@ -10,6 +10,7 @@ import {
 	RunType,
 	SortDirection
 } from '../../lib/api/data-contracts'
+import Slug from '../blocks/Slug.vue'
 
 const props = defineProps<{
 	id: number
@@ -102,15 +103,7 @@ function submit() {
 							<label for="slug">Slug*:</label>
 						</th>
 						<td>
-							<input
-								required
-								pattern="[a-zA-Z0-9\-_]{2,80}"
-								minlength="2"
-								maxlength="80"
-								v-model="createRequest.slug"
-								id="slug"
-								class="input"
-							/>
+							<Slug id="slug" class="input" :request="createRequest" />
 						</td>
 					</tr>
 					<tr>

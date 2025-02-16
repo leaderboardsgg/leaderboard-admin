@@ -11,6 +11,7 @@ import {
 	UpdateLeaderboardRequest
 } from '../../lib/api/data-contracts'
 import { HttpResponse } from '../../lib/api/http-client'
+import Slug from '../blocks/Slug.vue'
 
 const props = defineProps<{
 	id: number
@@ -131,7 +132,7 @@ async function submit() {
 								<label for="slug">Slug:</label>
 							</th>
 							<td>
-								<input v-model="updateRequest.slug" id="slug" />
+								<Slug :request="updateRequest" id="slug" />
 							</td>
 						</tr>
 						<tr>

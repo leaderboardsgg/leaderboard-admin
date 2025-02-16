@@ -6,6 +6,7 @@ import { useAuth } from '../../composables/useAuth'
 import { useSessionToken } from '../../composables/useSessionToken'
 import { Leaderboards } from '../../lib/api/Leaderboards'
 import { CreateLeaderboardRequest } from '../../lib/api/data-contracts'
+import Slug from '../blocks/Slug.vue'
 
 const token = useSessionToken()
 const createError = ref('')
@@ -86,15 +87,7 @@ function submit() {
 							<label for="slug">Slug*:</label>
 						</th>
 						<td>
-							<input
-								required
-								pattern="[a-zA-Z0-9-_]"
-								minlength="2"
-								maxlength="80"
-								v-model="createRequest.slug"
-								id="slug"
-								class="input"
-							/>
+							<Slug id="slug" class="input" :request="createRequest" />
 						</td>
 					</tr>
 					<tr>
