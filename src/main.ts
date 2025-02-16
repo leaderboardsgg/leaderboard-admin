@@ -36,7 +36,7 @@ const router = createRouter({
 			}),
 		},
 		{
-			path: '/leaderboard/create',
+			path: '/leaderboards/create',
 			name: 'leaderboardCreate',
 			component: LeaderboardCreate,
 		},
@@ -54,7 +54,7 @@ const router = createRouter({
 			}),
 		},
 		{
-			path: '/leaderboard/:id(\\d+)/categories/new',
+			path: '/leaderboard/:id(\\d+)/categories/create',
 			name: 'categoryCreate',
 			component: CategoryCreate,
 			props: (route) => ({
