@@ -75,14 +75,13 @@ const boardsSearched = computed(() =>
 		<ul v-else>
 			<li v-for="board in boardsSearched" :key="board.id">
 				<RouterLink
-					:to="`/leaderboard/${board.id}`"
+					:to="{ name: 'leaderboardView', params: { id: board.id } }"
 					:class="{ dull: board.deletedAt !== null }"
 				>
 					{{ board.name }}
 				</RouterLink>
 				({{ board.slug }})
 			</li>
-			<!-- TODO: Use a proper named route here. -->
 		</ul>
 	</div>
 </template>
