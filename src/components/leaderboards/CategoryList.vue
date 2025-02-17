@@ -33,7 +33,7 @@ const {
 		<div v-if="isLoading">Loading...</div>
 		<div v-else-if="error">
 			<p class="error-text">
-				Failed to fetch leaderboard: {{ errorResponse.status }}
+				Failed to fetch categories: {{ errorResponse.status }}
 				{{ errorResponse.title }}
 			</p>
 			<button @click="execute()" class="button">Retry</button>
@@ -42,10 +42,11 @@ const {
 		<div v-else>
 			<span>Categories:</span>
 			<ul>
-				<li v-for="cat of cats">
+				<li v-for="cat in cats">
 					<RouterLink :to="{ name: 'categoryView', params: { id: cat.id } }">{{
 						cat.name
 					}}</RouterLink>
+					({{ cat.slug }})
 				</li>
 			</ul>
 		</div>
