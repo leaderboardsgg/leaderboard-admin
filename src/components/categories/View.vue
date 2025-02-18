@@ -7,6 +7,7 @@ import { useSessionToken } from '../../composables/useSessionToken'
 import { Categories } from '../../lib/api/Categories'
 import { ProblemDetails } from '../../lib/api/data-contracts'
 import { HttpResponse } from '../../lib/api/http-client'
+import { Leaderboards } from '../../lib/api/Leaderboards'
 
 const props = defineProps<{
 	id: number
@@ -22,14 +23,22 @@ const categories = new Categories({
 	baseUrl: import.meta.env.VITE_BACKEND_URL
 })
 
+const leaderboards = new Leaderboards({
+	baseUrl: import.meta.env.VITE_BACKEND_URL
+})
+
 const {
 	state: category,
 	error,
 	isLoading,
 	execute
 } = useAsyncState(async () => {
-	const resp = await categories.getCategory(props.id)
-	return resp.data
+	const catResp = await categories.getCategory(props.id)
+	const resp = await leaderboards.getLeaderboard(catResp.data.leaderboardId)
+	return {
+		...catResp.data,
+		leaderboardSlug: resp.data.slug,
+	}
 }, null)
 
 const errorResponse = computed(
@@ -114,7 +123,7 @@ async function revealRestore() {
 					<tr>
 						<th>Slug:</th>
 						<td>
-							/<a :href="`${frontendUrl}/category/${category?.slug}`">{{
+							/<a :href="`${frontendUrl}/board/${category?.leaderboardSlug}/${category?.slug}`">{{
 								category?.slug
 							}}</a>
 						</td>
