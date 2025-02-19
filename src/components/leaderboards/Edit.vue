@@ -29,11 +29,7 @@ const leaderboards = new Leaderboards({
 
 const warnBeforeLeave = ref(true)
 
-const updateRequest = ref<UpdateLeaderboardRequest>({
-	info: '',
-	name: '',
-	slug: ''
-})
+const updateRequest = ref<UpdateLeaderboardRequest>({})
 
 const {
 	state: board,
@@ -132,7 +128,7 @@ async function submit() {
 								<label for="slug">Slug:</label>
 							</th>
 							<td>
-								<Slug :request="updateRequest" id="slug" />
+								<Slug v-model="updateRequest.slug" id="slug" />
 							</td>
 						</tr>
 						<tr>

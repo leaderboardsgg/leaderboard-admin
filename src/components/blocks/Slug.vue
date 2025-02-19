@@ -1,8 +1,6 @@
 <!-- Input field for slug management. -->
 <script setup lang="ts">
-const props = defineProps<{
-	request: Partial<{ slug: string }>
-}>()
+const slug = defineModel<string | undefined>({ required: true })
 </script>
 
 <template>
@@ -12,7 +10,7 @@ const props = defineProps<{
 		minlength="2"
 		maxlength="80"
 		v-bind="$attrs"
-		v-model="props.request.slug"
+		v-model="slug"
 	/>
 </template>
 

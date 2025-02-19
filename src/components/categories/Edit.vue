@@ -29,10 +29,7 @@ const categories = new Categories({
 
 const warnBeforeLeave = ref(true)
 
-const updateRequest = ref<UpdateCategoryRequest>({
-	name: '',
-	slug: ''
-})
+const updateRequest = ref<UpdateCategoryRequest>({})
 
 const {
 	state: cat,
@@ -134,7 +131,7 @@ async function submit() {
 								<label for="slug">Slug:</label>
 							</th>
 							<td>
-								<Slug :request="updateRequest" id="slug" />
+								<Slug v-model="updateRequest.slug" id="slug" />
 							</td>
 						</tr>
 						<tr>

@@ -87,7 +87,7 @@ function submit() {
 							<label for="slug">Slug*:</label>
 						</th>
 						<td>
-							<Slug id="slug" class="input" :request="createRequest" />
+							<Slug id="slug" class="input" v-model="createRequest.slug" />
 						</td>
 					</tr>
 					<tr>
