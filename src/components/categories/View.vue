@@ -37,7 +37,7 @@ const {
 	const resp = await leaderboards.getLeaderboard(catResp.data.leaderboardId)
 	return {
 		...catResp.data,
-		leaderboardSlug: resp.data.slug,
+		leaderboardSlug: resp.data.slug
 	}
 }, null)
 
@@ -123,9 +123,10 @@ async function revealRestore() {
 					<tr>
 						<th>Slug:</th>
 						<td>
-							/<a :href="`${frontendUrl}/board/${category?.leaderboardSlug}/${category?.slug}`">{{
-								category?.slug
-							}}</a>
+							/<a
+								:href="`${frontendUrl}/board/${category?.leaderboardSlug}/${category?.slug}`"
+								>{{ category?.slug }}</a
+							>
 						</td>
 					</tr>
 					<tr>
