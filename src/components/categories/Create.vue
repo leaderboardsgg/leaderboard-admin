@@ -5,7 +5,12 @@ import { useApi } from '../../composables/useApi'
 import { useAuth } from '../../composables/useAuth'
 import { useSessionToken } from '../../composables/useSessionToken'
 import { Categories } from '../../lib/api/Categories'
-import { CreateCategoryRequest, RunType, SortDirection } from '../../lib/api/data-contracts'
+import {
+	CreateCategoryRequest,
+	RunType,
+	SortDirection
+} from '../../lib/api/data-contracts'
+import Slug from '../blocks/Slug.vue'
 
 const props = defineProps<{
 	id: number
@@ -49,11 +54,10 @@ function submit() {
 	const request: CreateCategoryRequest = {
 		...createRequest.value,
 		sortDirection: createRequest.value.sortDirection as SortDirection,
-		type: createRequest.value.type as RunType,
+		type: createRequest.value.type as RunType
 	}
 	useApi(
-		() =>
-			categories.createCategory(props.id, request, useAuth(token.value)),
+		() => categories.createCategory(props.id, request, useAuth(token.value)),
 		({ data }) => {
 			warnBeforeLeave.value = false
 			router.push({ name: 'categoryView', params: { id: data.id } })
@@ -99,15 +103,7 @@ function submit() {
 							<label for="slug">Slug*:</label>
 						</th>
 						<td>
-							<input
-								required
-								pattern="[a-zA-Z0-9\-_]{2,80}"
-								minlength="2"
-								maxlength="80"
-								v-model="createRequest.slug"
-								id="slug"
-								class="input"
-							/>
+							<Slug id="slug" class="input" v-model="createRequest.slug" />
 						</td>
 					</tr>
 					<tr>
@@ -123,7 +119,11 @@ function submit() {
 							<label for="sort-direction">Sort Direction*:</label>
 						</th>
 						<td>
-							<select id="sort-direction" v-model="createRequest.sortDirection" required>
+							<select
+								id="sort-direction"
+								v-model="createRequest.sortDirection"
+								required
+							>
 								<option value="">---</option>
 								<option value="Ascending">Ascending</option>
 								<option value="Descending">Descending</option>
