@@ -94,7 +94,7 @@ async function submit() {
 			<p class="errorText">
 				<!-- For unexpected server errors; fields will be empty, hence the defaults. -->
 				Failed to fetch category: {{ errorResponse.status }}
-				{{ errorResponse.error?.title ?? 'Check the console for more info.' }}
+				{{ errorResponse.error?.title ?? 'Unexpected error.' }}
 			</p>
 			<button @click="execute()" class="button">Reload</button>
 		</div>
