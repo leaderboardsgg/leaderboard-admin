@@ -37,7 +37,7 @@ const {
 	const resp = await leaderboards.getLeaderboard(catResp.data.leaderboardId)
 	return {
 		...catResp.data,
-		leaderboardSlug: resp.data.slug,
+		leaderboardSlug: resp.data.slug
 	}
 }, null)
 
@@ -46,9 +46,7 @@ const errorResponse = computed(
 )
 
 async function revealDelete() {
-	if (
-		confirm('Really delete this category? (This action can be reversed)')
-	) {
+	if (confirm('Really delete this category? (This action can be reversed)')) {
 		useApi(
 			() => categories.deleteCategory(props.id, useAuth(token.value)),
 			() => execute(),
@@ -60,9 +58,7 @@ async function revealDelete() {
 }
 
 async function revealRestore() {
-	if (
-		confirm('Really restore this category? (This action can be reversed)')
-	) {
+	if (confirm('Really restore this category? (This action can be reversed)')) {
 		useApi(
 			() => categories.restoreCategory(props.id, useAuth(token.value)),
 			() => execute(),
@@ -87,14 +83,18 @@ async function revealRestore() {
 
 		<div v-else class="main-content">
 			<h1 class="title">Details for {{ category?.name }}</h1>
-			<RouterLink class="back-link" :to="{ name: 'leaderboardView', params: { id: category?.leaderboardId } }"
+			<RouterLink
+				class="back-link"
+				:to="{
+					name: 'leaderboardView',
+					params: { id: category?.leaderboardId }
+				}"
 				>&lt; Back</RouterLink
 			>
 			<div class="action-button-container">
-				<!-- TODO: Create edit page and uncomment this -->
-				<!-- <RouterLink :to="{ name: 'categoryEdit', params: { id: props.id } }">
+				<RouterLink :to="{ name: 'categoryEdit', params: { id: props.id } }">
 					<button class="action-button">Edit</button>
-				</RouterLink> -->
+				</RouterLink>
 
 				<button
 					v-if="category?.deletedAt === null"
@@ -123,9 +123,10 @@ async function revealRestore() {
 					<tr>
 						<th>Slug:</th>
 						<td>
-							/<a :href="`${frontendUrl}/board/${category?.leaderboardSlug}/${category?.slug}`">{{
-								category?.slug
-							}}</a>
+							/<a
+								:href="`${frontendUrl}/board/${category?.leaderboardSlug}/${category?.slug}`"
+								>{{ category?.slug }}</a
+							>
 						</td>
 					</tr>
 					<tr>
@@ -147,14 +148,14 @@ async function revealRestore() {
 					</tr>
 					<tr>
 						<th>Updated:</th>
-						<td>{{ category?.updatedAt }}</td>
+						<td v-if="category?.updatedAt">{{ category?.updatedAt }}</td>
+						<td v-else>-</td>
 					</tr>
 					<tr>
 						<th>Deleted:</th>
 						<td v-if="category?.deletedAt">{{ category?.deletedAt }}</td>
 						<td v-else class="dim">&lt;Not deleted&gt;</td>
 					</tr>
-
 				</tbody>
 			</table>
 		</div>

@@ -4,6 +4,7 @@ import App from './App.vue'
 import FourOhFour from './components/404.vue'
 import Main from './components/Main.vue'
 import CategoryCreate from './components/categories/Create.vue'
+import CategoryEdit from './components/categories/Edit.vue'
 import CategoryView from './components/categories/View.vue'
 import LeaderboardCreate from './components/leaderboards/Create.vue'
 import LeaderboardEdit from './components/leaderboards/Edit.vue'
@@ -54,12 +55,20 @@ const router = createRouter({
 			}),
 		},
 		{
+			path: '/category/:id(\\d+)/edit',
+			name: 'categoryEdit',
+			component: CategoryEdit,
+			props: (route) => ({
+				id: Number.parseInt(route.params.id as string, 10),
+			}),
+		},
+		{
 			path: '/leaderboard/:id(\\d+)/categories/create',
 			name: 'categoryCreate',
 			component: CategoryCreate,
 			props: (route) => ({
 				id: Number.parseInt(route.params.id as string, 10),
-			})
+			}),
 		},
 		// keep this at the bottom of the array.
 		{ path: '/:pathMatch(.*)*', name: '404', component: FourOhFour },
