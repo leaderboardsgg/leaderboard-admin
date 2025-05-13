@@ -10,12 +10,12 @@
  */
 
 import {
-	ChangePasswordRequest,
-	LoginRequest,
+	ChangePasswordPayload,
+	LoginPayload,
 	LoginResponse,
 	ProblemDetails,
-	RecoverAccountRequest,
-	RegisterRequest,
+	RegisterPayload,
+	SendRecoveryEmailPayload,
 	UserViewModel,
 	ValidationProblemDetails
 } from './data-contracts'
@@ -38,7 +38,7 @@ export class Account<
 	 * @response `422` `ValidationProblemDetails` The request contains errors. Validation error codes by property: - **Username**: - **UsernameFormat**: Invalid username format - **Password**: - **PasswordFormat**: Invalid password format - **Email**: - **EmailValidator**: Invalid email format
 	 * @response `500` `void` Internal Server Error
 	 */
-	register = (data: RegisterRequest, params: RequestParams = {}) =>
+	register = (data: RegisterPayload, params: RequestParams = {}) =>
 		this.request<
 			UserViewModel,
 			ProblemDetails | ValidationProblemDetails | void
@@ -67,7 +67,7 @@ export class Account<
 	 * @response `422` `ValidationProblemDetails` The request contains errors. Validation error codes by property: - **Password**: - **NotEmptyValidator**: No password was passed - **PasswordFormat**: Invalid password format - **Email**: - **NotEmptyValidator**: No email was passed - **EmailValidator**: Invalid email format
 	 * @response `500` `void` Internal Server Error
 	 */
-	login = (data: LoginRequest, params: RequestParams = {}) =>
+	login = (data: LoginPayload, params: RequestParams = {}) =>
 		this.request<
 			LoginResponse,
 			ProblemDetails | void | ValidationProblemDetails
@@ -114,7 +114,7 @@ export class Account<
 	 * @response `500` `void` Internal Server Error
 	 */
 	sendRecoveryEmail = (
-		data: RecoverAccountRequest,
+		data: SendRecoveryEmailPayload,
 		params: RequestParams = {}
 	) =>
 		this.request<void, ProblemDetails | void>({
@@ -184,7 +184,7 @@ export class Account<
 	 */
 	changePassword = (
 		id: string,
-		data: ChangePasswordRequest,
+		data: ChangePasswordPayload,
 		params: RequestParams = {}
 	) =>
 		this.request<void, ProblemDetails | void | ValidationProblemDetails>({
