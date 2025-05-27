@@ -601,6 +601,24 @@ export interface ListLeaderboardsParams {
 	status?: StatusFilter
 }
 
+export interface SearchLeaderboardsParams {
+	/** The query string. Must not be empty. */
+	q: string
+	/**
+	 * The maximum number of records to return. Fewer records may be returned.
+	 * @format int32
+	 */
+	limit?: number
+	/**
+	 * The zero-based index at which to begin selecting records to return.
+	 * @format int32
+	 * @default 0
+	 */
+	offset?: number
+	/** @default "Published" */
+	status?: StatusFilter
+}
+
 /** This request object is sent when creating a `Leaderboard`. */
 export type CreateLeaderboardPayload = CreateLeaderboardRequest
 

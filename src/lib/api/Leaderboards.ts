@@ -17,6 +17,7 @@ import {
 	LeaderboardViewModelListView,
 	ListLeaderboardsParams,
 	ProblemDetails,
+	SearchLeaderboardsParams,
 	UpdateLeaderboardPayload,
 	ValidationProblemDetails
 } from './data-contracts'
@@ -93,6 +94,31 @@ export class Leaderboards<
 			ProblemDetails | ValidationProblemDetails | void
 		>({
 			path: `/api/leaderboards`,
+			method: 'GET',
+			query: query,
+			secure: true,
+			format: 'json',
+			...params
+		})
+	/**
+	 * No description
+	 *
+	 * @tags Leaderboards
+	 * @name SearchLeaderboards
+	 * @summary Search leaderboards by name.
+	 * @request GET:/api/leaderboards/search
+	 * @secure
+	 * @response `200` `LeaderboardViewModelListView` OK
+	 * @response `400` `ProblemDetails` Bad Request
+	 * @response `422` `ProblemDetails` Unprocessable Content
+	 * @response `500` `void` Internal Server Error
+	 */
+	searchLeaderboards = (
+		query: SearchLeaderboardsParams,
+		params: RequestParams = {}
+	) =>
+		this.request<LeaderboardViewModelListView, ProblemDetails | void>({
+			path: `/api/leaderboards/search`,
 			method: 'GET',
 			query: query,
 			secure: true,
