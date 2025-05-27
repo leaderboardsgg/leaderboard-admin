@@ -24,8 +24,8 @@ const {
 	execute
 } = useAsyncState(async () => {
 	const resp = await categories.getCategoriesForLeaderboard({ id: props.id })
-	return resp.data
-}, null)
+	return resp.data.data
+}, [])
 </script>
 
 <template>
