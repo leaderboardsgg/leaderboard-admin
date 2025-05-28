@@ -4,7 +4,7 @@ import { ref } from 'vue'
 import { Leaderboards } from '../../lib/api/Leaderboards'
 import { StatusFilter } from '../../lib/api/data-contracts'
 
-const limit = 256;
+const limit = 50;
 const status = ref<StatusFilter>('Published')
 const query = ref('')
 const searchedQuery = ref('')
