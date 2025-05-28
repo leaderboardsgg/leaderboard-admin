@@ -29,8 +29,13 @@ const {
 		limit: limit
 	})
 
-	return resp.data.data
-}, [])
+	return resp.data
+}, {
+	data: [],
+	limitDefault: 0,
+	limitMax: 0,
+	total: 0
+})
 
 function search() {
 	execute()
@@ -70,7 +75,8 @@ function filterChanged() {
 		</div>
 
 		<div v-if="searchedQuery" class="results-text" >
-			Displaying results for: "{{ searchedQuery }}" ({{ searchedStatus }}).&nbsp;<a href="" @click.prevent="clear">clear</a>
+			Displaying {{ boards.data.length }} of {{ boards.total }} results for "{{ searchedQuery }}" ({{ searchedStatus }}).&nbsp;
+			<a href="" @click.prevent="clear">clear</a>
 		</div>
 
 		<div v-if="isLoading">Loading...</div>
@@ -81,7 +87,7 @@ function filterChanged() {
 		</div>
 
 		<ul v-else>
-			<li v-for="board in boards" :key="board.id">
+			<li v-for="board in boards.data" :key="board.id">
 				<RouterLink
 					:to="{ name: 'leaderboardView', params: { id: board.id } }"
 					:class="{ dull: board.deletedAt !== null }"
