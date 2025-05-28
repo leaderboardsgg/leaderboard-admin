@@ -7,6 +7,8 @@ import { StatusFilter } from '../../lib/api/data-contracts'
 const limit = 256;
 const status = ref<StatusFilter>('Published')
 const query = ref<string>('')
+const searchedQuery = ref<string>('')
+const searchedStatus = ref<StatusFilter>()
 
 const leaderboardClient = new Leaderboards({
 	baseUrl: import.meta.env.VITE_BACKEND_URL
@@ -16,7 +18,7 @@ const {
 	state: boards,
 	error,
 	isLoading,
-	execute: search
+	execute
 } = useAsyncState(async () => {
 	const resp = query.value ? await leaderboardClient.searchLeaderboards({
 		q: query.value,
@@ -30,7 +32,19 @@ const {
 	return resp.data.data
 }, [])
 
-function filterChanged(){
+function search() {
+	execute()
+	searchedQuery.value = query.value
+	searchedStatus.value = status.value
+}
+
+function clear() {
+	query.value = ''
+	searchedQuery.value = ''
+	execute()
+}
+
+function filterChanged() {
 	if (!query.value){
 		search()
 	}
@@ -44,7 +58,7 @@ function filterChanged(){
 			<RouterLink :to="{ name: 'leaderboardCreate' }">
 				<button class="button create-new">Create New</button>
 			</RouterLink>
-			<form @submit.prevent="search()" class="form">
+			<form @submit.prevent="search" class="form">
 				<input v-model="query" placeholder="Search" class="input" type="search"/>
 				<select v-model="status" class="input" @change="filterChanged">
 					<option value="" disabled>Please select one</option>
@@ -55,11 +69,15 @@ function filterChanged(){
 			</form>
 		</div>
 
+		<div v-if="searchedQuery" class="results-text" >
+			Displaying results for: "{{ searchedQuery }}" ({{ searchedStatus }}).&nbsp;<a href="" @click.prevent="clear">clear</a>
+		</div>
+
 		<div v-if="isLoading">Loading...</div>
 
 		<div v-else-if="error" class="error-container">
 			<p>An error occurred.</p>
-			<button @click="search()" class="retry-button">Retry</button>
+			<button @click="search" class="retry-button">Retry</button>
 		</div>
 
 		<ul v-else>
@@ -83,6 +101,11 @@ function filterChanged(){
 	display: flex;
 	flex-direction: column;
 	gap: 0.5rem;
+}
+
+.results-text {
+	align-self: flex-start;
+	display: flex;
 }
 
 .input-container {
