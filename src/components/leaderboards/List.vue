@@ -19,9 +19,9 @@ const {
 	error,
 	isLoading,
 	execute
-} = useAsyncState(async () => {
-	const resp = query.value ? await leaderboardClient.searchLeaderboards({
-		q: query.value,
+} = useAsyncState(async (q: string) => {
+	const resp = q ? await leaderboardClient.searchLeaderboards({
+		q: q,
 		status: status.value,
 		limit: limit
 	}) : await leaderboardClient.listLeaderboards({
@@ -37,22 +37,21 @@ const {
 	total: 0
 })
 
-function search() {
-	execute()
-	searchedQuery.value = query.value
+function search(q: string) {
+	execute(0, q)
+	searchedQuery.value = q
 	searchedStatus.value = status.value
 }
 
-function clear() {
-	query.value = ''
+function clear()
+{
+	execute(0, '')
 	searchedQuery.value = ''
-	execute()
 }
 
 function filterChanged() {
-	if (!query.value){
-		search()
-	}
+	execute(0, searchedQuery.value)
+	searchedStatus.value = status.value
 }
 </script>
 
@@ -63,7 +62,7 @@ function filterChanged() {
 			<RouterLink :to="{ name: 'leaderboardCreate' }">
 				<button class="button create-new">Create New</button>
 			</RouterLink>
-			<form @submit.prevent="search" class="form">
+			<form @submit.prevent="search(query)" class="form">
 				<input v-model="query" placeholder="Search" class="input" type="search"/>
 				<select v-model="status" class="input" @change="filterChanged">
 					<option value="" disabled>Please select one</option>
@@ -83,7 +82,7 @@ function filterChanged() {
 
 		<div v-else-if="error" class="error-container">
 			<p>An error occurred.</p>
-			<button @click="search" class="retry-button">Retry</button>
+			<button @click="search(query)" class="retry-button">Retry</button>
 		</div>
 
 		<ul v-else>
