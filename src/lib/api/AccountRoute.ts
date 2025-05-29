@@ -10,11 +10,11 @@
  */
 
 import {
-	ChangePasswordRequest,
-	LoginRequest,
+	ChangePasswordPayload,
+	LoginPayload,
 	LoginResponse,
-	RecoverAccountRequest,
-	RegisterRequest,
+	RegisterPayload,
+	SendRecoveryEmailPayload,
 	UserViewModel
 } from './data-contracts'
 
@@ -35,7 +35,7 @@ export namespace Account {
 	export namespace Register {
 		export type RequestParams = {}
 		export type RequestQuery = {}
-		export type RequestBody = RegisterRequest
+		export type RequestBody = RegisterPayload
 		export type RequestHeaders = {}
 		export type ResponseBody = UserViewModel
 	}
@@ -58,7 +58,7 @@ export namespace Account {
 	export namespace Login {
 		export type RequestParams = {}
 		export type RequestQuery = {}
-		export type RequestBody = LoginRequest
+		export type RequestBody = LoginPayload
 		export type RequestHeaders = {}
 		export type ResponseBody = LoginResponse
 	}
@@ -98,7 +98,7 @@ export namespace Account {
 	export namespace SendRecoveryEmail {
 		export type RequestParams = {}
 		export type RequestQuery = {}
-		export type RequestBody = RecoverAccountRequest
+		export type RequestBody = SendRecoveryEmailPayload
 		export type RequestHeaders = {}
 		export type ResponseBody = void
 	}
@@ -180,7 +180,7 @@ export namespace Account {
 			id: string
 		}
 		export type RequestQuery = {}
-		export type RequestBody = ChangePasswordRequest
+		export type RequestBody = ChangePasswordPayload
 		export type RequestHeaders = {}
 		export type ResponseBody = void
 	}

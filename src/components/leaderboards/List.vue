@@ -1,52 +1,58 @@
 <script setup lang="ts">
 import { useAsyncState } from '@vueuse/core'
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { Leaderboards } from '../../lib/api/Leaderboards'
+import { StatusFilter } from '../../lib/api/data-contracts'
 
-enum IncludeDeleted {
-	NotDeleted,
-	Deleted,
-	All
-}
-
-const includeDeleted = ref(IncludeDeleted.NotDeleted)
-const search = ref<string>('')
+const limit = 50;
+const status = ref<StatusFilter>('Published')
+const query = ref('')
+const searchedQuery = ref('')
+const searchedStatus = ref<StatusFilter>()
 
 const leaderboardClient = new Leaderboards({
 	baseUrl: import.meta.env.VITE_BACKEND_URL
 })
 
 const {
-	state: allBoards,
+	state: boards,
 	error,
 	isLoading,
 	execute
-} = useAsyncState(async () => {
-	const resp = await leaderboardClient.listLeaderboards({
-		includeDeleted: true
+} = useAsyncState(async (q: string) => {
+	const resp = q ? await leaderboardClient.searchLeaderboards({
+		q: q,
+		status: status.value,
+		limit: limit
+	}) : await leaderboardClient.listLeaderboards({
+		status: status.value,
+		limit: limit
 	})
 
 	return resp.data
-}, [])
+}, {
+	data: [],
+	limitDefault: 0,
+	limitMax: 0,
+	total: 0
+})
 
-const boardsFiltered = computed(() =>
-	allBoards.value.filter(
-		(board) =>
-			includeDeleted.value === IncludeDeleted.All ||
-			(includeDeleted.value === IncludeDeleted.NotDeleted) ===
-				(board.deletedAt === null)
-	)
-)
+function search(q: string) {
+	execute(0, q)
+	searchedQuery.value = q
+	searchedStatus.value = status.value
+}
 
-const boardsSearched = computed(() =>
-	boardsFiltered.value.filter(
-		(board) =>
-			!search.value ||
-			board.name
-				.toLocaleLowerCase()
-				.includes(search.value.trim().toLocaleLowerCase())
-	)
-)
+function clear()
+{
+	execute(0, '')
+	searchedQuery.value = ''
+}
+
+function filterChanged() {
+	execute(0, searchedQuery.value)
+	searchedStatus.value = status.value
+}
 </script>
 
 <template>
@@ -56,24 +62,31 @@ const boardsSearched = computed(() =>
 			<RouterLink :to="{ name: 'leaderboardCreate' }">
 				<button class="button create-new">Create New</button>
 			</RouterLink>
-			<input v-model="search" placeholder="Search" class="input" />
-			<select v-model="includeDeleted" class="input">
-				<option value="" disabled>Please select one</option>
-				<option :value="IncludeDeleted.NotDeleted">Not Deleted</option>
-				<option :value="IncludeDeleted.Deleted">Deleted</option>
-				<option :value="IncludeDeleted.All">All</option>
-			</select>
+			<form @submit.prevent="search(query)" class="form">
+				<input v-model="query" placeholder="Search" class="input" type="search"/>
+				<select v-model="status" class="input" @change="filterChanged">
+					<option value="" disabled>Please select one</option>
+					<option value="Published">Published</option>
+					<option value="Deleted">Deleted</option>
+					<option value="Any">All</option>
+				</select>
+			</form>
+		</div>
+
+		<div v-if="searchedQuery" class="results-text" >
+			Displaying {{ boards.data.length }} of {{ boards.total }} results for "{{ searchedQuery }}" ({{ searchedStatus }}).&nbsp;
+			<a href="" @click.prevent="clear">clear</a>
 		</div>
 
 		<div v-if="isLoading">Loading...</div>
 
 		<div v-else-if="error" class="error-container">
 			<p>An error occurred.</p>
-			<button @click="execute()" class="retry-button">Retry</button>
+			<button @click="search(query)" class="retry-button">Retry</button>
 		</div>
 
 		<ul v-else>
-			<li v-for="board in boardsSearched" :key="board.id">
+			<li v-for="board in boards.data" :key="board.id">
 				<RouterLink
 					:to="{ name: 'leaderboardView', params: { id: board.id } }"
 					:class="{ dull: board.deletedAt !== null }"
@@ -95,8 +108,18 @@ const boardsSearched = computed(() =>
 	gap: 0.5rem;
 }
 
+.results-text {
+	align-self: flex-start;
+	display: flex;
+}
+
 .input-container {
 	align-self: flex-end;
+	display: flex;
+	gap: 1rem;
+}
+
+.form {
 	display: flex;
 	gap: 1rem;
 }
