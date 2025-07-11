@@ -9,7 +9,7 @@
  * ---------------------------------------------------------------
  */
 
-import { UserViewModel } from './data-contracts'
+import { UpdateUserPayload, UserViewModel } from './data-contracts'
 
 export namespace Users {
 	/**
@@ -17,7 +17,7 @@ export namespace Users {
 	 * @tags Users
 	 * @name GetUser
 	 * @summary Gets a User by their ID.
-	 * @request GET:/api/user/{id}
+	 * @request GET:/api/users/{id}
 	 * @secure
 	 * @response `200` `UserViewModel` The `User` was found and returned successfully.
 	 * @response `400` `ProblemDetails` Bad Request
@@ -43,7 +43,7 @@ export namespace Users {
 	 * @tags Users
 	 * @name Me
 	 * @summary Gets the currently logged-in User.
-	 * @request GET:/user/me
+	 * @request GET:/users/me
 	 * @secure
 	 * @response `200` `UserViewModel` The `User` was found and returned successfully.
 	 * @response `400` `ProblemDetails` Bad Request
@@ -57,5 +57,31 @@ export namespace Users {
 		export type RequestBody = never
 		export type RequestHeaders = {}
 		export type ResponseBody = UserViewModel
+	}
+
+	/**
+	 * No description
+	 * @tags Users
+	 * @name UpdateUser
+	 * @summary Updates a user. This request is restricted to administrators, and currently only for banning/unbanning users.
+	 * @request PATCH:/users/{id}
+	 * @secure
+	 * @response `204` `void` No Content
+	 * @response `400` `ProblemDetails` Bad Request
+	 * @response `401` `void` Unauthorized
+	 * @response `403` `ProblemDetails` This request is not an attempt by an admin to ban/unban confirmed users.
+	 * @response `404` `ProblemDetails` Not Found
+	 * @response `422` `ValidationProblemDetails` Unprocessable Content
+	 * @response `500` `void` Internal Server Error
+	 */
+	export namespace UpdateUser {
+		export type RequestParams = {
+			/** @pattern ^[a-zA-Z0-9-_]{22}$ */
+			id: string
+		}
+		export type RequestQuery = {}
+		export type RequestBody = UpdateUserPayload
+		export type RequestHeaders = {}
+		export type ResponseBody = void
 	}
 }
