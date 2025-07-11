@@ -3,8 +3,13 @@ import { useAsyncState } from '@vueuse/core'
 import { ref } from 'vue'
 import { Leaderboards } from '../../lib/api/Leaderboards'
 import { StatusFilter } from '../../lib/api/data-contracts'
+import Paginator from './Paginator.vue'
 
-const limit = 50;
+const props = defineProps<{
+	limit: number | undefined
+	page: number
+}>()
+
 const status = ref<StatusFilter>('Published')
 const query = ref('')
 const searchedQuery = ref('')
@@ -19,23 +24,30 @@ const {
 	error,
 	isLoading,
 	execute
-} = useAsyncState(async (q: string) => {
-	const resp = q ? await leaderboardClient.searchLeaderboards({
-		q: q,
-		status: status.value,
-		limit: limit
-	}) : await leaderboardClient.listLeaderboards({
-		status: status.value,
-		limit: limit
-	})
+} = useAsyncState(
+	async (q: string) => {
+		const resp = q
+			? await leaderboardClient.searchLeaderboards({
+					q: q,
+					status: status.value,
+					limit: props.limit,
+					offset: (props.page - 1) * (props.limit ?? 0)
+				})
+			: await leaderboardClient.listLeaderboards({
+					status: status.value,
+					limit: props.limit,
+					offset: (props.page - 1) * (props.limit ?? 0)
+				})
 
-	return resp.data
-}, {
-	data: [],
-	limitDefault: 0,
-	limitMax: 0,
-	total: 0
-})
+		return resp.data
+	},
+	{
+		data: [],
+		limitDefault: 0,
+		limitMax: 0,
+		total: 0
+	}
+)
 
 function search(q: string) {
 	execute(0, q)
@@ -43,8 +55,7 @@ function search(q: string) {
 	searchedStatus.value = status.value
 }
 
-function clear()
-{
+function clear() {
 	execute(0, '')
 	searchedQuery.value = ''
 }
@@ -63,7 +74,12 @@ function filterChanged() {
 				<button class="button create-new">Create New</button>
 			</RouterLink>
 			<form @submit.prevent="search(query)" class="form">
-				<input v-model="query" placeholder="Search" class="input" type="search"/>
+				<input
+					v-model="query"
+					placeholder="Search"
+					class="input"
+					type="search"
+				/>
 				<select v-model="status" class="input" @change="filterChanged">
 					<option value="" disabled>Please select one</option>
 					<option value="Published">Published</option>
@@ -73,8 +89,18 @@ function filterChanged() {
 			</form>
 		</div>
 
-		<div v-if="searchedQuery" class="results-text" >
-			Displaying {{ boards.data.length }} of {{ boards.total }} results for "{{ searchedQuery }}" ({{ searchedStatus }}).&nbsp;
+		<div style="align-self: flex-end">
+			<Paginator
+				:total="boards.total"
+				:limit="limit ?? boards.limitDefault"
+				:page="page"
+			/>
+		</div>
+
+		<div v-if="searchedQuery" class="results-text">
+			Displaying {{ boards.data.length }} of {{ boards.total }} results for "{{
+				searchedQuery
+			}}" ({{ searchedStatus }}).&nbsp;
 			<a href="" @click.prevent="clear">clear</a>
 		</div>
 
@@ -96,6 +122,14 @@ function filterChanged() {
 				({{ board.slug }})
 			</li>
 		</ul>
+
+		<div style="align-self: flex-end">
+			<Paginator
+				:total="boards.total"
+				:limit="limit ?? boards.limitDefault"
+				:page="page"
+			/>
+		</div>
 	</div>
 </template>
 
