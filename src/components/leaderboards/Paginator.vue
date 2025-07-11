@@ -15,7 +15,7 @@ const totalPages = computed(() => Math.ceil(props.total / props.limit))
 <template>
 	<div class="container">
 		<form class="pageSelectorContainer" method="get">
-			<input type="hidden" name="limit" :value="props.limit" />
+			<input type="hidden" name="resultsPerPage" :value="props.limit" />
 			<label for="goToPage">Go to:</label>
 			<input
 				id="goToPage"
@@ -29,33 +29,33 @@ const totalPages = computed(() => Math.ceil(props.total / props.limit))
 		<div class="pageContainer">
 			<a
 				v-if="props.page > 1"
-				:href="`?limit=${props.limit}&page=${props.page - 1}`"
+				:href="`?resultsPerPage=${props.limit}&page=${props.page - 1}`"
 			>
 				<button>&laquo; Prev</button>
 			</a>
 			<template v-if="totalPages <= 7">
 				<a
 					v-for="page in totalPages"
-					:href="`?limit=${props.limit}&page=${page}`"
+					:href="`?resultsPerPage=${props.limit}&page=${page}`"
 				>
 					<button :disabled="props.page === page">{{ page }}</button>
 				</a>
 			</template>
 			<template v-else-if="props.page <= 6">
-				<a v-for="i in 6" :href="`?limit=${props.limit}&page=${i}`">
+				<a v-for="i in 6" :href="`?resultsPerPage=${props.limit}&page=${i}`">
 					<button :disabled="i === props.page">{{ i }}</button>
 				</a>
-				<a :href="`?limit=${props.limit}&page=${totalPages}`">
+				<a :href="`?resultsPerPage=${props.limit}&page=${totalPages}`">
 					<button>{{ totalPages }}</button>
 				</a>
 			</template>
 			<template v-else-if="props.page >= totalPages - 5">
-				<a :href="`?limit=${props.limit}&page=1`">
+				<a :href="`?resultsPerPage=${props.limit}&page=1`">
 					<button>1</button>
 				</a>
 				<a
 					v-for="i in 6"
-					:href="`?limit=${props.limit}&page=${totalPages - 6 + i}`"
+					:href="`?resultsPerPage=${props.limit}&page=${totalPages - 6 + i}`"
 				>
 					<button :disabled="props.page === totalPages - 6 + i">
 						{{ totalPages - 6 + i }}
@@ -63,18 +63,18 @@ const totalPages = computed(() => Math.ceil(props.total / props.limit))
 				</a>
 			</template>
 			<template v-else>
-				<a :href="`?limit=${props.limit}&page=1`">
+				<a :href="`?resultsPerPage=${props.limit}&page=1`">
 					<button>1</button>
 				</a>
 				<a
 					v-for="i in 5"
-					:href="`?limit=${props.limit}&page=${props.page + i - 3}`"
+					:href="`?resultsPerPage=${props.limit}&page=${props.page + i - 3}`"
 				>
 					<button :disabled="i === 3">
 						{{ props.page + i - 3 }}
 					</button>
 				</a>
-				<a :href="`?limit=${props.limit}&page${totalPages}`">
+				<a :href="`?resultsPerPage=${props.limit}&page${totalPages}`">
 					<button>
 						{{ totalPages }}
 					</button>
@@ -82,7 +82,7 @@ const totalPages = computed(() => Math.ceil(props.total / props.limit))
 			</template>
 			<a
 				v-if="props.page < totalPages"
-				:href="`?limit=${props.limit}&page=${props.page + 1}`"
+				:href="`?resultsPerPage=${props.limit}&page=${props.page + 1}`"
 			>
 				<button>Next &raquo;</button>
 			</a>

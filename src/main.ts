@@ -27,7 +27,7 @@ const router = createRouter({
 			props: (route) => ({
 				id: Number.parseInt(route.params.id as string, 10),
 				// Pagination's for categories
-				limit: Number.parseInt(route.query.limit as string, 10) || undefined,
+				limit: Number.parseInt(route.query.resultsPerPage as string, 10) || undefined,
 				page: Number.parseInt(route.query.page as string, 10) || 1,
 			}),
 		},
@@ -49,7 +49,7 @@ const router = createRouter({
 			name: 'leaderboardsList',
 			component: LeaderboardsList,
 			props: (route) => ({
-				limit: Number.parseInt(route.query.limit as string, 10) || undefined,
+				limit: Number.parseInt(route.query.resultsPerPage as string, 10) || undefined,
 				page: Number.parseInt(route.query.page as string, 10) || 1,
 			}),
 		},
