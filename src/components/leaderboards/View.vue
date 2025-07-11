@@ -59,7 +59,14 @@ async function revealRestore() {
 		confirm('Really restore this leaderboard? (This action can be reversed)')
 	) {
 		useApi(
-			() => leaderboards.restoreLeaderboard(props.id, useAuth(token.value)),
+			() =>
+				leaderboards.updateLeaderboard(
+					props.id,
+					{
+						status: 'Published'
+					},
+					useAuth(token.value)
+				),
 			() => execute(),
 			(error) => {
 				updateError.value = 'Failed to restore: ' + error.status
