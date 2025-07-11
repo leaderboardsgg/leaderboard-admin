@@ -11,6 +11,9 @@ import CategoryList from './CategoryList.vue'
 
 const props = defineProps<{
 	id: number
+	// Pagination props are for the categories
+	limit: number | undefined
+	page: number
 }>()
 
 const updateError = ref('')
@@ -141,7 +144,7 @@ async function revealRestore() {
 				</tbody>
 			</table>
 
-			<CategoryList :id="props.id" />
+			<CategoryList :id="props.id" :limit="props.limit" :page="props.page" />
 		</div>
 	</div>
 </template>
