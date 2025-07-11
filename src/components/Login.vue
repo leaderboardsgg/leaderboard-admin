@@ -36,6 +36,7 @@ async function submit() {
 		() => {
 			submitted.value = false
 			loginError.value = true
+			setTimeout(() => (loginError.value = false), 1000)
 		}
 	)
 }
