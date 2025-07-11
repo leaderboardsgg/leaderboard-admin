@@ -8,13 +8,15 @@ const props = defineProps<{
 }>()
 
 const limits = [25, 50, 100]
+	.filter((l) => l < props.limit)
+	.concat(props.limit, ...[25, 50, 100].filter((l) => l > props.limit))
 
 const totalPages = computed(() => Math.ceil(props.total / props.limit))
 </script>
 
 <template>
 	<div class="container">
-		<form class="pageSelectorContainer" method="get">
+		<form class="pageSelectorContainer">
 			<input type="hidden" name="resultsPerPage" :value="props.limit" />
 			<label for="goToPage">Go to:</label>
 			<input
@@ -87,11 +89,20 @@ const totalPages = computed(() => Math.ceil(props.total / props.limit))
 				<button>Next &raquo;</button>
 			</a>
 		</div>
-		<select>
-			<option v-for="limit in limits" value="limit">
-				{{ limit }} per page
-			</option>
-		</select>
+		<form>
+			<input type="hidden" name="page" :value="props.page" />
+			<select name="resultsPerPage">
+				<option
+					v-for="limit in limits"
+					:value="limit"
+					:selected="props.limit === limit"
+				>
+					{{ limit }}
+				</option>
+			</select>
+			per page
+			<button>Go</button>
+		</form>
 	</div>
 </template>
 
