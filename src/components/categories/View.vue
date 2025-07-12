@@ -60,7 +60,14 @@ async function revealDelete() {
 async function revealRestore() {
 	if (confirm('Really restore this category? (This action can be reversed)')) {
 		useApi(
-			() => categories.restoreCategory(props.id, useAuth(token.value)),
+			() =>
+				categories.updateCategory(
+					props.id,
+					{
+						status: 'Published'
+					},
+					useAuth(token.value)
+				),
 			() => execute(),
 			(error) => {
 				updateError.value = 'Failed to restore: ' + error.status
