@@ -70,7 +70,7 @@ function filterChanged() {
 	<div class="container">
 		<h1>Leaderboards</h1>
 		<div class="input-container">
-			<RouterLink :to="{ name: 'leaderboardCreate' }">
+			<RouterLink :to="{ name: 'leaderboardCreate' }" tabindex="-1">
 				<button class="button create-new">Create New</button>
 			</RouterLink>
 			<form @submit.prevent="search(query)" class="form">

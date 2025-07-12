@@ -32,6 +32,7 @@ const totalPages = computed(() => Math.ceil(props.total / props.limit))
 			<a
 				v-if="props.page > 1"
 				:href="`?resultsPerPage=${props.limit}&page=${props.page - 1}`"
+				tabindex="-1"
 			>
 				<button>&laquo; Prev</button>
 			</a>
@@ -39,25 +40,34 @@ const totalPages = computed(() => Math.ceil(props.total / props.limit))
 				<a
 					v-for="page in totalPages"
 					:href="`?resultsPerPage=${props.limit}&page=${page}`"
+					tabindex="-1"
 				>
 					<button :disabled="props.page === page">{{ page }}</button>
 				</a>
 			</template>
 			<template v-else-if="props.page <= 6">
-				<a v-for="i in 6" :href="`?resultsPerPage=${props.limit}&page=${i}`">
+				<a
+					v-for="i in 6"
+					:href="`?resultsPerPage=${props.limit}&page=${i}`"
+					tabindex="-1"
+				>
 					<button :disabled="i === props.page">{{ i }}</button>
 				</a>
-				<a :href="`?resultsPerPage=${props.limit}&page=${totalPages}`">
+				<a
+					:href="`?resultsPerPage=${props.limit}&page=${totalPages}`"
+					tabindex="-1"
+				>
 					<button>{{ totalPages }}</button>
 				</a>
 			</template>
 			<template v-else-if="props.page >= totalPages - 5">
-				<a :href="`?resultsPerPage=${props.limit}&page=1`">
+				<a :href="`?resultsPerPage=${props.limit}&page=1`" tabindex="-1">
 					<button>1</button>
 				</a>
 				<a
 					v-for="i in 6"
 					:href="`?resultsPerPage=${props.limit}&page=${totalPages - 6 + i}`"
+					tabindex="-1"
 				>
 					<button :disabled="props.page === totalPages - 6 + i">
 						{{ totalPages - 6 + i }}
@@ -65,18 +75,22 @@ const totalPages = computed(() => Math.ceil(props.total / props.limit))
 				</a>
 			</template>
 			<template v-else>
-				<a :href="`?resultsPerPage=${props.limit}&page=1`">
+				<a :href="`?resultsPerPage=${props.limit}&page=1`" tabindex="-1">
 					<button>1</button>
 				</a>
 				<a
 					v-for="i in 5"
 					:href="`?resultsPerPage=${props.limit}&page=${props.page + i - 3}`"
+					tabindex="-1"
 				>
 					<button :disabled="i === 3">
 						{{ props.page + i - 3 }}
 					</button>
 				</a>
-				<a :href="`?resultsPerPage=${props.limit}&page${totalPages}`">
+				<a
+					:href="`?resultsPerPage=${props.limit}&page${totalPages}`"
+					tabindex="-1"
+				>
 					<button>
 						{{ totalPages }}
 					</button>
@@ -85,6 +99,7 @@ const totalPages = computed(() => Math.ceil(props.total / props.limit))
 			<a
 				v-if="props.page < totalPages"
 				:href="`?resultsPerPage=${props.limit}&page=${props.page + 1}`"
+				tabindex="-1"
 			>
 				<button>Next &raquo;</button>
 			</a>
