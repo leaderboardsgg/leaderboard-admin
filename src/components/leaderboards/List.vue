@@ -89,14 +89,6 @@ function filterChanged() {
 			</form>
 		</div>
 
-		<div style="align-self: flex-end">
-			<Paginator
-				:total="boards.total"
-				:limit="limit ?? boards.limitDefault"
-				:page="page"
-			/>
-		</div>
-
 		<div v-if="searchedQuery" class="results-text">
 			Displaying {{ boards.data.length }} of {{ boards.total }} results for "{{
 				searchedQuery
@@ -111,19 +103,23 @@ function filterChanged() {
 			<button @click="search(query)" class="retry-button">Retry</button>
 		</div>
 
-		<ul v-else>
-			<li v-for="board in boards.data" :key="board.id">
-				<RouterLink
-					:to="{ name: 'leaderboardView', params: { id: board.id } }"
-					:class="{ dull: board.deletedAt !== null }"
-				>
-					{{ board.name }}
-				</RouterLink>
-				({{ board.slug }})
-			</li>
-		</ul>
-
-		<div style="align-self: flex-end">
+		<div v-else>
+			<Paginator
+				:total="boards.total"
+				:limit="limit ?? boards.limitDefault"
+				:page="page"
+			/>
+			<ul>
+				<li v-for="board in boards.data" :key="board.id">
+					<RouterLink
+						:to="{ name: 'leaderboardView', params: { id: board.id } }"
+						:class="{ dull: board.deletedAt !== null }"
+					>
+						{{ board.name }}
+					</RouterLink>
+					({{ board.slug }})
+				</li>
+			</ul>
 			<Paginator
 				:total="boards.total"
 				:limit="limit ?? boards.limitDefault"
