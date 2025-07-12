@@ -79,6 +79,7 @@ function filterChanged() {
 					placeholder="Search"
 					class="input"
 					type="search"
+					tabindex="0"
 				/>
 				<select v-model="status" class="input" @change="filterChanged">
 					<option value="" disabled>Please select one</option>
