@@ -78,7 +78,11 @@ async function revealUnban() {
 				>&lt; Back</RouterLink
 			>
 			<div class="action-button-container">
-				<RouterLink :to="{ name: 'userEdit', params: { id } }" tabindex="-1">
+				<RouterLink
+					v-if="user?.role !== 'Administrator'"
+					:to="{ name: 'userEdit', params: { id } }"
+					tabindex="-1"
+				>
 					<button class="action-button">Edit</button>
 				</RouterLink>
 
