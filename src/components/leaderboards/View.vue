@@ -94,11 +94,17 @@ async function revealRestore() {
 				>&lt; Back</RouterLink
 			>
 			<div class="action-button-container">
-				<RouterLink :to="{ name: 'categoryCreate', params: { id } }">
+				<RouterLink
+					:to="{ name: 'categoryCreate', params: { id } }"
+					tabindex="-1"
+				>
 					<button class="action-button">Create Category</button>
 				</RouterLink>
 
-				<RouterLink :to="{ name: 'leaderboardEdit', params: { id } }">
+				<RouterLink
+					:to="{ name: 'leaderboardEdit', params: { id } }"
+					tabindex="-1"
+				>
 					<button class="action-button">Edit</button>
 				</RouterLink>
 
