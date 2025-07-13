@@ -9,7 +9,12 @@
  * ---------------------------------------------------------------
  */
 
-import { UpdateUserPayload, UserViewModel } from './data-contracts'
+import {
+	UpdateUserPayload,
+	UserRole,
+	UserViewModel,
+	UserViewModelListView
+} from './data-contracts'
 
 export namespace Users {
 	/**
@@ -36,6 +41,42 @@ export namespace Users {
 		export type RequestBody = never
 		export type RequestHeaders = {}
 		export type ResponseBody = UserViewModel
+	}
+
+	/**
+	 * No description
+	 * @tags Users
+	 * @name ListUsers
+	 * @summary Gets users. Includes banned users, if specified.
+	 * @request GET:/users
+	 * @secure
+	 * @response `200` `UserViewModelListView` OK
+	 * @response `400` `ProblemDetails` Bad Request
+	 * @response `401` `void` Unauthorized
+	 * @response `403` `void` Forbidden
+	 * @response `422` `ValidationProblemDetails` Unprocessable Content
+	 * @response `500` `void` Internal Server Error
+	 */
+	export namespace ListUsers {
+		export type RequestParams = {}
+		export type RequestQuery = {
+			/**
+			 * The maximum number of records to return. Fewer records may be returned.
+			 * @format int32
+			 */
+			limit?: number
+			/**
+			 * The zero-based index at which to begin selecting records to return.
+			 * @format int32
+			 * @default 0
+			 */
+			offset?: number
+			/** @uniqueItems true */
+			roles?: UserRole[]
+		}
+		export type RequestBody = never
+		export type RequestHeaders = {}
+		export type ResponseBody = UserViewModelListView
 	}
 
 	/**
@@ -69,7 +110,7 @@ export namespace Users {
 	 * @response `204` `void` No Content
 	 * @response `400` `ProblemDetails` Bad Request
 	 * @response `401` `void` Unauthorized
-	 * @response `403` `ProblemDetails` This request is not an attempt by an admin to ban/unban confirmed users.
+	 * @response `403` `ProblemDetails` This request was not sent by an admin, the target user is an admin, or the role provided was neither BANNED nor CONFIRMED.
 	 * @response `404` `ProblemDetails` Not Found
 	 * @response `422` `ValidationProblemDetails` Unprocessable Content
 	 * @response `500` `void` Internal Server Error

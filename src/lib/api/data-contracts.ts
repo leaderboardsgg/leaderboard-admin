@@ -459,6 +459,29 @@ export interface UserViewModel {
 	createdAt: string
 }
 
+export interface UserViewModelListView {
+	data: UserViewModel[]
+	/**
+	 * The total number of records matching the given criteria that
+	 * exist in the database, NOT the total number of records returned.
+	 * @format int64
+	 */
+	total: number
+	/**
+	 * The default limit that will be applied for this resource type
+	 * if the client does not specify one in the query string.
+	 * @format int32
+	 */
+	limitDefault: number
+	/**
+	 * The maximum value the client is allowed to specify as a limt for
+	 * endpoints return a paginated list of resources of this type.
+	 * Exceeding this value will result in an error.
+	 * @format int32
+	 */
+	limitMax: number
+}
+
 export interface ValidationProblemDetails {
 	type?: string | null
 	title?: string | null
@@ -687,6 +710,22 @@ export interface GetRecordsForCategoryParams {
  * All fields are optional but you must specify at least one.
  */
 export type UpdateRunPayload = UpdateTimedRunRequest | UpdateScoredRunRequest
+
+export interface ListUsersParams {
+	/**
+	 * The maximum number of records to return. Fewer records may be returned.
+	 * @format int32
+	 */
+	limit?: number
+	/**
+	 * The zero-based index at which to begin selecting records to return.
+	 * @format int32
+	 * @default 0
+	 */
+	offset?: number
+	/** @uniqueItems true */
+	roles?: UserRole[]
+}
 
 /**
  * The request object sent when updating a `User`.

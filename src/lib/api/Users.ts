@@ -10,9 +10,11 @@
  */
 
 import {
+	ListUsersParams,
 	ProblemDetails,
 	UpdateUserPayload,
 	UserViewModel,
+	UserViewModelListView,
 	ValidationProblemDetails
 } from './data-contracts'
 import { ContentType, HttpClient, RequestParams } from './http-client'
@@ -37,6 +39,33 @@ export class Users<
 		this.request<UserViewModel, ProblemDetails | void>({
 			path: `/api/users/${id}`,
 			method: 'GET',
+			secure: true,
+			format: 'json',
+			...params
+		})
+	/**
+	 * No description
+	 *
+	 * @tags Users
+	 * @name ListUsers
+	 * @summary Gets users. Includes banned users, if specified.
+	 * @request GET:/users
+	 * @secure
+	 * @response `200` `UserViewModelListView` OK
+	 * @response `400` `ProblemDetails` Bad Request
+	 * @response `401` `void` Unauthorized
+	 * @response `403` `void` Forbidden
+	 * @response `422` `ValidationProblemDetails` Unprocessable Content
+	 * @response `500` `void` Internal Server Error
+	 */
+	listUsers = (query: ListUsersParams, params: RequestParams = {}) =>
+		this.request<
+			UserViewModelListView,
+			ProblemDetails | void | ValidationProblemDetails
+		>({
+			path: `/users`,
+			method: 'GET',
+			query: query,
 			secure: true,
 			format: 'json',
 			...params
@@ -74,7 +103,7 @@ export class Users<
 	 * @response `204` `void` No Content
 	 * @response `400` `ProblemDetails` Bad Request
 	 * @response `401` `void` Unauthorized
-	 * @response `403` `ProblemDetails` This request is not an attempt by an admin to ban/unban confirmed users.
+	 * @response `403` `ProblemDetails` This request was not sent by an admin, the target user is an admin, or the role provided was neither BANNED nor CONFIRMED.
 	 * @response `404` `ProblemDetails` Not Found
 	 * @response `422` `ValidationProblemDetails` Unprocessable Content
 	 * @response `500` `void` Internal Server Error
