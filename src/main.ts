@@ -10,6 +10,9 @@ import LeaderboardCreate from './components/leaderboards/Create.vue'
 import LeaderboardEdit from './components/leaderboards/Edit.vue'
 import LeaderboardsList from './components/leaderboards/List.vue'
 import LeaderboardView from './components/leaderboards/View.vue'
+import UserEdit from './components/users/Edit.vue'
+import UsersList from './components/users/List.vue'
+import UserView from './components/users/View.vue'
 import './style.css'
 
 const router = createRouter({
@@ -19,6 +22,34 @@ const router = createRouter({
 			path: '/',
 			name: 'home',
 			component: Main,
+		},
+		{
+			path: '/user/:id',
+			name: 'userView',
+			component: UserView,
+			props: (route) => ({
+				id: route.params.id as string,
+			}),
+		},
+		{
+			path: '/user/:id/edit',
+			name: 'userEdit',
+			component: UserEdit,
+			props: (route) => ({
+				id: Number.parseInt(route.params.id as string, 10),
+			}),
+		},
+		{
+			path: '/users',
+			name: 'usersList',
+			component: UsersList,
+			props: (route) => ({
+				limit:
+					Number.parseInt(route.query.resultsPerPage as string, 10) ||
+					undefined,
+				page: Number.parseInt(route.query.page as string, 10) || 1,
+				roles: route.query.roles,
+			}),
 		},
 		{
 			path: '/leaderboard/:id(\\d+)',

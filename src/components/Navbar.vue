@@ -19,6 +19,7 @@ const { state: user } = useUserDetails()
 		<div class="navbar-left">
 			<p class="title select-none">Leaderboards.gg Admin Panel</p>
 			<RouterLink :to="{ name: 'leaderboardsList' }">Leaderboards</RouterLink>
+			<RouterLink :to="{ name: 'usersList' }">Users</RouterLink>
 		</div>
 		<div class="navbar-right">
 			<p>Signed in as {{ user?.username }}</p>
