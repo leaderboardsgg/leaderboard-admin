@@ -167,7 +167,7 @@ function updateLimits() {
 .resultsPerPageContainer {
 	display: flex;
 	align-items: center;
-	gap: .6rem;
+	gap: 0.6rem;
 }
 
 .resultsPerPage {

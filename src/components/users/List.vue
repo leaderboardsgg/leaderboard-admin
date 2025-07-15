@@ -34,7 +34,7 @@ function parseRolesFromQuery(roles: string | string[] | undefined): UserRole[] {
 		return []
 	}
 
-	const r: Set<UserRole> = new Set();
+	const r: Set<UserRole> = new Set()
 
 	for (let role of roles) {
 		if (/^administrator$/i.test(role)) {
@@ -161,7 +161,7 @@ const {
 }
 
 .input-container .label {
-	margin-top: .4rem;
+	margin-top: 0.4rem;
 }
 
 .input {
