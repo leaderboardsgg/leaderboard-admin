@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 const props = defineProps<{
 	total: number
@@ -11,18 +11,26 @@ const limits = [25, 50, 100]
 	.filter((l) => l < props.limit)
 	.concat(props.limit, ...[25, 50, 100].filter((l) => l > props.limit))
 
+const limit = ref(props.limit)
+
 const totalPages = computed(() => Math.ceil(props.total / props.limit))
+
+function updateLimits() {
+	const search = new URLSearchParams(location.search)
+	search.set('resultsPerPage', limit.value.toString(10))
+	location.search = search.toString()
+}
 </script>
 
 <template>
 	<div class="container">
 		<form class="pageSelectorContainer">
 			<input type="hidden" name="resultsPerPage" :value="props.limit" />
-			<label for="goToPage">Go to:</label>
+			<label for="goToPage">Go to page:</label>
 			<input
 				id="goToPage"
 				name="page"
-				class="goToPageSelector"
+				class="goToPage"
 				type="number"
 				min="1"
 				:max="totalPages"
@@ -43,7 +51,9 @@ const totalPages = computed(() => Math.ceil(props.total / props.limit))
 					:href="`?resultsPerPage=${props.limit}&page=${page}`"
 					tabindex="-1"
 				>
-					<button class="button" :disabled="props.page === page">{{ page }}</button>
+					<button class="button" :disabled="props.page === page">
+						{{ page }}
+					</button>
 				</a>
 			</template>
 			<template v-else-if="props.page <= 6">
@@ -105,9 +115,15 @@ const totalPages = computed(() => Math.ceil(props.total / props.limit))
 				<button class="button">Next &raquo;</button>
 			</a>
 		</div>
-		<form>
-			<input type="hidden" name="page" :value="props.page" />
-			<select name="resultsPerPage" class="resultsPerPageSelector">
+		<div class="resultsPerPageContainer">
+			<label for="resultsPerPage">Show</label>
+			<select
+				v-model="limit"
+				id="resultsPerPage"
+				name="resultsPerPage"
+				class="resultsPerPage"
+				@change="updateLimits"
+			>
 				<option
 					v-for="limit in limits"
 					:value="limit"
@@ -116,9 +132,8 @@ const totalPages = computed(() => Math.ceil(props.total / props.limit))
 					{{ limit }}
 				</option>
 			</select>
-			per page
-			<button class="button">Go</button>
-		</form>
+			<span>per page</span>
+		</div>
 	</div>
 </template>
 
@@ -145,11 +160,17 @@ const totalPages = computed(() => Math.ceil(props.total / props.limit))
 	align-items: center;
 }
 
-.goToPageSelector {
-	padding: .5rem .2rem;
+.goToPage {
+	padding: 0.5rem 0.2rem;
 }
 
-.resultsPerPageSelector {
-	padding: .5rem .2rem;
+.resultsPerPageContainer {
+	display: flex;
+	align-items: center;
+	gap: .6rem;
+}
+
+.resultsPerPage {
+	padding: 0.5rem 0.2rem;
 }
 </style>
