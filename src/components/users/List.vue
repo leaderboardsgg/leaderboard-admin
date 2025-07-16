@@ -99,7 +99,7 @@ const {
 		<form class="input-container">
 			<input hidden name="resultsPerPage" :value="props.limit" />
 			<input hidden name="page" :value="props.page" />
-			<label class="label" for="roles">Filter users by:</label>
+			<label class="label" for="roles">Filter roles:</label>
 			<select id="roles" v-model="roles" name="role" class="input" multiple>
 				<option value="Administrator">Admin</option>
 				<option value="Registered">Registered</option>
