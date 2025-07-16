@@ -72,7 +72,7 @@ export namespace Users {
 			 */
 			offset?: number
 			/** @uniqueItems true */
-			roles?: UserRole[]
+			role?: UserRole[]
 		}
 		export type RequestBody = never
 		export type RequestHeaders = {}

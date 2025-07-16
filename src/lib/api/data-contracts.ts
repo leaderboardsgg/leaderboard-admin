@@ -724,7 +724,7 @@ export interface ListUsersParams {
 	 */
 	offset?: number
 	/** @uniqueItems true */
-	roles?: UserRole[]
+	role?: UserRole[]
 }
 
 /**

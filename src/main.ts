@@ -48,7 +48,7 @@ const router = createRouter({
 					Number.parseInt(route.query.resultsPerPage as string, 10) ||
 					undefined,
 				page: Number.parseInt(route.query.page as string, 10) || 1,
-				roles: route.query.roles,
+				roles: route.query.role,
 			}),
 		},
 		{

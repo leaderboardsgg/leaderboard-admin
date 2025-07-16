@@ -75,7 +75,7 @@ const {
 	async () => {
 		const resp = await userClient.listUsers(
 			{
-				roles: roles.value,
+				role: roles.value,
 				limit: props.limit,
 				offset: (props.page - 1) * (props.limit ?? 0)
 			},
@@ -100,7 +100,7 @@ const {
 			<input hidden name="resultsPerPage" :value="props.limit" />
 			<input hidden name="page" :value="props.page" />
 			<label class="label" for="roles">Filter users by:</label>
-			<select id="roles" v-model="roles" name="roles" class="input" multiple>
+			<select id="roles" v-model="roles" name="role" class="input" multiple>
 				<option value="Administrator">Admin</option>
 				<option value="Registered">Registered</option>
 				<option value="Confirmed">Confirmed</option>
