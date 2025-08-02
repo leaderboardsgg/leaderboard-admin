@@ -48,7 +48,7 @@ export class Users<
 	 *
 	 * @tags Users
 	 * @name ListUsers
-	 * @summary Gets users. Includes banned users, if specified.
+	 * @summary Gets users, filtered by role.
 	 * @request GET:/users
 	 * @secure
 	 * @response `200` `UserViewModelListView` OK

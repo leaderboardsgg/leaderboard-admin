@@ -47,7 +47,7 @@ export namespace Users {
 	 * No description
 	 * @tags Users
 	 * @name ListUsers
-	 * @summary Gets users. Includes banned users, if specified.
+	 * @summary Gets users, filtered by role.
 	 * @request GET:/users
 	 * @secure
 	 * @response `200` `UserViewModelListView` OK
@@ -71,8 +71,11 @@ export namespace Users {
 			 * @default 0
 			 */
 			offset?: number
-			/** @uniqueItems true */
-			role?: UserRole[]
+			/**
+			 * Multiple comma-separated values are allowed.
+			 * @default "Confirmed, Administrator"
+			 */
+			role?: UserRole
 		}
 		export type RequestBody = never
 		export type RequestHeaders = {}

@@ -723,8 +723,11 @@ export interface ListUsersParams {
 	 * @default 0
 	 */
 	offset?: number
-	/** @uniqueItems true */
-	role?: UserRole[]
+	/**
+	 * Multiple comma-separated values are allowed.
+	 * @default "Confirmed, Administrator"
+	 */
+	role?: UserRole
 }
 
 /**
