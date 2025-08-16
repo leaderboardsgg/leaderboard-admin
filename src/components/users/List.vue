@@ -13,47 +13,23 @@ const props = defineProps<{
 	roles: string | string[] | undefined
 }>()
 
+const allRoles: UserRole[] = [
+	'Administrator',
+	'Banned',
+	'Confirmed',
+	'Registered'
+]
+
 function parseRolesFromQuery(roles: string | string[] | undefined): UserRole[] {
 	if (roles === undefined) {
 		return []
 	}
 
 	if (typeof roles === 'string') {
-		if (/^administrator$/i.test(roles)) {
-			return ['Administrator']
-		}
-		if (/^banned$/i.test(roles)) {
-			return ['Banned']
-		}
-		if (/^confirmed$/i.test(roles)) {
-			return ['Confirmed']
-		}
-		if (/^registered$/i.test(roles)) {
-			return ['Registered']
-		}
-		return []
+		return allRoles.filter((role) => role === roles)
 	}
 
-	const r: Set<UserRole> = new Set()
-
-	for (let role of roles) {
-		if (/^administrator$/i.test(role)) {
-			r.add('Administrator')
-			continue
-		}
-		if (/^banned$/i.test(role)) {
-			r.add('Banned')
-			continue
-		}
-		if (/^confirmed$/i.test(role)) {
-			r.add('Confirmed')
-			continue
-		}
-		if (/^registered$/i.test(role)) {
-			r.add('Registered')
-			continue
-		}
-	}
+	const r: Set<UserRole> = new Set(allRoles.filter((r) => roles.includes(r)))
 
 	return Array.from(r.values())
 }
