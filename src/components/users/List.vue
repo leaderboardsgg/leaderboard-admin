@@ -29,9 +29,7 @@ function parseRolesFromQuery(roles: string | string[] | undefined): UserRole[] {
 		return allRoles.filter((role) => role === roles)
 	}
 
-	const r: Set<UserRole> = new Set(allRoles.filter((r) => roles.includes(r)))
-
-	return Array.from(r.values())
+	return allRoles.filter((r) => roles.includes(r))
 }
 
 const roles: Ref<UserRole[]> = ref(parseRolesFromQuery(props.roles))
