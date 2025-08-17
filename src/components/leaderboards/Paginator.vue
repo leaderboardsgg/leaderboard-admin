@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed } from 'vue';
 
 const props = defineProps<{
 	total: number
@@ -11,13 +11,13 @@ const limits = [25, 50, 100]
 	.filter((l) => l < props.limit)
 	.concat(props.limit, ...[25, 50, 100].filter((l) => l > props.limit))
 
-const limit = ref(props.limit)
+const limit = props.limit
 
 const totalPages = computed(() => Math.ceil(props.total / props.limit))
 
 function updateLimits() {
 	const search = new URLSearchParams(location.search)
-	search.set('resultsPerPage', limit.value.toString(10))
+	search.set('resultsPerPage', limit.toString(10))
 	location.search = search.toString()
 }
 </script>
