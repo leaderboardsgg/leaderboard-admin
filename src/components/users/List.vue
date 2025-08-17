@@ -52,7 +52,7 @@ const {
 				// @ts-ignore The query param accepts a comma-separated list of roles,
 				// which is something the generated contract can't feasibly make types
 				// for - zysim
-				role: roles.value.length > 0 ? roles.value.join(',') : undefined,
+				role: roles.value.join(','),
 				limit: props.limit,
 				offset: (props.page - 1) * (props.limit ?? 0)
 			},
