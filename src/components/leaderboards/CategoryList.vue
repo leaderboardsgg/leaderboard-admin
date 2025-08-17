@@ -4,7 +4,7 @@ import { computed } from 'vue'
 import { Categories } from '../../lib/api/Categories'
 import { ProblemDetails } from '../../lib/api/data-contracts'
 import { HttpResponse } from '../../lib/api/http-client'
-import Paginator from './Paginator.vue'
+import Paginator from '../Paginator.vue'
 
 const props = defineProps<{
 	id: number

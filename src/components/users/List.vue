@@ -3,9 +3,9 @@ import { useAsyncState } from '@vueuse/core'
 import { ref, Ref } from 'vue'
 import { useAuth } from '../../composables/useAuth'
 import { useSessionToken } from '../../composables/useSessionToken'
-import { Users } from '../../lib/api/Users'
-import Paginator from '../leaderboards/Paginator.vue'
 import { UserRole } from '../../lib/api/data-contracts'
+import { Users } from '../../lib/api/Users'
+import Paginator from '../Paginator.vue'
 
 const props = defineProps<{
 	limit: number | undefined
@@ -52,7 +52,8 @@ const {
 				// @ts-ignore The query param accepts a comma-separated list of roles,
 				// which is something the generated contract can't feasibly make types
 				// for - zysim
-				role: roles.value.join(','),
+				// role: roles.value.join(','),
+				role: roles.value.length > 0 ? roles.value.join(',') : undefined,
 				limit: props.limit,
 				offset: (props.page - 1) * (props.limit ?? 0)
 			},
@@ -98,25 +99,21 @@ const {
 				:total="users.total"
 				:limit="limit ?? users.limitDefault"
 				:page="page"
-			/>
-			<div v-if="users.total === 0">
-				No users found with the applied filters.
-			</div>
-			<ul v-else>
-				<li v-for="user in users.data" :key="user.id">
-					<RouterLink
-						:to="{ name: 'userView', params: { id: user.id } }"
-						:class="{ dull: user.role === 'Banned' }"
-					>
-						{{ user.username }}
-					</RouterLink>
-				</li>
-			</ul>
-			<Paginator
-				:total="users.total"
-				:limit="limit ?? users.limitDefault"
-				:page="page"
-			/>
+			>
+				<div v-if="users.total === 0">
+					No users found with the applied filters.
+				</div>
+				<ul v-else>
+					<li v-for="user in users.data" :key="user.id">
+						<RouterLink
+							:to="{ name: 'userView', params: { id: user.id } }"
+							:class="{ dull: user.role === 'Banned' }"
+						>
+							{{ user.username }}
+						</RouterLink>
+					</li>
+				</ul>
+			</Paginator>
 		</div>
 	</div>
 </template>

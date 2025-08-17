@@ -3,7 +3,7 @@ import { useAsyncState } from '@vueuse/core'
 import { ref } from 'vue'
 import { Leaderboards } from '../../lib/api/Leaderboards'
 import { StatusFilter } from '../../lib/api/data-contracts'
-import Paginator from './Paginator.vue'
+import Paginator from '../Paginator.vue'
 
 const props = defineProps<{
 	limit: number | undefined
