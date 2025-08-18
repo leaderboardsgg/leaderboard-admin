@@ -74,12 +74,6 @@ const router = createRouter({
 			path: '/leaderboards',
 			name: 'leaderboardsList',
 			component: LeaderboardsList,
-			props: (route) => ({
-				limit:
-					Number.parseInt(route.query.resultsPerPage as string, 10) ||
-					undefined,
-				page: Number.parseInt(route.query.page as string, 10) || 1,
-			}),
 		},
 		{
 			path: '/category/:id(\\d+)',
