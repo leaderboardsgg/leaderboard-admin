@@ -69,8 +69,11 @@ const length = end - first + 1
 			<span>per page</span>
 		</div>
 		<div class="pageContainer">
+			<button :disabled="page === 1" class="button"	@click="page = 1">
+				&laquo; First
+			</button>
 			<button :disabled="page === 1" class="button" @click="page -= 1">
-				&laquo; Prev
+				&lsaquo; Prev
 			</button>
 			<button
 				v-for="i in length"
@@ -82,7 +85,10 @@ const length = end - first + 1
 				{{ first + i - 1 }}
 			</button>
 			<button :disabled="page === totalPages" class="button" @click="page += 1">
-				Next &raquo;
+				Next &rsaquo;
+			</button>
+			<button :disabled="page === totalPages" class="button"	@click="page = totalPages">
+				Last &raquo;
 			</button>
 		</div>
 	</div>
