@@ -65,7 +65,7 @@ const {
 		limitDefault: 0,
 		limitMax: 0,
 		total: 0
-	},
+	}
 )
 
 watch(pageQuery, () => execute())

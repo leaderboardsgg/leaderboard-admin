@@ -7,18 +7,14 @@ import { ProblemDetails } from '../../lib/api/data-contracts'
 import { HttpResponse } from '../../lib/api/http-client'
 import Paginator from '../Paginator.vue'
 
-const idQuery = useRouteParams(
-	'id',
-	undefined,
-	{
-		transform(val: string | undefined) {
-			if (typeof val === 'undefined') {
-				throw new Error('id shouldn\'t be undefined')
-			}
-			return parseInt(val, 10)
+const idQuery = useRouteParams('id', undefined, {
+	transform(val: string | undefined) {
+		if (typeof val === 'undefined') {
+			throw new Error("id shouldn't be undefined")
 		}
-	},
-)
+		return parseInt(val, 10)
+	}
+})
 const pageQuery = useRouteQuery('page', '1', { transform: Number })
 const limitQuery = useRouteQuery('resultsPerPage', '25', { transform: Number })
 

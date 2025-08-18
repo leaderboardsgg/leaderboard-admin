@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { clamp } from '@vueuse/core';
+import { clamp } from '@vueuse/core'
 
 const props = defineProps<{
 	total: number
@@ -62,14 +62,19 @@ const length = end - first + 1
 				name="resultsPerPage"
 				class="resultsPerPage"
 			>
-				<option v-for="l in limitOptions" :value="l" :selected="l === limit" :key="l">
+				<option
+					v-for="l in limitOptions"
+					:value="l"
+					:selected="l === limit"
+					:key="l"
+				>
 					{{ l }}
 				</option>
 			</select>
 			<span>per page</span>
 		</div>
 		<div class="pageContainer">
-			<button :disabled="page === 1" class="button"	@click="page = 1">
+			<button :disabled="page === 1" class="button" @click="page = 1">
 				&laquo; First
 			</button>
 			<button :disabled="page === 1" class="button" @click="page -= 1">
@@ -87,7 +92,11 @@ const length = end - first + 1
 			<button :disabled="page === totalPages" class="button" @click="page += 1">
 				Next &rsaquo;
 			</button>
-			<button :disabled="page === totalPages" class="button"	@click="page = totalPages">
+			<button
+				:disabled="page === totalPages"
+				class="button"
+				@click="page = totalPages"
+			>
 				Last &raquo;
 			</button>
 		</div>

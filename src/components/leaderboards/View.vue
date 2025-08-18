@@ -10,18 +10,14 @@ import { ProblemDetails } from '../../lib/api/data-contracts'
 import { HttpResponse } from '../../lib/api/http-client'
 import CategoryList from './CategoryList.vue'
 
-const idQuery = useRouteParams(
-	'id',
-	undefined,
-	{
-		transform(val: string | undefined) {
-			if (typeof val === 'undefined') {
-				throw new Error('id shouldn\'t be undefined')
-			}
-			return parseInt(val, 10)
+const idQuery = useRouteParams('id', undefined, {
+	transform(val: string | undefined) {
+		if (typeof val === 'undefined') {
+			throw new Error("id shouldn't be undefined")
 		}
+		return parseInt(val, 10)
 	}
-)
+})
 
 const updateError = ref('')
 
