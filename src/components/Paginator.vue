@@ -7,7 +7,7 @@ const props = defineProps<{
 
 const page = defineModel<number>('page', { required: true })
 const limit = defineModel('limit', { default: 25 })
-const limitOptions = Array.from(new Set([25, 50, 100].concat(limit.value))).sort((a, b) => a - b)
+const limitOptions = [25, 50, 100]
 const totalPages = Math.max(Math.ceil(props.total / limit.value), 1)
 page.value = clamp(page.value, 1, totalPages)
 

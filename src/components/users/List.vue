@@ -10,7 +10,7 @@ import Paginator from '../Paginator.vue'
 
 const rolesQuery = useRouteQuery<string | string[] | undefined>('role')
 const pageQuery = useRouteQuery('page', '1', { transform: Number })
-const limitQuery = useRouteQuery<number | undefined>('resultsPerPage', undefined, { transform: Number })
+const limitQuery = useRouteQuery('resultsPerPage', '25', { transform: Number })
 
 const allRoles: UserRole[] = [
 	'Administrator',
@@ -68,13 +68,8 @@ const {
 	},
 )
 
-const limit = ref(limitQuery.value ?? users.value.limitDefault)
-
 watch(pageQuery, () => execute())
-watch(limit, () => {
-	limitQuery.value = limit.value
-	execute()
-})
+watch(limitQuery, () => execute())
 watch(roles, () => {
 	rolesQuery.value = roles.value
 	pageQuery.value = 1
@@ -105,7 +100,7 @@ watch(roles, () => {
 		<div v-else>
 			<Paginator
 				:total="users.total"
-				v-model:limit="limit"
+				v-model:limit="limitQuery"
 				v-model:page="pageQuery"
 			/>
 			<div v-if="users.total === 0">
