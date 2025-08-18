@@ -73,7 +73,7 @@ const length = end - first + 1
 		</div>
 		<slot></slot>
 		<div class="pageContainer">
-			<button v-if="page > 1" class="button" @click="page -= 1">
+			<button :disabled="page === 1" class="button" @click="page -= 1">
 				&laquo; Prev
 			</button>
 			<button
@@ -85,7 +85,7 @@ const length = end - first + 1
 			>
 				{{ first + i - 1 }}
 			</button>
-			<button v-if="page < totalPages" class="button" @click="page += 1">
+			<button :disabled="page === totalPages" class="button" @click="page += 1">
 				Next &raquo;
 			</button>
 		</div>
