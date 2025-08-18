@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { clamp } from '@vueuse/core'
-import { computed } from 'vue'
+import { clamp } from '@vueuse/core';
 
 const props = defineProps<{
 	total: number
@@ -9,10 +8,8 @@ const props = defineProps<{
 const page = defineModel<number>('page', { required: true })
 const limit = defineModel('limit', { default: 25 })
 const limitOptions = Array.from(new Set([25, 50, 100].concat(limit.value))).sort((a, b) => a - b)
-const totalPages = computed(() =>
-	Math.max(Math.ceil(props.total / limit.value), 1)
-)
-page.value = clamp(page.value, 1, totalPages.value)
+const totalPages = Math.max(Math.ceil(props.total / limit.value), 1)
+page.value = clamp(page.value, 1, totalPages)
 
 /**
  * We use arithmetic to calculate the first and last pagination buttons to
@@ -48,10 +45,10 @@ page.value = clamp(page.value, 1, totalPages.value)
 const leftmost = page.value - 3
 const vacantLeft = Math.max(leftmost, 1) - leftmost
 const rightmost = page.value + 3
-const vacantRight = rightmost - Math.min(rightmost, totalPages.value)
+const vacantRight = rightmost - Math.min(rightmost, totalPages)
 const shifted = page.value + vacantLeft - vacantRight
 const first = Math.max(shifted - 3, 1)
-const end = Math.min(shifted + 3, totalPages.value)
+const end = Math.min(shifted + 3, totalPages)
 const length = end - first + 1
 </script>
 
