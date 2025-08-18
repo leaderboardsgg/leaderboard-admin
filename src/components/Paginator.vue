@@ -14,6 +14,37 @@ const totalPages = computed(() =>
 )
 page.value = clamp(page.value, 1, totalPages.value)
 
+/**
+ * We use arithmetic to calculate the first and last pagination buttons to
+ * render that will include the current page, `page`, without also exceeding
+ * how many pages we actually have. Also, we want to render the smaller of
+ * seven buttons, or all possible pages.
+ *
+ * We first assume that we have at least seven pages in total, and that `page`
+ * is in the middle. I.e. if we have exactly seven pages, `page` is 4.
+ *
+ * 1. We take 3 from `page` and add 3 to `page` into separate variables,
+ *    `leftmost` and `rightmost`.
+ * 2. We get the amount each variable exceeds the maximum possible bounds (1
+ *    and `totalPages`) and save them to `vacantLeft` and `vacantRight`,
+ *    respectively.
+ * 3. `vacantLeft` and `vacantRight` are added to our new, biased center,
+ *    `shifted`.
+ * 4. We repeat step 1 on `shifted` to get `first` and `end`, and clamp
+ *    them to 1 to `totalPages`, respectively.
+ * 5. We calculate `length` to get the number of buttons we will render.
+ *
+ * E.g. if `page` is 1 and `totalPages` is 3, then:
+ * - `vacantLeft` and `vacantRight` will be 2 and 1:
+ * - `shifted` will be 2;
+ * - `first` will be 1, after clamping from -1
+ * - `end` will be 3, after clamping from 5
+ * - `length` will be 3
+ * I.e. we will render three buttons, for pages 1 through 3.
+ *
+ * We get to build the page buttons in constant time this way, instead of O(N)
+ * with iterative methods. - zysim, thetedder
+ */
 const leftmost = page.value - 3
 const vacantLeft = Math.max(leftmost, 1) - leftmost
 const rightmost = page.value + 3
