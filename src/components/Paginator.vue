@@ -7,8 +7,8 @@ const props = defineProps<{
 }>()
 
 const page = defineModel<number>('page', { required: true })
-const limits = [25, 50, 100]
 const limit = defineModel('limit', { default: 25 })
+const limitOptions = Array.from(new Set([25, 50, 100].concat(limit.value))).sort((a, b) => a - b)
 const totalPages = computed(() =>
 	Math.max(Math.ceil(props.total / limit.value), 1)
 )
@@ -65,7 +65,7 @@ const length = end - first + 1
 				name="resultsPerPage"
 				class="resultsPerPage"
 			>
-				<option v-for="l in limits" :value="l" :selected="l === limit" :key="l">
+				<option v-for="l in limitOptions" :value="l" :selected="l === limit" :key="l">
 					{{ l }}
 				</option>
 			</select>
