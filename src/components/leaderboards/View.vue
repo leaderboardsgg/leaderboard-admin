@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useAsyncState } from '@vueuse/core'
+import { useRouteParams } from '@vueuse/router'
 import { computed, ref } from 'vue'
 import { useApi } from '../../composables/useApi'
 import { useAuth } from '../../composables/useAuth'
@@ -9,12 +10,18 @@ import { ProblemDetails } from '../../lib/api/data-contracts'
 import { HttpResponse } from '../../lib/api/http-client'
 import CategoryList from './CategoryList.vue'
 
-const props = defineProps<{
-	id: number
-	// Pagination props are for the categories
-	limit: number | undefined
-	page: number
-}>()
+const idQuery = useRouteParams(
+	'id',
+	undefined,
+	{
+		transform(val: string | undefined) {
+			if (typeof val === 'undefined') {
+				throw new Error('id shouldn\'t be undefined')
+			}
+			return parseInt(val, 10)
+		}
+	}
+)
 
 const updateError = ref('')
 
@@ -32,7 +39,7 @@ const {
 	isLoading,
 	execute
 } = useAsyncState(async () => {
-	const resp = await leaderboards.getLeaderboard(props.id)
+	const resp = await leaderboards.getLeaderboard(idQuery.value)
 	return resp.data
 }, null)
 
@@ -45,7 +52,7 @@ async function revealDelete() {
 		confirm('Really delete this leaderboard? (This action can be reversed)')
 	) {
 		useApi(
-			() => leaderboards.deleteLeaderboard(props.id, useAuth(token.value)),
+			() => leaderboards.deleteLeaderboard(idQuery.value, useAuth(token.value)),
 			() => execute(),
 			(error) => {
 				updateError.value = 'Failed to delete: ' + error.status
@@ -61,7 +68,7 @@ async function revealRestore() {
 		useApi(
 			() =>
 				leaderboards.updateLeaderboard(
-					props.id,
+					idQuery.value,
 					{
 						status: 'Published'
 					},
@@ -95,14 +102,14 @@ async function revealRestore() {
 			>
 			<div class="action-button-container">
 				<RouterLink
-					:to="{ name: 'categoryCreate', params: { id } }"
+					:to="{ name: 'categoryCreate', params: { id: idQuery } }"
 					tabindex="-1"
 				>
 					<button class="action-button">Create Category</button>
 				</RouterLink>
 
 				<RouterLink
-					:to="{ name: 'leaderboardEdit', params: { id } }"
+					:to="{ name: 'leaderboardEdit', params: { id: idQuery } }"
 					tabindex="-1"
 				>
 					<button class="action-button">Edit</button>
@@ -157,7 +164,7 @@ async function revealRestore() {
 				</tbody>
 			</table>
 
-			<CategoryList :id="props.id" :limit="props.limit" :page="props.page" />
+			<CategoryList />
 		</div>
 	</div>
 </template>
