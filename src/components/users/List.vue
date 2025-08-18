@@ -1,17 +1,16 @@
 <script setup lang="ts">
 import { useAsyncState } from '@vueuse/core'
-import { ref, Ref } from 'vue'
+import { useRouteQuery } from '@vueuse/router'
+import { ref, Ref, watch } from 'vue'
 import { useAuth } from '../../composables/useAuth'
 import { useSessionToken } from '../../composables/useSessionToken'
 import { UserRole } from '../../lib/api/data-contracts'
 import { Users } from '../../lib/api/Users'
 import Paginator from '../Paginator.vue'
 
-const props = defineProps<{
-	limit: number | undefined
-	page: number
-	roles: string | string[] | undefined
-}>()
+const rolesQuery = useRouteQuery<string | string[] | undefined>('role')
+const pageQuery = useRouteQuery('page', '1', { transform: Number })
+const limitQuery = useRouteQuery<number | undefined>('resultsPerPage', undefined, { transform: Number })
 
 const allRoles: UserRole[] = [
 	'Administrator',
@@ -32,7 +31,7 @@ function parseRolesFromQuery(roles: string | string[] | undefined): UserRole[] {
 	return allRoles.filter((r) => roles.includes(r))
 }
 
-const roles: Ref<UserRole[]> = ref(parseRolesFromQuery(props.roles))
+const roles: Ref<UserRole[]> = ref(parseRolesFromQuery(rolesQuery.value))
 
 const userClient = new Users({
 	baseUrl: import.meta.env.VITE_BACKEND_URL
@@ -52,10 +51,9 @@ const {
 				// @ts-ignore The query param accepts a comma-separated list of roles,
 				// which is something the generated contract can't feasibly make types
 				// for - zysim
-				// role: roles.value.join(','),
-				role: roles.value.length > 0 ? roles.value.join(',') : undefined,
-				limit: props.limit,
-				offset: (props.page - 1) * (props.limit ?? 0)
+				role: roles.value.join(',') || undefined,
+				limit: limitQuery.value,
+				offset: (pageQuery.value - 1) * (limitQuery.value ?? 0)
 			},
 			useAuth(token.value)
 		)
@@ -67,16 +65,27 @@ const {
 		limitDefault: 0,
 		limitMax: 0,
 		total: 0
-	}
+	},
 )
+
+const limit = ref(limitQuery.value ?? users.value.limitDefault)
+
+watch(pageQuery, () => execute())
+watch(limit, () => {
+	limitQuery.value = limit.value
+	execute()
+})
+watch(roles, () => {
+	rolesQuery.value = roles.value
+	pageQuery.value = 1
+	execute()
+})
 </script>
 
 <template>
 	<div class="container">
 		<h1>Users</h1>
-		<form class="input-container">
-			<input hidden name="resultsPerPage" :value="props.limit" />
-			<input hidden name="page" :value="props.page" />
+		<div class="role-change-container">
 			<label class="label" for="roles">Filter roles:</label>
 			<select id="roles" v-model="roles" name="role" class="input" multiple>
 				<option value="Administrator">Admin</option>
@@ -84,8 +93,7 @@ const {
 				<option value="Confirmed">Confirmed</option>
 				<option value="Banned">Banned</option>
 			</select>
-			<button class="button">Filter</button>
-		</form>
+		</div>
 
 		<div v-if="isLoading">Loading...</div>
 
@@ -97,23 +105,22 @@ const {
 		<div v-else>
 			<Paginator
 				:total="users.total"
-				:limit="limit ?? users.limitDefault"
-				:page="page"
-			>
-				<div v-if="users.total === 0">
-					No users found with the applied filters.
-				</div>
-				<ul v-else>
-					<li v-for="user in users.data" :key="user.id">
-						<RouterLink
-							:to="{ name: 'userView', params: { id: user.id } }"
-							:class="{ dull: user.role === 'Banned' }"
-						>
-							{{ user.username }}
-						</RouterLink>
-					</li>
-				</ul>
-			</Paginator>
+				v-model:limit="limit"
+				v-model:page="pageQuery"
+			/>
+			<div v-if="users.total === 0">
+				No users found with the applied filters.
+			</div>
+			<ul v-else>
+				<li v-for="user in users.data" :key="user.id">
+					<RouterLink
+						:to="{ name: 'userView', params: { id: user.id } }"
+						:class="{ dull: user.role === 'Banned' }"
+					>
+						{{ user.username }}
+					</RouterLink>
+				</li>
+			</ul>
 		</div>
 	</div>
 </template>
@@ -127,14 +134,14 @@ const {
 	gap: 0.5rem;
 }
 
-.input-container {
+.role-change-container {
 	align-self: flex-end;
 	display: flex;
 	gap: 1rem;
 	align-items: flex-start;
 }
 
-.input-container .label {
+.role-change-container .label {
 	margin-top: 0.4rem;
 }
 

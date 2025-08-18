@@ -68,7 +68,6 @@ const length = end - first + 1
 			</select>
 			<span>per page</span>
 		</div>
-		<slot></slot>
 		<div class="pageContainer">
 			<button :disabled="page === 1" class="button" @click="page -= 1">
 				&laquo; Prev

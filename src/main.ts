@@ -43,13 +43,6 @@ const router = createRouter({
 			path: '/users',
 			name: 'usersList',
 			component: UsersList,
-			props: (route) => ({
-				limit:
-					Number.parseInt(route.query.resultsPerPage as string, 10) ||
-					undefined,
-				page: Number.parseInt(route.query.page as string, 10) || 1,
-				roles: route.query.role,
-			}),
 		},
 		{
 			path: '/leaderboard/:id(\\d+)',
