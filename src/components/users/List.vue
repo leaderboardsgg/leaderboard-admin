@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useAsyncState } from '@vueuse/core'
 import { useRouteQuery } from '@vueuse/router'
-import { ref, Ref, watch } from 'vue'
+import { watch } from 'vue'
 import { useAuth } from '../../composables/useAuth'
 import { useSessionToken } from '../../composables/useSessionToken'
 import { UserRole } from '../../lib/api/data-contracts'
