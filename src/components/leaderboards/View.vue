@@ -154,7 +154,7 @@ async function revealRestore() {
 				</tbody>
 			</table>
 
-			<CategoryList :leaderboard-id="props.id"/>
+			<CategoryList :leaderboard-id="props.id" />
 		</div>
 	</div>
 </template>

@@ -18,9 +18,13 @@ const allRoles: UserRole[] = [
 	'Registered'
 ]
 
-const rolesQuery = useRouteQuery<UserRole[]>('role', ['Administrator', 'Confirmed'], {
-	transform: (roles) => roles.filter(role => allRoles.includes(role))
-})
+const rolesQuery = useRouteQuery<UserRole[]>(
+	'role',
+	['Administrator', 'Confirmed'],
+	{
+		transform: (roles) => roles.filter((role) => allRoles.includes(role))
+	}
+)
 
 const userClient = new Users({
 	baseUrl: import.meta.env.VITE_BACKEND_URL
@@ -40,32 +44,29 @@ const {
 	error,
 	isLoading,
 	execute
-} = useAsyncState(
-	async () => {
-		// Not specifying any roles causes it to default to Admin + Confirmed, which is
-		// unintuitive. Simply don't fetch any data instead.
-		// - Ted W
+} = useAsyncState(async () => {
+	// Not specifying any roles causes it to default to Admin + Confirmed, which is
+	// unintuitive. Simply don't fetch any data instead.
+	// - Ted W
 
-		if (rolesQuery.value.length === 0) {
-			return emptyData
-		}
+	if (rolesQuery.value.length === 0) {
+		return emptyData
+	}
 
-		const resp = await userClient.listUsers(
-			{
-				// @ts-ignore The query param accepts a comma-separated list of roles,
-				// which is something the generated contract can't feasibly make types
-				// for - zysim
-				role: rolesQuery.value.join(','),
-				limit: limitQuery.value,
-				offset: (pageQuery.value - 1) * (limitQuery.value ?? 0)
-			},
-			useAuth(token.value)
-		)
+	const resp = await userClient.listUsers(
+		{
+			// @ts-ignore The query param accepts a comma-separated list of roles,
+			// which is something the generated contract can't feasibly make types
+			// for - zysim
+			role: rolesQuery.value.join(','),
+			limit: limitQuery.value,
+			offset: (pageQuery.value - 1) * (limitQuery.value ?? 0)
+		},
+		useAuth(token.value)
+	)
 
-		return resp.data
-	},
-	emptyData
-)
+	return resp.data
+}, emptyData)
 
 watch([pageQuery, limitQuery], () => execute())
 
@@ -84,7 +85,13 @@ watch(rolesQuery, () => {
 		<h1>Users</h1>
 		<div class="role-change-container">
 			<label class="label" for="roles">Filter roles:</label>
-			<select id="roles" v-model="rolesQuery" name="role" class="input" multiple>
+			<select
+				id="roles"
+				v-model="rolesQuery"
+				name="role"
+				class="input"
+				multiple
+			>
 				<option value="Administrator">Admin</option>
 				<option value="Registered">Registered</option>
 				<option value="Confirmed">Confirmed</option>
