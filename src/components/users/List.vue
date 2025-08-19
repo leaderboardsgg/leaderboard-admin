@@ -105,7 +105,7 @@ watch(rolesQuery, () => {
 				v-model:limit="limitQuery"
 				v-model:page="pageQuery"
 			/>
-			<div v-if="users.total === 0">
+			<div v-if="users.data.length === 0">
 				No users found with the applied filters.
 			</div>
 			<ul v-else>
