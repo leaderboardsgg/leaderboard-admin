@@ -28,6 +28,13 @@ const userClient = new Users({
 
 const token = useSessionToken()
 
+const emptyData = {
+	data: [],
+	limitDefault: 0,
+	limitMax: 0,
+	total: 0
+}
+
 const {
 	state: users,
 	error,
@@ -35,12 +42,20 @@ const {
 	execute
 } = useAsyncState(
 	async () => {
+		// Not specifying any roles causes it to default to Admin + Confirmed, which is
+		// unintuitive. Simply don't fetch any data instead.
+		// - Ted W
+
+		if (rolesQuery.value.length === 0) {
+			return emptyData
+		}
+
 		const resp = await userClient.listUsers(
 			{
 				// @ts-ignore The query param accepts a comma-separated list of roles,
 				// which is something the generated contract can't feasibly make types
 				// for - zysim
-				role: roles.value.join(',') || undefined,
+				role: rolesQuery.value.join(','),
 				limit: limitQuery.value,
 				offset: (pageQuery.value - 1) * (limitQuery.value ?? 0)
 			},
@@ -49,12 +64,7 @@ const {
 
 		return resp.data
 	},
-	{
-		data: [],
-		limitDefault: 0,
-		limitMax: 0,
-		total: 0
-	}
+	emptyData
 )
 
 watch([pageQuery, limitQuery], () => execute())
