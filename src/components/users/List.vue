@@ -8,7 +8,6 @@ import { UserRole } from '../../lib/api/data-contracts'
 import { Users } from '../../lib/api/Users'
 import Paginator from '../Paginator.vue'
 
-const rolesQuery = useRouteQuery<string | string[] | undefined>('role')
 const pageQuery = useRouteQuery('page', '1', { transform: Number })
 const limitQuery = useRouteQuery('resultsPerPage', '25', { transform: Number })
 
@@ -19,19 +18,9 @@ const allRoles: UserRole[] = [
 	'Registered'
 ]
 
-function parseRolesFromQuery(roles: string | string[] | undefined): UserRole[] {
-	if (roles === undefined) {
-		return []
-	}
-
-	if (typeof roles === 'string') {
-		return allRoles.filter((role) => role === roles)
-	}
-
-	return allRoles.filter((r) => roles.includes(r))
-}
-
-const roles: Ref<UserRole[]> = ref(parseRolesFromQuery(rolesQuery.value))
+const rolesQuery = useRouteQuery<UserRole[]>('role', ['Administrator', 'Confirmed'], {
+	transform: (roles) => roles.filter(role => allRoles.includes(role))
+})
 
 const userClient = new Users({
 	baseUrl: import.meta.env.VITE_BACKEND_URL
@@ -68,10 +57,13 @@ const {
 	}
 )
 
-watch(pageQuery, () => execute())
-watch(limitQuery, () => execute())
-watch(roles, () => {
-	rolesQuery.value = roles.value
+watch([pageQuery, limitQuery], () => execute())
+
+// Return to page 1 if the role selection changes. The user can use the back
+// button to restore the previous view if necessary.
+// - Ted W
+
+watch(rolesQuery, () => {
 	pageQuery.value = 1
 	execute()
 })
@@ -82,7 +74,7 @@ watch(roles, () => {
 		<h1>Users</h1>
 		<div class="role-change-container">
 			<label class="label" for="roles">Filter roles:</label>
-			<select id="roles" v-model="roles" name="role" class="input" multiple>
+			<select id="roles" v-model="rolesQuery" name="role" class="input" multiple>
 				<option value="Administrator">Admin</option>
 				<option value="Registered">Registered</option>
 				<option value="Confirmed">Confirmed</option>
