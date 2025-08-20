@@ -36,7 +36,7 @@ const router = createRouter({
 			name: 'userEdit',
 			component: UserEdit,
 			props: (route) => ({
-				id: Number.parseInt(route.params.id as string, 10),
+				id: route.params.id as string,
 			}),
 		},
 		{
