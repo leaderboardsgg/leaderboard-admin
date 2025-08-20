@@ -92,7 +92,7 @@ async function revealRestore() {
 			>
 			<div class="action-button-container">
 				<RouterLink
-					:to="{ name: 'categoryCreate', params: { id: id } }"
+					:to="{ name: 'categoryCreate', params: { id } }"
 					tabindex="-1"
 				>
 					<button class="action-button">Create Category</button>
