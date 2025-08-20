@@ -1,20 +1,16 @@
 <script setup lang="ts">
 import { useAsyncState } from '@vueuse/core'
-import { useRouteParams, useRouteQuery } from '@vueuse/router'
+import { useRouteQuery } from '@vueuse/router'
 import { computed, watch } from 'vue'
 import { Categories } from '../../lib/api/Categories'
 import { ProblemDetails } from '../../lib/api/data-contracts'
 import { HttpResponse } from '../../lib/api/http-client'
 import Paginator from '../Paginator.vue'
 
-const idQuery = useRouteParams('id', undefined, {
-	transform(val: string | undefined) {
-		if (typeof val === 'undefined') {
-			throw new Error("id shouldn't be undefined")
-		}
-		return parseInt(val, 10)
-	}
-})
+const props = defineProps<{
+	leaderboardId: number
+}>()
+
 const pageQuery = useRouteQuery('page', '1', { transform: Number })
 const limitQuery = useRouteQuery('resultsPerPage', '25', { transform: Number })
 
@@ -34,7 +30,7 @@ const {
 } = useAsyncState(
 	async () => {
 		const resp = await categories.getCategoriesForLeaderboard({
-			id: idQuery.value,
+			id: props.leaderboardId,
 			limit: limitQuery.value,
 			offset: (pageQuery.value - 1) * (limitQuery.value ?? 0)
 		})
@@ -48,8 +44,7 @@ const {
 	}
 )
 
-watch(limitQuery, () => execute())
-watch(pageQuery, () => execute())
+watch([limitQuery, pageQuery], () => execute())
 </script>
 
 <template>

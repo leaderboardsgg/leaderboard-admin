@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { useAsyncState } from '@vueuse/core'
 import { useRouteQuery } from '@vueuse/router'
-import { ref, Ref, watch } from 'vue'
+import { watch } from 'vue'
 import { useAuth } from '../../composables/useAuth'
 import { useSessionToken } from '../../composables/useSessionToken'
 import { UserRole } from '../../lib/api/data-contracts'
 import { Users } from '../../lib/api/Users'
 import Paginator from '../Paginator.vue'
 
-const rolesQuery = useRouteQuery<string | string[] | undefined>('role')
 const pageQuery = useRouteQuery('page', '1', { transform: Number })
 const limitQuery = useRouteQuery('resultsPerPage', '25', { transform: Number })
 
@@ -19,19 +18,13 @@ const allRoles: UserRole[] = [
 	'Registered'
 ]
 
-function parseRolesFromQuery(roles: string | string[] | undefined): UserRole[] {
-	if (roles === undefined) {
-		return []
+const rolesQuery = useRouteQuery<UserRole[]>(
+	'role',
+	['Administrator', 'Confirmed'],
+	{
+		transform: (roles) => roles.filter((role) => allRoles.includes(role))
 	}
-
-	if (typeof roles === 'string') {
-		return allRoles.filter((role) => role === roles)
-	}
-
-	return allRoles.filter((r) => roles.includes(r))
-}
-
-const roles: Ref<UserRole[]> = ref(parseRolesFromQuery(rolesQuery.value))
+)
 
 const userClient = new Users({
 	baseUrl: import.meta.env.VITE_BACKEND_URL
@@ -39,39 +32,49 @@ const userClient = new Users({
 
 const token = useSessionToken()
 
+const emptyData = {
+	data: [],
+	limitDefault: 0,
+	limitMax: 0,
+	total: 0
+}
+
 const {
 	state: users,
 	error,
 	isLoading,
 	execute
-} = useAsyncState(
-	async () => {
-		const resp = await userClient.listUsers(
-			{
-				// @ts-ignore The query param accepts a comma-separated list of roles,
-				// which is something the generated contract can't feasibly make types
-				// for - zysim
-				role: roles.value.join(',') || undefined,
-				limit: limitQuery.value,
-				offset: (pageQuery.value - 1) * (limitQuery.value ?? 0)
-			},
-			useAuth(token.value)
-		)
+} = useAsyncState(async () => {
+	// Not specifying any roles causes it to default to Admin + Confirmed, which is
+	// unintuitive. Simply don't fetch any data instead.
+	// - Ted W
 
-		return resp.data
-	},
-	{
-		data: [],
-		limitDefault: 0,
-		limitMax: 0,
-		total: 0
+	if (rolesQuery.value.length === 0) {
+		return emptyData
 	}
-)
 
-watch(pageQuery, () => execute())
-watch(limitQuery, () => execute())
-watch(roles, () => {
-	rolesQuery.value = roles.value
+	const resp = await userClient.listUsers(
+		{
+			// @ts-ignore The query param accepts a comma-separated list of roles,
+			// which is something the generated contract can't feasibly make types
+			// for - zysim
+			role: rolesQuery.value.join(','),
+			limit: limitQuery.value,
+			offset: (pageQuery.value - 1) * (limitQuery.value ?? 0)
+		},
+		useAuth(token.value)
+	)
+
+	return resp.data
+}, emptyData)
+
+watch([pageQuery, limitQuery], () => execute())
+
+// Return to page 1 if the role selection changes. The user can use the back
+// button to restore the previous view if necessary.
+// - Ted W
+
+watch(rolesQuery, () => {
 	pageQuery.value = 1
 	execute()
 })
@@ -82,7 +85,13 @@ watch(roles, () => {
 		<h1>Users</h1>
 		<div class="role-change-container">
 			<label class="label" for="roles">Filter roles:</label>
-			<select id="roles" v-model="roles" name="role" class="input" multiple>
+			<select
+				id="roles"
+				v-model="rolesQuery"
+				name="role"
+				class="input"
+				multiple
+			>
 				<option value="Administrator">Admin</option>
 				<option value="Registered">Registered</option>
 				<option value="Confirmed">Confirmed</option>
@@ -103,7 +112,7 @@ watch(roles, () => {
 				v-model:limit="limitQuery"
 				v-model:page="pageQuery"
 			/>
-			<div v-if="users.total === 0">
+			<div v-if="users.data.length === 0">
 				No users found with the applied filters.
 			</div>
 			<ul v-else>
