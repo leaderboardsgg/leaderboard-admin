@@ -60,7 +60,7 @@ const {
 			// for - zysim
 			role: rolesQuery.value.join(','),
 			limit: limitQuery.value,
-			offset: (pageQuery.value - 1) * (limitQuery.value ?? 0)
+			offset: (pageQuery.value - 1) * limitQuery.value
 		},
 		useAuth(token.value)
 	)

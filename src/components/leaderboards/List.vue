@@ -30,12 +30,12 @@ const {
 					q: q,
 					status: status.value,
 					limit: limitQuery.value,
-					offset: (pageQuery.value - 1) * (limitQuery.value ?? 0)
+					offset: (pageQuery.value - 1) * limitQuery.value
 				})
 			: await leaderboardClient.listLeaderboards({
 					status: status.value,
 					limit: limitQuery.value,
-					offset: (pageQuery.value - 1) * (limitQuery.value ?? 0)
+					offset: (pageQuery.value - 1) * limitQuery.value
 				})
 
 		return resp.data
