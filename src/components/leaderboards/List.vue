@@ -64,7 +64,11 @@ function filterChanged() {
 	searchedStatus.value = status.value
 }
 
-watch([limitQuery, pageQuery], () => execute(0, query.value))
+watch(limitQuery, () => {
+	pageQuery.value = 1
+	execute(0, query.value)
+})
+watch(pageQuery, () => execute(0, query.value))
 </script>
 
 <template>

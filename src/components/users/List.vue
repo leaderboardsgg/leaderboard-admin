@@ -68,13 +68,13 @@ const {
 	return resp.data
 }, emptyData)
 
-watch([pageQuery, limitQuery], () => execute())
+watch(pageQuery, () => execute())
 
 // Return to page 1 if the role selection changes. The user can use the back
 // button to restore the previous view if necessary.
 // - Ted W
 
-watch(rolesQuery, () => {
+watch([limitQuery, rolesQuery], () => {
 	pageQuery.value = 1
 	execute()
 })
