@@ -202,10 +202,6 @@ async function revealRestore() {
 	background: crimson;
 }
 
-.table-header {
-	font-weight: bold;
-}
-
 .error-text {
 	grid-column: span 2 / span 2;
 	color: crimson;
