@@ -1,0 +1,170 @@
+<script setup lang="ts">
+import { useAsyncState } from '@vueuse/core'
+import { useRouteQuery } from '@vueuse/router'
+import { watch } from 'vue'
+import { useAuth } from '../../composables/useAuth'
+import { useSessionToken } from '../../composables/useSessionToken'
+import { UserRole } from '../../lib/api/data-contracts'
+import { Users } from '../../lib/api/Users'
+import Paginator from '../Paginator.vue'
+
+const pageQuery = useRouteQuery('page', '1', { transform: Number })
+const limitQuery = useRouteQuery('resultsPerPage', '25', { transform: Number })
+
+const allRoles: UserRole[] = [
+	'Administrator',
+	'Banned',
+	'Confirmed',
+	'Registered'
+]
+
+const rolesQuery = useRouteQuery<UserRole[]>(
+	'role',
+	['Administrator', 'Confirmed'],
+	{
+		transform: (roles) => roles.filter((role) => allRoles.includes(role))
+	}
+)
+
+const userClient = new Users({
+	baseUrl: import.meta.env.VITE_BACKEND_URL
+})
+
+const token = useSessionToken()
+
+const emptyData = {
+	data: [],
+	limitDefault: 0,
+	limitMax: 0,
+	total: 0
+}
+
+const {
+	state: users,
+	error,
+	isLoading,
+	execute
+} = useAsyncState(async () => {
+	// Not specifying any roles causes it to default to Admin + Confirmed, which is
+	// unintuitive. Simply don't fetch any data instead.
+	// - Ted W
+
+	if (rolesQuery.value.length === 0) {
+		return emptyData
+	}
+
+	const resp = await userClient.listUsers(
+		{
+			// @ts-ignore The query param accepts a comma-separated list of roles,
+			// which is something the generated contract can't feasibly make types
+			// for - zysim
+			role: rolesQuery.value.join(','),
+			limit: limitQuery.value,
+			offset: (pageQuery.value - 1) * limitQuery.value
+		},
+		useAuth(token.value)
+	)
+
+	return resp.data
+}, emptyData)
+
+watch(pageQuery, () => execute())
+
+// Return to page 1 if the role selection changes. The user can use the back
+// button to restore the previous view if necessary.
+// - Ted W
+
+watch([limitQuery, rolesQuery], () => {
+	pageQuery.value = 1
+	execute()
+})
+</script>
+
+<template>
+	<div class="container">
+		<h1>Users</h1>
+		<div class="role-change-container">
+			<label class="label" for="roles">Filter roles:</label>
+			<select
+				id="roles"
+				v-model="rolesQuery"
+				name="role"
+				class="input"
+				multiple
+			>
+				<option value="Administrator">Admin</option>
+				<option value="Registered">Registered</option>
+				<option value="Confirmed">Confirmed</option>
+				<option value="Banned">Banned</option>
+			</select>
+		</div>
+
+		<div v-if="isLoading">Loading...</div>
+
+		<div v-else-if="error" class="error-container">
+			<p>An error occurred.</p>
+			<button @click="() => execute()" class="retry-button">Retry</button>
+		</div>
+
+		<div v-else>
+			<Paginator
+				:total="users.total"
+				v-model:limit="limitQuery"
+				v-model:page="pageQuery"
+			/>
+			<div v-if="users.data.length === 0">
+				No users found with the applied filters.
+			</div>
+			<ul v-else>
+				<li v-for="user in users.data" :key="user.id">
+					<RouterLink
+						:to="{ name: 'userView', params: { id: user.id } }"
+						:class="{ dull: user.role === 'Banned' }"
+					>
+						{{ user.username }}
+					</RouterLink>
+				</li>
+			</ul>
+		</div>
+	</div>
+</template>
+
+<style lang="css" scoped>
+.container {
+	max-width: 85rem;
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.role-change-container {
+	align-self: flex-end;
+	display: flex;
+	gap: 1rem;
+	align-items: flex-start;
+}
+
+.role-change-container .label {
+	margin-top: 0.4rem;
+}
+
+.input {
+	padding: 0.5rem;
+}
+
+.error-container {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.retry-button {
+	align-self: start;
+	padding: 1rem;
+}
+
+.dull {
+	color: grey;
+}
+</style>

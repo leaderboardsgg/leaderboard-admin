@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { useAsyncState } from '@vueuse/core'
-import { ref } from 'vue'
+import { useRouteQuery } from '@vueuse/router'
+import { ref, watch } from 'vue'
 import { Leaderboards } from '../../lib/api/Leaderboards'
 import { StatusFilter } from '../../lib/api/data-contracts'
-import Paginator from './Paginator.vue'
+import Paginator from '../Paginator.vue'
 
-const props = defineProps<{
-	limit: number | undefined
-	page: number
-}>()
+const pageQuery = useRouteQuery('page', '1', { transform: Number })
+const limitQuery = useRouteQuery('resultsPerPage', '25', { transform: Number })
 
 const status = ref<StatusFilter>('Published')
 const query = ref('')
@@ -30,13 +29,13 @@ const {
 			? await leaderboardClient.searchLeaderboards({
 					q: q,
 					status: status.value,
-					limit: props.limit,
-					offset: (props.page - 1) * (props.limit ?? 0)
+					limit: limitQuery.value,
+					offset: (pageQuery.value - 1) * limitQuery.value
 				})
 			: await leaderboardClient.listLeaderboards({
 					status: status.value,
-					limit: props.limit,
-					offset: (props.page - 1) * (props.limit ?? 0)
+					limit: limitQuery.value,
+					offset: (pageQuery.value - 1) * limitQuery.value
 				})
 
 		return resp.data
@@ -64,6 +63,12 @@ function filterChanged() {
 	execute(0, searchedQuery.value)
 	searchedStatus.value = status.value
 }
+
+watch(limitQuery, () => {
+	pageQuery.value = 1
+	execute(0, query.value)
+})
+watch(pageQuery, () => execute(0, query.value))
 </script>
 
 <template>
@@ -107,8 +112,8 @@ function filterChanged() {
 		<div v-else>
 			<Paginator
 				:total="boards.total"
-				:limit="limit ?? boards.limitDefault"
-				:page="page"
+				v-model:limit="limitQuery"
+				v-model:page="pageQuery"
 			/>
 			<ul>
 				<li v-for="board in boards.data" :key="board.id">
@@ -123,8 +128,8 @@ function filterChanged() {
 			</ul>
 			<Paginator
 				:total="boards.total"
-				:limit="limit ?? boards.limitDefault"
-				:page="page"
+				v-model:limit="limitQuery"
+				v-model:page="pageQuery"
 			/>
 		</div>
 	</div>

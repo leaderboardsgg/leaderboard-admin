@@ -10,6 +10,9 @@ import LeaderboardCreate from './components/leaderboards/Create.vue'
 import LeaderboardEdit from './components/leaderboards/Edit.vue'
 import LeaderboardsList from './components/leaderboards/List.vue'
 import LeaderboardView from './components/leaderboards/View.vue'
+import UserEdit from './components/users/Edit.vue'
+import UsersList from './components/users/List.vue'
+import UserView from './components/users/View.vue'
 import './style.css'
 
 const router = createRouter({
@@ -21,16 +24,32 @@ const router = createRouter({
 			component: Main,
 		},
 		{
+			path: '/user/:id',
+			name: 'userView',
+			component: UserView,
+			props: (route) => ({
+				id: route.params.id as string,
+			}),
+		},
+		{
+			path: '/user/:id/edit',
+			name: 'userEdit',
+			component: UserEdit,
+			props: (route) => ({
+				id: route.params.id as string,
+			}),
+		},
+		{
+			path: '/users',
+			name: 'usersList',
+			component: UsersList,
+		},
+		{
 			path: '/leaderboard/:id(\\d+)',
 			name: 'leaderboardView',
 			component: LeaderboardView,
 			props: (route) => ({
 				id: Number.parseInt(route.params.id as string, 10),
-				// Pagination's for categories
-				limit:
-					Number.parseInt(route.query.resultsPerPage as string, 10) ||
-					undefined,
-				page: Number.parseInt(route.query.page as string, 10) || 1,
 			}),
 		},
 		{
@@ -50,12 +69,6 @@ const router = createRouter({
 			path: '/leaderboards',
 			name: 'leaderboardsList',
 			component: LeaderboardsList,
-			props: (route) => ({
-				limit:
-					Number.parseInt(route.query.resultsPerPage as string, 10) ||
-					undefined,
-				page: Number.parseInt(route.query.page as string, 10) || 1,
-			}),
 		},
 		{
 			path: '/category/:id(\\d+)',

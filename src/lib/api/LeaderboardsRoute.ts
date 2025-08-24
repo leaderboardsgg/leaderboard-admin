@@ -108,7 +108,7 @@ export namespace Leaderboards {
 	 * @tags Leaderboards
 	 * @name SearchLeaderboards
 	 * @summary Search leaderboards by name or slug.
-	 * @request GET:/api/leaderboards/search
+	 * @request GET:/api/search/leaderboards
 	 * @secure
 	 * @response `200` `LeaderboardViewModelListView` OK
 	 * @response `400` `ProblemDetails` Bad Request

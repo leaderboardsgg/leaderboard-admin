@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import { useAsyncState } from '@vueuse/core'
-import { computed } from 'vue'
+import { useRouteQuery } from '@vueuse/router'
+import { computed, watch } from 'vue'
 import { Categories } from '../../lib/api/Categories'
 import { ProblemDetails } from '../../lib/api/data-contracts'
 import { HttpResponse } from '../../lib/api/http-client'
-import Paginator from './Paginator.vue'
+import Paginator from '../Paginator.vue'
 
 const props = defineProps<{
-	id: number
-	limit: number | undefined
-	page: number
+	leaderboardId: number
 }>()
+
+const pageQuery = useRouteQuery('page', '1', { transform: Number })
+const limitQuery = useRouteQuery('resultsPerPage', '25', { transform: Number })
 
 const categories = new Categories({
 	baseUrl: import.meta.env.VITE_BACKEND_URL
@@ -28,9 +30,9 @@ const {
 } = useAsyncState(
 	async () => {
 		const resp = await categories.getCategoriesForLeaderboard({
-			id: props.id,
-			limit: props.limit,
-			offset: (props.page - 1) * (props.limit ?? 0)
+			id: props.leaderboardId,
+			limit: limitQuery.value,
+			offset: (pageQuery.value - 1) * (limitQuery.value ?? 0)
 		})
 		return resp.data
 	},
@@ -41,6 +43,8 @@ const {
 		total: 0
 	}
 )
+
+watch([limitQuery, pageQuery], () => execute())
 </script>
 
 <template>
@@ -48,7 +52,7 @@ const {
 		<div v-if="isLoading">Loading...</div>
 		<div v-else-if="error">
 			<p class="error-text">
-				Failed to fetch categories: {{ errorResponse.status }}
+				Failed to fetch categories: {{ errorResponse }}
 				{{ errorResponse.title }}
 			</p>
 			<button @click="execute()" class="button">Retry</button>
@@ -56,9 +60,9 @@ const {
 
 		<div v-else>
 			<Paginator
-				:limit="props.limit ?? cats.limitDefault"
+				v-model:limit="limitQuery"
 				:total="cats.total"
-				:page="props.page"
+				v-model:page="pageQuery"
 			/>
 			<span>Categories:</span>
 			<ul>

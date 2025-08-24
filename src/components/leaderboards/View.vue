@@ -11,9 +11,6 @@ import CategoryList from './CategoryList.vue'
 
 const props = defineProps<{
 	id: number
-	// Pagination props are for the categories
-	limit: number | undefined
-	page: number
 }>()
 
 const updateError = ref('')
@@ -94,11 +91,17 @@ async function revealRestore() {
 				>&lt; Back</RouterLink
 			>
 			<div class="action-button-container">
-				<RouterLink :to="{ name: 'categoryCreate', params: { id } }">
+				<RouterLink
+					:to="{ name: 'categoryCreate', params: { id } }"
+					tabindex="-1"
+				>
 					<button class="action-button">Create Category</button>
 				</RouterLink>
 
-				<RouterLink :to="{ name: 'leaderboardEdit', params: { id } }">
+				<RouterLink
+					:to="{ name: 'leaderboardEdit', params: { id } }"
+					tabindex="-1"
+				>
 					<button class="action-button">Edit</button>
 				</RouterLink>
 
@@ -151,7 +154,7 @@ async function revealRestore() {
 				</tbody>
 			</table>
 
-			<CategoryList :id="props.id" :limit="props.limit" :page="props.page" />
+			<CategoryList :leaderboard-id="props.id" />
 		</div>
 	</div>
 </template>
