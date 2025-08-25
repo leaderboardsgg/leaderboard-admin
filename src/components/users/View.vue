@@ -77,30 +77,20 @@ async function revealUnban() {
 			<RouterLink class="back-link" :to="{ name: 'usersList' }"
 				>&lt; Back</RouterLink
 			>
-			<div class="action-button-container">
-				<RouterLink
-					v-if="user?.role !== 'Administrator'"
-					:to="{ name: 'userEdit', params: { id } }"
-					tabindex="-1"
-				>
-					<button class="action-button">Edit</button>
-				</RouterLink>
-
-				<button
-					v-if="user?.role === 'Confirmed'"
-					class="action-button delete-button"
-					@click="revealBan"
-				>
-					Ban
-				</button>
-				<button
-					v-else-if="user?.role === 'Banned'"
-					class="action-button"
-					@click="revealUnban"
-				>
-					Unban
-				</button>
-			</div>
+			<button
+				v-if="user?.role === 'Confirmed'"
+				class="action-button delete-button"
+				@click="revealBan"
+			>
+				Ban
+			</button>
+			<button
+				v-else-if="user?.role === 'Banned'"
+				class="action-button"
+				@click="revealUnban"
+			>
+				Unban
+			</button>
 
 			<p v-if="updateError" class="error-text">{{ updateError }}</p>
 
@@ -154,12 +144,6 @@ async function revealUnban() {
 .back-link {
 	justify-self: start;
 	padding: 0.5rem;
-}
-
-.action-button-container {
-	display: flex;
-	gap: 0.5rem;
-	justify-self: end;
 }
 
 .action-button {

@@ -10,7 +10,6 @@ import LeaderboardCreate from './components/leaderboards/Create.vue'
 import LeaderboardEdit from './components/leaderboards/Edit.vue'
 import LeaderboardsList from './components/leaderboards/List.vue'
 import LeaderboardView from './components/leaderboards/View.vue'
-import UserEdit from './components/users/Edit.vue'
 import UsersList from './components/users/List.vue'
 import UserView from './components/users/View.vue'
 import './style.css'
@@ -27,14 +26,6 @@ const router = createRouter({
 			path: '/user/:id',
 			name: 'userView',
 			component: UserView,
-			props: (route) => ({
-				id: route.params.id as string,
-			}),
-		},
-		{
-			path: '/user/:id/edit',
-			name: 'userEdit',
-			component: UserEdit,
 			props: (route) => ({
 				id: route.params.id as string,
 			}),
