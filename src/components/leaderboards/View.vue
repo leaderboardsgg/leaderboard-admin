@@ -8,6 +8,7 @@ import { Leaderboards } from '../../lib/api/Leaderboards'
 import { ProblemDetails } from '../../lib/api/data-contracts'
 import { HttpResponse } from '../../lib/api/http-client'
 import CategoryList from './CategoryList.vue'
+import BaseButton from '../base/BaseButton.vue'
 
 const props = defineProps<{
 	id: number
@@ -41,7 +42,7 @@ async function revealDelete() {
 	if (
 		confirm('Really delete this leaderboard? (This action can be reversed)')
 	) {
-		useApi(
+		await useApi(
 			() => leaderboards.deleteLeaderboard(props.id, useAuth(token.value)),
 			() => execute(),
 			(error) => {
@@ -55,7 +56,7 @@ async function revealRestore() {
 	if (
 		confirm('Really restore this leaderboard? (This action can be reversed)')
 	) {
-		useApi(
+		await useApi(
 			() =>
 				leaderboards.updateLeaderboard(
 					props.id,
@@ -95,26 +96,29 @@ async function revealRestore() {
 					:to="{ name: 'categoryCreate', params: { id } }"
 					tabindex="-1"
 				>
-					<button class="action-button">Create Category</button>
+					<BaseButton color="secondary">Create Category</BaseButton>
 				</RouterLink>
 
 				<RouterLink
 					:to="{ name: 'leaderboardEdit', params: { id } }"
 					tabindex="-1"
 				>
-					<button class="action-button">Edit</button>
+					<BaseButton color="secondary">Edit</BaseButton>
 				</RouterLink>
 
-				<button
+				<BaseButton
 					v-if="board?.deletedAt === null"
-					class="action-button delete-button"
+					color="delete"
 					@click="revealDelete"
 				>
 					Delete
-				</button>
-				<button v-else class="action-button" @click="revealRestore">
+				</BaseButton>
+				<BaseButton
+					v-else
+					color="secondary"
+					@click="revealRestore">
 					Restore
-				</button>
+				</BaseButton>
 			</div>
 
 			<p v-if="updateError" class="error-text">{{ updateError }}</p>
@@ -191,15 +195,6 @@ async function revealRestore() {
 	display: flex;
 	gap: 0.5rem;
 	justify-self: end;
-}
-
-.action-button {
-	min-width: 3rem;
-	height: 3rem;
-}
-
-.delete-button {
-	background: crimson;
 }
 
 .error-text {

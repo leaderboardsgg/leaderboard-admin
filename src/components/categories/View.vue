@@ -8,6 +8,7 @@ import { Categories } from '../../lib/api/Categories'
 import { ProblemDetails } from '../../lib/api/data-contracts'
 import { HttpResponse } from '../../lib/api/http-client'
 import { Leaderboards } from '../../lib/api/Leaderboards'
+import BaseButton from '../base/BaseButton.vue'
 
 const props = defineProps<{
 	id: number
@@ -47,7 +48,7 @@ const errorResponse = computed(
 
 async function revealDelete() {
 	if (confirm('Really delete this category? (This action can be reversed)')) {
-		useApi(
+		await useApi(
 			() => categories.deleteCategory(props.id, useAuth(token.value)),
 			() => execute(),
 			(error) => {
@@ -59,7 +60,7 @@ async function revealDelete() {
 
 async function revealRestore() {
 	if (confirm('Really restore this category? (This action can be reversed)')) {
-		useApi(
+		await useApi(
 			() =>
 				categories.updateCategory(
 					props.id,
@@ -103,19 +104,22 @@ async function revealRestore() {
 					:to="{ name: 'categoryEdit', params: { id: props.id } }"
 					tabindex="-1"
 				>
-					<button class="action-button">Edit</button>
+					<BaseButton color="secondary">Edit</BaseButton>
 				</RouterLink>
 
-				<button
+				<BaseButton
 					v-if="category?.deletedAt === null"
-					class="action-button delete-button"
+					color="delete"
 					@click="revealDelete"
 				>
 					Delete
-				</button>
-				<button v-else class="action-button" @click="revealRestore">
+				</BaseButton>
+				<BaseButton
+					v-else
+					color="secondary"
+					@click="revealRestore">
 					Restore
-				</button>
+				</BaseButton>
 			</div>
 
 			<p v-if="updateError" class="error-text">{{ updateError }}</p>
