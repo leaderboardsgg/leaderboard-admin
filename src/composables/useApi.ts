@@ -1,4 +1,4 @@
-import type { HttpResponse } from '../lib/api/http-client'
+import type { HttpResponse } from '@/lib/api/http-client'
 
 type SuccessResponse<T> = Omit<HttpResponse<T, unknown>, 'error'>
 type ErrorResponse<T> = Omit<HttpResponse<unknown, T>, 'data'>

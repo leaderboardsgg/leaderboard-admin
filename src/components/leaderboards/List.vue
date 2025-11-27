@@ -2,9 +2,9 @@
 import { useAsyncState } from '@vueuse/core'
 import { useRouteQuery } from '@vueuse/router'
 import { ref, watch } from 'vue'
-import { Leaderboards } from '../../lib/api/Leaderboards'
-import { StatusFilter } from '../../lib/api/data-contracts'
-import Paginator from '../Paginator.vue'
+import { Leaderboards } from '@/lib/api/Leaderboards'
+import { StatusFilter } from '@/lib/api/data-contracts'
+import Paginator from '@/components/Paginator.vue'
 
 const pageQuery = useRouteQuery('page', '1', { transform: Number })
 const limitQuery = useRouteQuery('resultsPerPage', '25', { transform: Number })

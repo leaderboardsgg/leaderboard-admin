@@ -2,11 +2,11 @@
 import { useAsyncState } from '@vueuse/core'
 import { useRouteQuery } from '@vueuse/router'
 import { watch } from 'vue'
-import { useAuth } from '../../composables/useAuth'
-import { useSessionToken } from '../../composables/useSessionToken'
-import { UserRole } from '../../lib/api/data-contracts'
-import { Users } from '../../lib/api/Users'
-import Paginator from '../Paginator.vue'
+import { useAuth } from '@/composables/useAuth'
+import { useSessionToken } from '@/composables/useSessionToken'
+import { UserRole } from '@/lib/api/data-contracts'
+import { Users } from '@/lib/api/Users'
+import Paginator from '@/components/Paginator.vue'
 
 const pageQuery = useRouteQuery('page', '1', { transform: Number })
 const limitQuery = useRouteQuery('resultsPerPage', '25', { transform: Number })

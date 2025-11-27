@@ -2,16 +2,16 @@
 import { useAsyncState } from '@vueuse/core'
 import { computed, ref } from 'vue'
 import { onBeforeRouteLeave, useRouter } from 'vue-router'
-import { useApi } from '../../composables/useApi'
-import { useAuth } from '../../composables/useAuth'
-import { useSessionToken } from '../../composables/useSessionToken'
-import { Leaderboards } from '../../lib/api/Leaderboards'
+import { useApi } from '@/composables/useApi'
+import { useAuth } from '@/composables/useAuth'
+import { useSessionToken } from '@/composables/useSessionToken'
+import { Leaderboards } from '@/lib/api/Leaderboards'
 import {
 	ProblemDetails,
 	UpdateLeaderboardRequest
-} from '../../lib/api/data-contracts'
-import { HttpResponse } from '../../lib/api/http-client'
-import Slug from '../blocks/Slug.vue'
+} from '@/lib/api/data-contracts'
+import { HttpResponse } from '@/lib/api/http-client'
+import Slug from '@/components/blocks/Slug.vue'
 
 const props = defineProps<{
 	id: number

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { onBeforeRouteLeave, useRouter } from 'vue-router'
-import { useApi } from '../../composables/useApi'
-import { useAuth } from '../../composables/useAuth'
-import { useSessionToken } from '../../composables/useSessionToken'
-import { Leaderboards } from '../../lib/api/Leaderboards'
-import { CreateLeaderboardRequest } from '../../lib/api/data-contracts'
-import Slug from '../blocks/Slug.vue'
+import { useApi } from '@/composables/useApi'
+import { useAuth } from '@/composables/useAuth'
+import { useSessionToken } from '@/composables/useSessionToken'
+import { Leaderboards } from '@/lib/api/Leaderboards'
+import { CreateLeaderboardRequest } from '@/lib/api/data-contracts'
+import Slug from '@/components/blocks/Slug.vue'
 
 const token = useSessionToken()
 const createError = ref('')

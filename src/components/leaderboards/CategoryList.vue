@@ -2,10 +2,10 @@
 import { useAsyncState } from '@vueuse/core'
 import { useRouteQuery } from '@vueuse/router'
 import { computed, watch } from 'vue'
-import { Categories } from '../../lib/api/Categories'
-import { ProblemDetails } from '../../lib/api/data-contracts'
-import { HttpResponse } from '../../lib/api/http-client'
-import Paginator from '../Paginator.vue'
+import { Categories } from '@/lib/api/Categories'
+import { ProblemDetails } from '@/lib/api/data-contracts'
+import { HttpResponse } from '@/lib/api/http-client'
+import Paginator from '@/components/Paginator.vue'
 
 const props = defineProps<{
 	leaderboardId: number

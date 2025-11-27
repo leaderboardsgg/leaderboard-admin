@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import Login from './components/Login.vue'
-import Navbar from './components/Navbar.vue'
-import { useUserDetails } from './composables/useUserDetails'
+import Login from '@/components/Login.vue'
+import Navbar from '@/components/Navbar.vue'
+import { useUserDetails } from '@/composables/useUserDetails'
 
 const { state, isLoading, isReady } = useUserDetails()
 const loggedIn = computed(() => state.value?.role === 'Administrator')
