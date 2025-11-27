@@ -1,18 +1,20 @@
 <script setup lang="ts">
 import { useAsyncState } from '@vueuse/core'
 import { computed, ref } from 'vue'
-import { useApi } from '@/composables/useApi'
-import { useAuth } from '@/composables/useAuth'
-import { useSessionToken } from '@/composables/useSessionToken'
-import { Categories } from '@/lib/api/Categories'
-import { ProblemDetails } from '@/lib/api/data-contracts'
-import { HttpResponse } from '@/lib/api/http-client'
-import { Leaderboards } from '@/lib/api/Leaderboards'
+import { useApi } from '@/composables/useApi.ts'
+import { useAuth } from '@/composables/useAuth.ts'
+import { useSessionToken } from '@/composables/useSessionToken.ts'
+import { Categories } from '@/lib/api/Categories.ts'
+import { ProblemDetails } from '@/lib/api/data-contracts.ts'
+import { HttpResponse } from '@/lib/api/http-client.ts'
+import { Leaderboards } from '@/lib/api/Leaderboards.ts'
 import BaseButton from '@/components/base/BaseButton.vue'
+import { useRoute } from 'vue-router'
 
-const props = defineProps<{
-	id: number
-}>()
+const route = useRoute('/leaderboards/[board_id]/categories/[cat_id]')
+const boardId = Number(route.params.board_id)
+const categoryId = Number(route.params.cat_id)
+
 
 const updateError = ref('')
 
@@ -34,7 +36,7 @@ const {
 	isLoading,
 	execute
 } = useAsyncState(async () => {
-	const catResp = await categories.getCategory(props.id)
+	const catResp = await categories.getCategory(categoryId)
 	const resp = await leaderboards.getLeaderboard(catResp.data.leaderboardId)
 	return {
 		...catResp.data,
@@ -49,7 +51,7 @@ const errorResponse = computed(
 async function revealDelete() {
 	if (confirm('Really delete this category? (This action can be reversed)')) {
 		await useApi(
-			() => categories.deleteCategory(props.id, useAuth(token.value)),
+			() => categories.deleteCategory(categoryId, useAuth(token.value)),
 			() => execute(),
 			(error) => {
 				updateError.value = 'Failed to delete: ' + error.status
@@ -63,7 +65,7 @@ async function revealRestore() {
 		await useApi(
 			() =>
 				categories.updateCategory(
-					props.id,
+					categoryId,
 					{
 						status: 'Published'
 					},
@@ -94,14 +96,14 @@ async function revealRestore() {
 			<RouterLink
 				class="back-link"
 				:to="{
-					name: 'leaderboardView',
-					params: { id: category?.leaderboardId }
+					name: '/leaderboards/[board_id]',
+					params: { board_id: Number(category?.leaderboardId) }
 				}"
 				>&lt; Back</RouterLink
 			>
 			<div class="action-button-container">
 				<RouterLink
-					:to="{ name: 'categoryEdit', params: { id: props.id } }"
+					:to="{ name: '/leaderboards/[board_id]/categories/[cat_id].edit', params: { board_id: boardId, cat_id: categoryId } }"
 					tabindex="-1"
 				>
 					<BaseButton color="secondary">Edit</BaseButton>

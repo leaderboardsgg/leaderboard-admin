@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import { useAsyncState } from '@vueuse/core'
 import { computed, ref } from 'vue'
-import { useApi } from '@/composables/useApi'
-import { useAuth } from '@/composables/useAuth'
-import { useSessionToken } from '@/composables/useSessionToken'
-import { ProblemDetails } from '@/lib/api/data-contracts'
-import { HttpResponse } from '@/lib/api/http-client'
-import { Users } from '@/lib/api/Users'
+import { useApi } from '@/composables/useApi.ts'
+import { useAuth } from '@/composables/useAuth.ts'
+import { useSessionToken } from '@/composables/useSessionToken.ts'
+import { ProblemDetails } from '@/lib/api/data-contracts.ts'
+import { HttpResponse } from '@/lib/api/http-client.ts'
+import { Users } from '@/lib/api/Users.ts'
 import BaseButton from '@/components/base/BaseButton.vue'
-const props = defineProps<{
-	id: string
-}>()
+import { useRoute } from 'vue-router'
+
+const route = useRoute('/users/[user_id]')
+const userId = route.params.user_id
 
 const updateError = ref('')
 
@@ -26,7 +27,7 @@ const {
 	isLoading,
 	execute
 } = useAsyncState(async () => {
-	const resp = await users.getUser(props.id)
+	const resp = await users.getUser(userId)
 	return resp.data
 }, null)
 
@@ -38,7 +39,7 @@ async function revealBan() {
 	if (confirm('Really ban this user? (This action can be reversed)')) {
 		await useApi(
 			() =>
-				users.updateUser(props.id, { role: 'Banned' }, useAuth(token.value)),
+				users.updateUser(userId, { role: 'Banned' }, useAuth(token.value)),
 			() => execute(),
 			(error) => {
 				updateError.value = 'Failed to ban: ' + error.status
@@ -51,7 +52,7 @@ async function revealUnban() {
 	if (confirm('Really unban this user? (This action can be reversed)')) {
 		await useApi(
 			() =>
-				users.updateUser(props.id, { role: 'Confirmed' }, useAuth(token.value)),
+				users.updateUser(userId, { role: 'Confirmed' }, useAuth(token.value)),
 			() => execute(),
 			(error) => {
 				updateError.value = 'Failed to unban: ' + error.status
@@ -75,7 +76,7 @@ async function revealUnban() {
 		<div v-else class="main-content">
 			<h1 class="title">Details for {{ user?.username }}</h1>
 
-			<RouterLink class="back-link" :to="{ name: 'usersList' }"
+			<RouterLink class="back-link" :to="{ name: '/users/' }"
 				>&lt; Back</RouterLink
 			>
 			<BaseButton

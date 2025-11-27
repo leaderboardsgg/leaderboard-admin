@@ -4,34 +4,24 @@ import { onBeforeRouteLeave, useRouter } from 'vue-router'
 import { useApi } from '@/composables/useApi'
 import { useAuth } from '@/composables/useAuth'
 import { useSessionToken } from '@/composables/useSessionToken'
-import { Categories } from '@/lib/api/Categories'
-import {
-	CreateCategoryRequest,
-	RunType,
-	SortDirection
-} from '@/lib/api/data-contracts'
+import { Leaderboards } from '@/lib/api/Leaderboards'
+import { CreateLeaderboardRequest } from '@/lib/api/data-contracts'
 import Slug from '@/components/blocks/Slug.vue'
-
-const props = defineProps<{
-	id: number
-}>()
 
 const token = useSessionToken()
 const createError = ref('')
 const router = useRouter()
 
-const categories = new Categories({
+const leaderboards = new Leaderboards({
 	baseUrl: import.meta.env.VITE_BACKEND_URL
 })
 
 const warnBeforeLeave = ref(true)
 
-const createRequest = ref({
+const createRequest = ref<CreateLeaderboardRequest>({
 	name: '',
 	slug: '',
-	info: '',
-	sortDirection: '',
-	type: ''
+	info: ''
 })
 
 onBeforeRouteLeave(() => {
@@ -39,9 +29,7 @@ onBeforeRouteLeave(() => {
 		warnBeforeLeave.value &&
 		(createRequest.value.name ||
 			createRequest.value.slug ||
-			createRequest.value.info ||
-			createRequest.value.sortDirection ||
-			createRequest.value.type)
+			createRequest.value.info)
 	) {
 		if (!window.confirm('Do you want to leave? You have unsaved changes.')) {
 			return false
@@ -50,17 +38,12 @@ onBeforeRouteLeave(() => {
 })
 
 function submit() {
-	// Form validation should cover invalid values
-	const request: CreateCategoryRequest = {
-		...createRequest.value,
-		sortDirection: createRequest.value.sortDirection as SortDirection,
-		type: createRequest.value.type as RunType
-	}
 	useApi(
-		() => categories.createCategory(props.id, request, useAuth(token.value)),
+		() =>
+			leaderboards.createLeaderboard(createRequest.value, useAuth(token.value)),
 		({ data }) => {
 			warnBeforeLeave.value = false
-			router.push({ name: 'categoryView', params: { id: data.id } })
+			router.push({ name: '/leaderboards/[board_id]', params: { board_id: data.id } })
 		},
 		(error) => {
 			createError.value = 'Failed to create: ' + error.status.toString(10)
@@ -71,14 +54,15 @@ function submit() {
 
 <template>
 	<div class="container">
-		<h1>Create Category</h1>
+		<h1>Create Leaderboard</h1>
 		<RouterLink
 			class="back-link"
-			:to="{ name: 'leaderboardView', params: { id: props.id } }"
+			:to="{ name: '/leaderboards/' }"
 			title="Changes will not be saved."
 		>
 			&lt; Back
 		</RouterLink>
+
 		<p v-if="createError" class="error-text">{{ createError }}</p>
 
 		<form @submit.prevent="submit">
@@ -112,34 +96,6 @@ function submit() {
 						</th>
 						<td>
 							<textarea v-model="createRequest.info" id="info" rows="10" />
-						</td>
-					</tr>
-					<tr>
-						<th>
-							<label for="sort-direction">Sort Direction*:</label>
-						</th>
-						<td>
-							<select
-								id="sort-direction"
-								v-model="createRequest.sortDirection"
-								required
-							>
-								<option value="">---</option>
-								<option value="Ascending">Ascending</option>
-								<option value="Descending">Descending</option>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<th>
-							<label for="run-type">Type*:</label>
-						</th>
-						<td>
-							<select id="run-type" v-model="createRequest.type" required>
-								<option value="">---</option>
-								<option value="Score">Score</option>
-								<option value="Time">Time</option>
-							</select>
 						</td>
 					</tr>
 				</tbody>

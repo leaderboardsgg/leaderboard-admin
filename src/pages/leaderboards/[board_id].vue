@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useAsyncState } from '@vueuse/core'
 import { computed, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import { useApi } from '@/composables/useApi'
 import { useAuth } from '@/composables/useAuth'
 import { useSessionToken } from '@/composables/useSessionToken'
@@ -10,9 +11,8 @@ import { HttpResponse } from '@/lib/api/http-client'
 import CategoryList from '@/components/leaderboards/CategoryList.vue'
 import BaseButton from '@/components/base/BaseButton.vue'
 
-const props = defineProps<{
-	id: number
-}>()
+const route = useRoute('/leaderboards/[board_id]')
+const boardId = Number(route.params.board_id)
 
 const updateError = ref('')
 
@@ -30,7 +30,7 @@ const {
 	isLoading,
 	execute
 } = useAsyncState(async () => {
-	const resp = await leaderboards.getLeaderboard(props.id)
+	const resp = await leaderboards.getLeaderboard(boardId)
 	return resp.data
 }, null)
 
@@ -43,7 +43,7 @@ async function revealDelete() {
 		confirm('Really delete this leaderboard? (This action can be reversed)')
 	) {
 		await useApi(
-			() => leaderboards.deleteLeaderboard(props.id, useAuth(token.value)),
+			() => leaderboards.deleteLeaderboard(boardId, useAuth(token.value)),
 			() => execute(),
 			(error) => {
 				updateError.value = 'Failed to delete: ' + error.status
@@ -59,7 +59,7 @@ async function revealRestore() {
 		await useApi(
 			() =>
 				leaderboards.updateLeaderboard(
-					props.id,
+					boardId,
 					{
 						status: 'Published'
 					},
@@ -76,7 +76,8 @@ async function revealRestore() {
 
 <template>
 	<div class="container">
-		<div v-if="isLoading">Loading...</div>
+		<router-view v-if="$route.path.includes('/categories/')" />
+		<div v-else-if="isLoading">Loading...</div>
 		<div v-else-if="error" class="error-container">
 			<p class="error-text">
 				Failed to fetch leaderboard: {{ errorResponse.status }}
@@ -88,19 +89,19 @@ async function revealRestore() {
 		<div v-else class="main-content">
 			<h1 class="title">Details for {{ board?.name }}</h1>
 
-			<RouterLink class="back-link" :to="{ name: 'leaderboardsList' }"
+			<RouterLink class="back-link" :to="{ name: '/leaderboards/' }"
 				>&lt; Back</RouterLink
 			>
 			<div class="action-button-container">
 				<RouterLink
-					:to="{ name: 'categoryCreate', params: { id } }"
+					:to="{ name: '/leaderboards/[board_id]/categories/create', params: { board_id: boardId }}"
 					tabindex="-1"
 				>
 					<BaseButton color="secondary">Create Category</BaseButton>
 				</RouterLink>
 
 				<RouterLink
-					:to="{ name: 'leaderboardEdit', params: { id } }"
+					:to="{ name: '/leaderboards/[board_id].edit', params: { board_id: boardId } }"
 					tabindex="-1"
 				>
 					<BaseButton color="secondary">Edit</BaseButton>
@@ -113,10 +114,7 @@ async function revealRestore() {
 				>
 					Delete
 				</BaseButton>
-				<BaseButton
-					v-else
-					color="secondary"
-					@click="revealRestore">
+				<BaseButton v-else color="secondary" @click="revealRestore">
 					Restore
 				</BaseButton>
 			</div>
@@ -158,7 +156,7 @@ async function revealRestore() {
 				</tbody>
 			</table>
 
-			<CategoryList :leaderboard-id="props.id" />
+			<CategoryList :leaderboard-id="boardId" />
 		</div>
 	</div>
 </template>

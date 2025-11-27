@@ -1,21 +1,21 @@
 <script setup lang="ts">
 import { useAsyncState } from '@vueuse/core'
 import { computed, ref } from 'vue'
-import { onBeforeRouteLeave, useRouter } from 'vue-router'
-import { useApi } from '@/composables/useApi'
-import { useAuth } from '@/composables/useAuth'
-import { useSessionToken } from '@/composables/useSessionToken'
-import { Leaderboards } from '@/lib/api/Leaderboards'
+import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
+import { useApi } from '@/composables/useApi.ts'
+import { useAuth } from '@/composables/useAuth.ts'
+import { useSessionToken } from '@/composables/useSessionToken.ts'
+import { Categories } from '@/lib/api/Categories.ts'
 import {
 	ProblemDetails,
-	UpdateLeaderboardRequest
-} from '@/lib/api/data-contracts'
-import { HttpResponse } from '@/lib/api/http-client'
+	UpdateCategoryRequest
+} from '@/lib/api/data-contracts.ts'
+import { HttpResponse } from '@/lib/api/http-client.ts'
 import Slug from '@/components/blocks/Slug.vue'
 
-const props = defineProps<{
-	id: number
-}>()
+const route = useRoute('/leaderboards/[board_id]/categories/[cat_id].edit')
+const boardId = Number(route.params.board_id)
+const categoryId = Number(route.params.cat_id)
 
 const updateError = ref('')
 
@@ -23,33 +23,35 @@ const token = useSessionToken()
 
 const router = useRouter()
 
-const leaderboards = new Leaderboards({
+const categories = new Categories({
 	baseUrl: import.meta.env.VITE_BACKEND_URL
 })
 
 const warnBeforeLeave = ref(true)
 
-const updateRequest = ref<UpdateLeaderboardRequest>({})
+const updateRequest = ref<UpdateCategoryRequest>({})
 
 const {
-	state: board,
+	state: cat,
 	error,
 	isLoading,
 	execute
 } = useAsyncState(async () => {
-	const resp = await leaderboards.getLeaderboard(props.id)
-	updateRequest.value.info = resp.data.info
+	const resp = await categories.getCategory(categoryId)
+	updateRequest.value.info = resp.data.info || ''
 	updateRequest.value.name = resp.data.name
 	updateRequest.value.slug = resp.data.slug
+	updateRequest.value.sortDirection = resp.data.sortDirection
 	return resp.data
 }, null)
 
 onBeforeRouteLeave(() => {
 	if (
 		warnBeforeLeave.value &&
-		(board.value?.name !== updateRequest.value.name ||
-			board.value?.slug !== updateRequest.value.slug ||
-			board.value?.info !== updateRequest.value.info)
+		(cat.value?.name !== updateRequest.value.name ||
+			cat.value?.slug !== updateRequest.value.slug ||
+			cat.value?.info !== updateRequest.value.info ||
+			cat.value?.sortDirection !== updateRequest.value.sortDirection)
 	) {
 		if (!window.confirm('Do you want to leave? You have unsaved changes.')) {
 			return false
@@ -64,18 +66,22 @@ const errorResponse = computed(
 async function submit() {
 	useApi(
 		() =>
-			leaderboards.updateLeaderboard(
-				props.id,
+			categories.updateCategory(
+				categoryId,
 				{
 					name: updateRequest.value.name,
 					info: updateRequest.value.info,
-					slug: updateRequest.value.slug
+					slug: updateRequest.value.slug,
+					sortDirection: updateRequest.value.sortDirection
 				},
 				useAuth(token.value)
 			),
 		() => {
 			warnBeforeLeave.value = false
-			router.push({ name: 'leaderboardView', params: { id: props.id } })
+			router.push({
+				name: '/leaderboards/[board_id]/categories/[cat_id]',
+				params: { board_id: boardId, cat_id: categoryId }
+			})
 		},
 		(error) => {
 			updateError.value = 'Failed to update: ' + error.status.toString(10)
@@ -90,18 +96,18 @@ async function submit() {
 		<div v-else-if="error" class="error-container">
 			<p class="errorText">
 				<!-- For unexpected server errors; fields will be empty, hence the defaults. -->
-				Failed to fetch leaderboard: {{ errorResponse.status }}
+				Failed to fetch category: {{ errorResponse.status }}
 				{{ errorResponse.error?.title ?? 'Unexpected error.' }}
 			</p>
 			<button @click="execute()" class="button">Reload</button>
 		</div>
 
 		<div v-else class="main-content">
-			<h1>Update {{ board?.name }}</h1>
+			<h1 class="title">Update {{ cat?.name }}</h1>
 
 			<RouterLink
 				class="back-link"
-				:to="{ name: 'leaderboardView', params: { id } }"
+				:to="{ name: '/leaderboards/[board_id]/categories/[cat_id]', params: { board_id: boardId, cat_id: categoryId } }"
 				title="Changes will not be saved."
 				>&lt; Back</RouterLink
 			>
@@ -113,7 +119,7 @@ async function submit() {
 					<tbody>
 						<tr>
 							<th>ID:</th>
-							<td>{{ board?.id }}</td>
+							<td>{{ cat?.id }}</td>
 						</tr>
 						<tr>
 							<th>
@@ -132,15 +138,6 @@ async function submit() {
 							</td>
 						</tr>
 						<tr>
-							<th>Created:</th>
-							<td>{{ board?.createdAt }}</td>
-						</tr>
-						<tr>
-							<th>Deleted:</th>
-							<td v-if="board?.deletedAt">{{ board?.deletedAt }}</td>
-							<td v-else class="dim">&lt;Not deleted&gt;</td>
-						</tr>
-						<tr>
 							<th>
 								<label for="info">Info:</label>
 							</th>
@@ -148,9 +145,33 @@ async function submit() {
 								<textarea v-model="updateRequest.info" id="info" rows="5" />
 							</td>
 						</tr>
+						<tr>
+							<th>
+								<label for="sort-direction">Sort Direction:</label>
+							</th>
+							<td>
+								<select
+									v-model="updateRequest.sortDirection"
+									id="sort-direction"
+								>
+									<option value="">---</option>
+									<option value="Ascending">Ascending</option>
+									<option value="Descending">Descending</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<th>Created:</th>
+							<td>{{ cat?.createdAt }}</td>
+						</tr>
+						<tr>
+							<th>Deleted:</th>
+							<td v-if="cat?.deletedAt">{{ cat?.deletedAt }}</td>
+							<td v-else class="dim">&lt;Not deleted&gt;</td>
+						</tr>
 					</tbody>
 				</table>
-				<button>Save Changes</button>
+				<button class="button">Save Changes</button>
 			</form>
 		</div>
 	</div>
@@ -173,6 +194,10 @@ async function submit() {
 	flex-direction: column;
 	margin-top: 1rem;
 	row-gap: 1rem;
+}
+
+.title {
+	grid-column: span 2 / span 2;
 }
 
 .back-link {

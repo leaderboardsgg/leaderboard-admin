@@ -7,7 +7,7 @@ const router = useRouter()
 const token = useSessionToken()
 
 function logoutClicked() {
-	router.push({ name: 'home' })
+	router.push({ name: '/' })
 	token.value = ''
 }
 
@@ -18,8 +18,8 @@ const { state: user } = useUserDetails()
 	<div class="navbar">
 		<div class="navbar-left">
 			<p class="title select-none">Leaderboards.gg Admin Panel</p>
-			<RouterLink :to="{ name: 'leaderboardsList' }">Leaderboards</RouterLink>
-			<RouterLink :to="{ name: 'usersList' }">Users</RouterLink>
+			<RouterLink :to="{ name: '/leaderboards/' }">Leaderboards</RouterLink>
+			<RouterLink :to="{ name: '/users/' }">Users</RouterLink>
 		</div>
 		<div class="navbar-right">
 			<p>Signed in as {{ user?.username }}</p>

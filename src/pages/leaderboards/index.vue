@@ -2,8 +2,8 @@
 import { useAsyncState } from '@vueuse/core'
 import { useRouteQuery } from '@vueuse/router'
 import { ref, watch } from 'vue'
-import { Leaderboards } from '@/lib/api/Leaderboards'
-import { StatusFilter } from '@/lib/api/data-contracts'
+import { Leaderboards } from '@/lib/api/Leaderboards.ts'
+import { StatusFilter } from '@/lib/api/data-contracts.ts'
 import Paginator from '@/components/Paginator.vue'
 
 const pageQuery = useRouteQuery('page', '1', { transform: Number })
@@ -75,7 +75,7 @@ watch(pageQuery, () => execute(0, query.value))
 	<div class="container">
 		<h1>Leaderboards</h1>
 		<div class="input-container">
-			<RouterLink :to="{ name: 'leaderboardCreate' }" tabindex="-1">
+			<RouterLink :to="{ name: '/leaderboards/create' }" tabindex="-1">
 				<button class="button create-new">Create New</button>
 			</RouterLink>
 			<form @submit.prevent="search(query)" class="form">
@@ -118,7 +118,7 @@ watch(pageQuery, () => execute(0, query.value))
 			<ul>
 				<li v-for="board in boards.data" :key="board.id">
 					<RouterLink
-						:to="{ name: 'leaderboardView', params: { id: board.id } }"
+						:to="{ name: '/leaderboards/[board_id]', params: { board_id: board.id } }"
 						:class="{ dull: board.deletedAt !== null }"
 					>
 						{{ board.name }}

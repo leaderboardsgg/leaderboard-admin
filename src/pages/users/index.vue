@@ -2,10 +2,10 @@
 import { useAsyncState } from '@vueuse/core'
 import { useRouteQuery } from '@vueuse/router'
 import { watch } from 'vue'
-import { useAuth } from '@/composables/useAuth'
-import { useSessionToken } from '@/composables/useSessionToken'
-import { UserRole } from '@/lib/api/data-contracts'
-import { Users } from '@/lib/api/Users'
+import { useAuth } from '@/composables/useAuth.ts'
+import { useSessionToken } from '@/composables/useSessionToken.ts'
+import { UserRole } from '@/lib/api/data-contracts.ts'
+import { Users } from '@/lib/api/Users.ts'
 import Paginator from '@/components/Paginator.vue'
 
 const pageQuery = useRouteQuery('page', '1', { transform: Number })
@@ -118,7 +118,7 @@ watch([limitQuery, rolesQuery], () => {
 			<ul v-else>
 				<li v-for="user in users.data" :key="user.id">
 					<RouterLink
-						:to="{ name: 'userView', params: { id: user.id } }"
+						:to="{ name: '/users/[user_id]', params: { user_id: user.id } }"
 						:class="{ dull: user.role === 'Banned' }"
 					>
 						{{ user.username }}
