@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { Account } from '../lib/api/Account'
-import { LoginRequest } from '../lib/api/data-contracts'
-import { useSessionToken } from '../composables/useSessionToken'
-import { useUserDetails } from '../composables/useUserDetails'
-import { useApi } from '../composables/useApi'
+import { Account } from '@/lib/api/Account'
+import { LoginRequest } from '@/lib/api/data-contracts'
+import { useSessionToken } from '@/composables/useSessionToken'
+import { useUserDetails } from '@/composables/useUserDetails'
+import { useApi } from '@/composables/useApi'
 
 const email = ref('')
 const password = ref('')

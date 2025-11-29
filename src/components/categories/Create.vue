@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { onBeforeRouteLeave, useRouter } from 'vue-router'
-import { useApi } from '../../composables/useApi'
-import { useAuth } from '../../composables/useAuth'
-import { useSessionToken } from '../../composables/useSessionToken'
-import { Categories } from '../../lib/api/Categories'
+import { useApi } from '@/composables/useApi'
+import { useAuth } from '@/composables/useAuth'
+import { useSessionToken } from '@/composables/useSessionToken'
+import { Categories } from '@/lib/api/Categories'
 import {
 	CreateCategoryRequest,
 	RunType,
 	SortDirection
-} from '../../lib/api/data-contracts'
-import Slug from '../blocks/Slug.vue'
+} from '@/lib/api/data-contracts'
+import Slug from '@/components/blocks/Slug.vue'
 
 const props = defineProps<{
 	id: number

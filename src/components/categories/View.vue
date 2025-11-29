@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { useAsyncState } from '@vueuse/core'
 import { computed, ref } from 'vue'
-import { useApi } from '../../composables/useApi'
-import { useAuth } from '../../composables/useAuth'
-import { useSessionToken } from '../../composables/useSessionToken'
-import { Categories } from '../../lib/api/Categories'
-import { ProblemDetails } from '../../lib/api/data-contracts'
-import { HttpResponse } from '../../lib/api/http-client'
-import { Leaderboards } from '../../lib/api/Leaderboards'
-import BaseButton from '../base/BaseButton.vue'
+import { useApi } from '@/composables/useApi'
+import { useAuth } from '@/composables/useAuth'
+import { useSessionToken } from '@/composables/useSessionToken'
+import { Categories } from '@/lib/api/Categories'
+import { ProblemDetails } from '@/lib/api/data-contracts'
+import { HttpResponse } from '@/lib/api/http-client'
+import { Leaderboards } from '@/lib/api/Leaderboards'
+import BaseButton from '@/components/base/BaseButton.vue'
 
 const props = defineProps<{
 	id: number

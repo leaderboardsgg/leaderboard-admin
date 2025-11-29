@@ -1,8 +1,8 @@
 import { createGlobalState, useAsyncState } from '@vueuse/core'
 import { watchEffect } from 'vue'
-import { Users } from '../lib/api/Users'
-import { useAuth } from './useAuth'
-import { useSessionToken } from './useSessionToken'
+import { Users } from '@/lib/api/Users'
+import { useAuth } from '@/composables/useAuth'
+import { useSessionToken } from '@/composables/useSessionToken'
 
 export const useUserDetails = createGlobalState(() => {
 	const users = new Users({
