@@ -1,9 +1,9 @@
 <script setup lang="ts">
-const { color = 'primary', variant ='solid', disabled = false, size = 'sm' } = defineProps<{
+const { color = 'primary', variant = 'solid', disabled = false, size = 'sm' } = defineProps<{
 	color?: 'primary' | 'secondary' | 'delete'
-	variant: 'solid' | 'outline',
-	disabled: boolean,
-	size: 'sm' | 'full'
+	variant?: 'solid' | 'outline',
+	disabled?: boolean,
+	size?: 'sm' | 'full'
 }>()
 </script>
 

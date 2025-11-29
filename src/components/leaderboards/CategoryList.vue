@@ -67,7 +67,7 @@ watch([limitQuery, pageQuery], () => execute())
 			<span>Categories:</span>
 			<ul>
 				<li v-for="cat in cats.data">
-					<RouterLink :to="{ name: 'categoryView', params: { id: cat.id } }">{{
+					<RouterLink :to="{ name: '/leaderboards/[board_id]/categories/[cat_id]', params: { board_id: props.leaderboardId, cat_id: cat.id } }">{{
 						cat.name
 					}}</RouterLink>
 					({{ cat.slug }})

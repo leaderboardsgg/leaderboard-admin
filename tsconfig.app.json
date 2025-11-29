@@ -24,7 +24,13 @@
 			"@/*": [
 				"./src/*"
 			],
+		},
+		"types": [
+			"unplugin-vue-router/client"
+		],
+		"vueCompilerOptions": {
+			"plugins": ["unplugin-vue-router/volar/sfc-typed-router"]
 		}
 	},
-	"include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"]
+	"include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "./typed-router.d.ts"]
 }
