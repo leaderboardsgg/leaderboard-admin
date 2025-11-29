@@ -7,6 +7,7 @@ import { useSessionToken } from '../../composables/useSessionToken'
 import { ProblemDetails } from '../../lib/api/data-contracts'
 import { HttpResponse } from '../../lib/api/http-client'
 import { Users } from '../../lib/api/Users'
+import BaseButton from '../base/BaseButton.vue'
 const props = defineProps<{
 	id: string
 }>()
@@ -35,7 +36,7 @@ const errorResponse = computed(
 
 async function revealBan() {
 	if (confirm('Really ban this user? (This action can be reversed)')) {
-		useApi(
+		await useApi(
 			() =>
 				users.updateUser(props.id, { role: 'Banned' }, useAuth(token.value)),
 			() => execute(),
@@ -48,7 +49,7 @@ async function revealBan() {
 
 async function revealUnban() {
 	if (confirm('Really unban this user? (This action can be reversed)')) {
-		useApi(
+		await useApi(
 			() =>
 				users.updateUser(props.id, { role: 'Confirmed' }, useAuth(token.value)),
 			() => execute(),
@@ -77,20 +78,20 @@ async function revealUnban() {
 			<RouterLink class="back-link" :to="{ name: 'usersList' }"
 				>&lt; Back</RouterLink
 			>
-			<button
+			<BaseButton
 				v-if="user?.role === 'Confirmed'"
-				class="action-button delete-button"
+				color="delete"
 				@click="revealBan"
 			>
 				Ban
-			</button>
-			<button
+			</BaseButton>
+			<BaseButton
 				v-else-if="user?.role === 'Banned'"
-				class="action-button"
+				class="secondary"
 				@click="revealUnban"
 			>
 				Unban
-			</button>
+			</BaseButton>
 
 			<p v-if="updateError" class="error-text">{{ updateError }}</p>
 
@@ -144,15 +145,6 @@ async function revealUnban() {
 .back-link {
 	justify-self: start;
 	padding: 0.5rem;
-}
-
-.action-button {
-	min-width: 3rem;
-	height: 3rem;
-}
-
-.delete-button {
-	background: crimson;
 }
 
 .error-text {
